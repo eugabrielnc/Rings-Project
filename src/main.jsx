@@ -3,7 +3,14 @@ import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Header from "../src/componentes/header";
+import Footer from "./componentes/footer";
 import Home from "../src/pages/home";
+import ShoppingCart from "../src/pages/ShoppingCart";
+import Shop from "../src/pages/Shop";
+import ShopDetails from "./pages/ShopDetails";
+import Checkout from "./pages/Checkout";
+import About from "./pages/About";
+import Contact from "./pages/Contact";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
@@ -13,7 +20,15 @@ ReactDOM.createRoot(document.getElementById("root")).render(
 
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/shopcart" element={<ShoppingCart />} />
+        <Route path="/shop" element={<Shop />} />
+        <Route path="/shopdetails" element={<ShopDetails />} />
+        <Route path="/checkout" element={<Checkout />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/contact" element={<Contact />} />
       </Routes>
+
+      <Footer />
 
     </BrowserRouter>
   </React.StrictMode>
