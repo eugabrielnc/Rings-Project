@@ -51,19 +51,19 @@ export default function Header() {
             <nav className="header__menu mobile-menu">
               <ul>
                 <li className="active">
-                  <a href="/">Home</a>
+                  <a href="/">Inicio</a>
                 </li>
 
                 <li>
-                  <a href="/shop">Shop</a>
+                  <a href="/shop">Produtos</a>
                 </li>
 
                 <li>
-                  <a href="#">Pages</a>
+                  <a href="#">Paginas</a>
                   <ul className="dropdown">
-                    <li><a href="/about">About Us</a></li>
-                    <li><a href="/shop-details">Shop Details</a></li>
-                    <li><a href="/shopping-cart">Shopping Cart</a></li>
+                    <li><a href="/about">Sobre nos</a></li>
+                    <li><a href="/shop-details">Detalhes da Compra</a></li>
+                    <li><a href="/shopping-cart">Carrinho</a></li>
                     <li><a href="/checkout">Check Out</a></li>
                     <li><a href="/blog-details">Blog Details</a></li>
                   </ul>
@@ -74,7 +74,7 @@ export default function Header() {
                 </li>
 
                 <li>
-                  <a href="/contact">Contacts</a>
+                  <a href="/contact">Contato</a>
                 </li>
               </ul>
             </nav>
