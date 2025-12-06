@@ -106,6 +106,7 @@ export default function Header() {
           <i className="fa fa-bars"></i>
         </div>
       </div>
+      
     </header>
   );
 }
