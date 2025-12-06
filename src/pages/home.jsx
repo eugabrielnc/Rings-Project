@@ -174,29 +174,29 @@ export default function MaleFashion() {
             <div className="col-lg-7 offset-lg-4">
               <div className="banner__item">
                 <div className="banner__item__pic">
-                  <img src={`/img/banner/banner-1.jpg`} alt="" />
+                  <img src={`/img/hero/inicial.png`} alt="" />
                 </div>
                 <div className="banner__item__text">
-                  <h2>Clothing Collections 2030</h2>
-                  <a href="#">Shop now</a>
+                  <h2>Aneis de ouro</h2>
+                  <a href="#">Compre agora</a>
                 </div>
               </div>
             </div>
             <div className="col-lg-5">
               <div className="banner__item banner__item--middle">
                 <div className="banner__item__pic">
-                  <img src={`/img/banner/banner-2.jpg`} alt="" />
+                  <img src={`/img/hero/inicial-2.webp`} alt="" />
                 </div>
                 <div className="banner__item__text">
-                  <h2>Accessories</h2>
-                  <a href="#">Shop now</a>
+                  <h2>Anel de prata</h2>
+                  <a href="#">Compre agora</a>
                 </div>
               </div>
             </div>
             <div className="col-lg-7">
               <div className="banner__item banner__item--last">
                 <div className="banner__item__pic">
-                  <img src={`/img/banner/banner-3.jpg`} alt="" />
+                  <img src={`/img/hero/inicial.png`} alt="" />
                 </div>
                 <div className="banner__item__text">
                   <h2>Shoes Spring 2030</h2>
@@ -216,10 +216,10 @@ export default function MaleFashion() {
             <div className="col-lg-12">
               <ul className="filter__controls">
                 <li className="active" data-filter="*">
-                  Best Sellers
+                  Mais vendidos
                 </li>
-                <li data-filter=".new-arrivals">New Arrivals</li>
-                <li data-filter=".hot-sales">Hot Sales</li>
+                <li data-filter=".new-arrivals">Novidades</li>
+                <li data-filter=".hot-sales"> Tendencias</li>
               </ul>
             </div>
           </div>
@@ -228,8 +228,8 @@ export default function MaleFashion() {
 
             <div className="col-lg-3 col-md-6 col-sm-6 mix new-arrivals">
               <div className="product__item">
-                <div className="product__item__pic set-bg" data-setbg="img/product/product-1.jpg">
-                  <span className="label">New</span>
+                <div className="product__item__pic set-bg" data-setbg="img/product/product-15.jpeg">
+                  <span className="label">Novo</span>
                   <ul className="product__hover">
                     <li>
                       <a href="#">
@@ -251,7 +251,7 @@ export default function MaleFashion() {
                 <div className="product__item__text">
                   <h6>Piqué Biker Jacket</h6>
                   <a href="#" className="add-cart">
-                    + Add To Cart
+                    + Adicionar ao carrinho
                   </a>
                   <div className="rating">
                     <i className="fa fa-star-o"></i>
@@ -278,7 +278,7 @@ export default function MaleFashion() {
 
             <div className="col-lg-3 col-md-6 col-sm-6 mix hot-sales">
               <div className="product__item">
-                <div className="product__item__pic set-bg" data-setbg="img/product/product-2.jpg">
+                <div className="product__item__pic set-bg" data-setbg="img/product/product-16.jpeg">
                   <ul className="product__hover">
                     <li>
                       <a href="#">
@@ -300,7 +300,7 @@ export default function MaleFashion() {
                 <div className="product__item__text">
                   <h6>Piqué Biker Jacket</h6>
                   <a href="#" className="add-cart">
-                    + Add To Cart
+                    + Adicionar ao carrinho
                   </a>
                   <div className="rating">
                     <i className="fa fa-star-o"></i>
@@ -327,7 +327,7 @@ export default function MaleFashion() {
 
             <div className="col-lg-3 col-md-6 col-sm-6 mix new-arrivals">
               <div className="product__item sale">
-                <div className="product__item__pic set-bg" data-setbg="img/product/product-3.jpg">
+                <div className="product__item__pic set-bg" data-setbg="img/product/product-17.jpeg">
                   <span className="label">Sale</span>
                   <ul className="product__hover">
                     <li>
@@ -350,7 +350,7 @@ export default function MaleFashion() {
                 <div className="product__item__text">
                   <h6>Multi-pocket Chest Bag</h6>
                   <a href="#" className="add-cart">
-                    + Add To Cart
+                    + Adicionar ao carrinho
                   </a>
                   <div className="rating">
                     <i className="fa fa-star"></i>
@@ -377,7 +377,7 @@ export default function MaleFashion() {
 
             <div className="col-lg-3 col-md-6 col-sm-6 mix hot-sales">
               <div className="product__item">
-                <div className="product__item__pic set-bg" data-setbg="img/product/product-4.jpg">
+                <div className="product__item__pic set-bg" data-setbg="img/product/product-18.jpeg">
                   <ul className="product__hover">
                     <li>
                       <a href="#">
@@ -399,7 +399,7 @@ export default function MaleFashion() {
                 <div className="product__item__text">
                   <h6>Diagonal Textured Cap</h6>
                   <a href="#" className="add-cart">
-                    + Add To Cart
+                    + Adicionar ao carrinho
                   </a>
                   <div className="rating">
                     <i className="fa fa-star-o"></i>
@@ -449,7 +449,7 @@ export default function MaleFashion() {
                 <div className="product__item__text">
                   <h6>Lether Backpack</h6>
                   <a href="#" className="add-cart">
-                    + Add To Cart
+                    + Adicionar ao carrinho
                   </a>
                   <div className="rating">
                     <i className="fa fa-star-o"></i>
@@ -499,7 +499,7 @@ export default function MaleFashion() {
                 <div className="product__item__text">
                   <h6>Ankle Boots</h6>
                   <a href="#" className="add-cart">
-                    + Add To Cart
+                    + Adicionar ao carrinho
                   </a>
                   <div className="rating">
                     <i className="fa fa-star"></i>
@@ -548,7 +548,7 @@ export default function MaleFashion() {
                 <div className="product__item__text">
                   <h6>T-shirt Contrast Pocket</h6>
                   <a href="#" className="add-cart">
-                    + Add To Cart
+                    + Adicionar ao carrinho
                   </a>
                   <div className="rating">
                     <i className="fa fa-star-o"></i>
@@ -597,7 +597,7 @@ export default function MaleFashion() {
                 <div className="product__item__text">
                   <h6>Basic Flowing Scarf</h6>
                   <a href="#" className="add-cart">
-                    + Add To Cart
+                    + Adicionar ao carrinho
                   </a>
                   <div className="rating">
                     <i className="fa fa-star-o"></i>
@@ -654,11 +654,11 @@ export default function MaleFashion() {
                 <div className="categories__deal__countdown__timer" id="countdown">
                   <div className="cd-item">
                     <span>3</span>
-                    <p>Days</p>
+                    <p>Dias</p>
                   </div>
                   <div className="cd-item">
                     <span>1</span>
-                    <p>Hours</p>
+                    <p>Hora</p>
                   </div>
                   <div className="cd-item">
                     <span>50</span>
@@ -666,11 +666,11 @@ export default function MaleFashion() {
                   </div>
                   <div className="cd-item">
                     <span>18</span>
-                    <p>Seconds</p>
+                    <p>Segundos</p>
                   </div>
                 </div>
                 <a href="#" className="primary-btn">
-                  Shop now
+                  Compre agora
                 </a>
               </div>
             </div>
@@ -714,7 +714,7 @@ export default function MaleFashion() {
           <div className="row">
             <div className="col-lg-12">
               <div className="section-title">
-                <span>Latest News</span>
+                <span>Ultimas Noticias</span>
                 <h2>Fashion New Trends</h2>
               </div>
             </div>
