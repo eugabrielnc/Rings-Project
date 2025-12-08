@@ -29,12 +29,15 @@
 /*----------------------------------------*/
 /* Template default CSS
 /*----------------------------------------*/
-
+:root {
+	--primary-color: linear-gradient(90deg, #ffffff 0%, #f7e9b3 35%, #d4af37 90%);
+}
 html,
 body {
 	height: 100%;
 	font-family: "Nunito Sans", sans-serif;
 	-webkit-font-smoothing: antialiased;
+	
 }
 
 h1,
@@ -316,7 +319,7 @@ ol {
 -----------------------*/
 
 .header {
-	background: #ffffff;
+	background: var(--primary-color)
 }
 
 .header__top {
@@ -493,7 +496,7 @@ ol {
 	bottom: 0;
 	width: 100%;
 	height: 2px;
-	background: #e53637;
+	background: var(--primary-color);
 	content: "";
 	-webkit-transition: all 0.5s;
 	-o-transition: all 0.5s;
@@ -512,7 +515,7 @@ ol {
 }
 
 .header__menu ul li.active a {
-	color: #e53637;
+	color: white;
 	font-weight: 700;
 }
 
@@ -561,6 +564,17 @@ ol {
 /*---------------------
   Hero
 -----------------------*/
+.hero__slider .swiper-slide-active .hero__text h6,
+.hero__slider .swiper-slide-active .hero__text h2,
+.hero__slider .swiper-slide-active .hero__text p,
+.hero__slider .swiper-slide-active .hero__text .primary-btn {
+  top: 0;
+  opacity: 1;
+} 
+.hero__slider .swiper-button-next,
+.hero__slider .swiper-button-prev {
+  color: white;
+}
 
 .hero__slider.owl-carousel .owl-item.active .hero__text h6 {
 	top: 0;
@@ -603,7 +617,7 @@ ol {
 }
 
 .hero__text h6 {
-	color: #e53637;
+	color: black;
 	font-size: 14px;
 	font-weight: 700;
 	text-transform: uppercase;
@@ -684,12 +698,13 @@ ol {
 
 .banner__item {
 	position: relative;
-	overflow: hidden;
+	overflow: hidden; 
+	background: var(--primary-color);
 }
 
 .banner__item:hover .banner__item__text a:after {
 	width: 40px;
-	background: #e53637;
+	background: var(--primary-color)
 }
 
 .banner__item.banner__item--middle {
@@ -747,7 +762,7 @@ ol {
 	bottom: 0;
 	width: 100%;
 	height: 2px;
-	background: #111111;
+	background: var(--primary-color);
 	content: "";
 	-webkit-transition: all, 0.3s;
 	-o-transition: all, 0.3s;
@@ -759,7 +774,7 @@ ol {
 -----------------------*/
 
 .categories {
-	background: #f3f2ee;
+	background: var(--primary-color);
 	overflow: hidden;
 	padding-top: 150px;
 	padding-bottom: 125px;
@@ -777,7 +792,7 @@ ol {
 	top: 0;
 	height: 300px;
 	width: 600px;
-	background: #ffffff;
+	
 	z-index: -1;
 	content: "";
 }
@@ -828,7 +843,7 @@ ol {
 }
 
 .categories__deal__countdown span {
-	color: #e53637;
+	color: black ;
 	font-size: 14px;
 	font-weight: 700;
 	text-transform: uppercase;
