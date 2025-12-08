@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
-import { Swiper, SwiperSlide } from 'swiper/react'; 
+import { useState } from "react";
+import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Navigation, Pagination, EffectFade } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -7,12 +8,12 @@ import 'swiper/css/pagination';
 import 'swiper/css/effect-fade';
 import '../assets/Css/bootstrap.min.css';
 import '../assets/Css/font-awesome.min.css';
-import  '../assets/Css/elegant-icons.css';
-import  '../assets/Css/magnific-popup.css';
+import '../assets/Css/elegant-icons.css';
+import '../assets/Css/magnific-popup.css';
 import '../assets/Css/nice-select.css';
 import '../assets/Css/owl.carousel.min.css';
 import '../assets/Css/slicknav.min.css';
-import '../assets/Css/style.css'; 
+import '../assets/Css/style.css';
 import "@fortawesome/fontawesome-free/css/all.min.css";
 
 // NOTE:
@@ -51,11 +52,12 @@ export default function MaleFashion() {
   }, []);
 
   const currentYear = new Date().getFullYear();
+  const [selectedColor, setSelectedColor] = useState("gold");
 
   return (
     <div>
       {/* Page Preloader (you can implement a React state to show/hide) */}
-     
+
 
       {/* Offcanvas Menu Begin */}
       <div className="offcanvas-menu-overlay"></div>
@@ -79,7 +81,7 @@ export default function MaleFashion() {
         <div className="offcanvas__nav__option">
           <a href="#" className="search-switch">
             <img src={`/img/icon/search.png`} alt="" />
-            
+
           </a>
           <a href="#">
             <img src={`/img/icon/heart.png`} alt="" />
@@ -96,92 +98,92 @@ export default function MaleFashion() {
       </div>
       {/* Offcanvas Menu End */}
 
- 
+
 
       {/* Hero Section Begin */}
       <section className="hero">
-      <Swiper
-        modules={[Autoplay, Navigation, Pagination, EffectFade]}
-        effect="fade"
-        loop={true}
-        autoplay={{
-          delay: 3500,
-          disableOnInteraction: false,
-        }}
-        navigation={true}
-        pagination={{ clickable: true }}
-        className="hero__slider"
-      >
-        
-        {/* SLIDE 1 */}
-        <SwiperSlide>
-          <div
-            className="hero__items set-bg"
-            style={{
-              backgroundImage: "url('/img/hero/aliancaof.png')",
-            }}
-          >
-            <div className="container">
-              <div className="row">
-                <div className="col-xl-5 col-lg-7 col-md-8">
-                  <div className="hero__text">
-                    <h6>Alianças</h6>
-                    <h2>Aliança com banho a ouro 18k</h2>
-                    <p>
-                      Par de alianças de moedas com banho a ouro 18k, anatômicas abauladas com anel solitário de pedra central
-                    </p>
-                    <a href="#" className="primary-btn">
-                      Compre agora 
-                    </a>
-                    <div className="hero__social">
-                      <a href="#"><i className="fab fa-facebook"></i></a>
-                      <a href="#"><i className="fab fa-twitter"></i></a>
-                      <a href="#"><i className="fab fa-pinterest"></i></a>
-                      <a href="#"><i className="fab fa-instagram"></i></a>
+        <Swiper
+          modules={[Autoplay, Navigation, Pagination, EffectFade]}
+          effect="fade"
+          loop={true}
+          autoplay={{
+            delay: 3500,
+            disableOnInteraction: false,
+          }}
+          navigation={true}
+          pagination={{ clickable: true }}
+          className="hero__slider"
+        >
+
+          {/* SLIDE 1 */}
+          <SwiperSlide>
+            <div
+              className="hero__items set-bg"
+              style={{
+                backgroundImage: "url('/img/hero/aliancaof.png')",
+              }}
+            >
+              <div className="container">
+                <div className="row">
+                  <div className="col-xl-5 col-lg-7 col-md-8">
+                    <div className="hero__text">
+                      <h6>Alianças</h6>
+                      <h2>Aliança com banho a ouro 18k</h2>
+                      <p>
+                        Par de alianças de moedas com banho a ouro 18k, anatômicas abauladas com anel solitário de pedra central
+                      </p>
+                      <a href="#" className="primary-btn">
+                        Compre agora
+                      </a>
+                      <div className="hero__social">
+                        <a href="#"><i className="fab fa-facebook"></i></a>
+                        <a href="#"><i className="fab fa-twitter"></i></a>
+                        <a href="#"><i className="fab fa-pinterest"></i></a>
+                        <a href="#"><i className="fab fa-instagram"></i></a>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-        </SwiperSlide>
+          </SwiperSlide>
 
-        {/* SLIDE 2 */}
-        <SwiperSlide>
-          <div
-            className="hero__items set-bg"
-            style={{
-              backgroundImage: "url('/img/hero/alianca4.png')",
-            }}
-          >
-            <div className="container">
-              <div className="row">
-                <div className="col-xl-5 col-lg-7 col-md-8">
-                  <div className="hero__text">
-                    <h6>Winter</h6>
-                    <h2>New Arrivals 2030</h2>
-                    <p>
-                      Comfortable, durable luxury pieces crafted with style and
-                      minimalism in mind.
-                    </p>
-                    <a href="#" className="primary-btn">
-                      Compre agora 
-                    </a>
-                    <div className="hero__social">
-                      <a href="#"><i className="fab fa-facebook"></i></a>
-                      <a href="#"><i className="fab fa-twitter"></i></a>
-                      <a href="#"><i className="fab fa-pinterest"></i></a>
-                      <a href="#"><i className="fab fa-instagram"></i></a>
+          {/* SLIDE 2 */}
+          <SwiperSlide>
+            <div
+              className="hero__items set-bg"
+              style={{
+                backgroundImage: "url('/img/hero/alianca4.png')",
+              }}
+            >
+              <div className="container">
+                <div className="row">
+                  <div className="col-xl-5 col-lg-7 col-md-8">
+                    <div className="hero__text">
+                      <h6>Winter</h6>
+                      <h2>New Arrivals 2030</h2>
+                      <p>
+                        Comfortable, durable luxury pieces crafted with style and
+                        minimalism in mind.
+                      </p>
+                      <a href="#" className="primary-btn">
+                        Compre agora
+                      </a>
+                      <div className="hero__social">
+                        <a href="#"><i className="fab fa-facebook"></i></a>
+                        <a href="#"><i className="fab fa-twitter"></i></a>
+                        <a href="#"><i className="fab fa-pinterest"></i></a>
+                        <a href="#"><i className="fab fa-instagram"></i></a>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-        </SwiperSlide>
+          </SwiperSlide>
 
-      </Swiper>
-    </section>
+        </Swiper>
+      </section>
       {/* Hero Section End */}
 
       {/* Banner Section Begin */}
@@ -226,7 +228,6 @@ export default function MaleFashion() {
       </section>
       {/* Banner Section End */}
 
-      {/* Product Section Begin */}
       <section className="product spad">
         <div className="container">
           <div className="row">
@@ -235,32 +236,32 @@ export default function MaleFashion() {
                 <li className="active" data-filter="*">
                   Mais vendidos
                 </li>
-                <li data-filter=".new-arrivals">Novidades</li>
-                <li data-filter=".hot-sales"> Tendencias</li>
               </ul>
             </div>
           </div>
           <div className="row product__filter">
-            {/* Product items - repeated list converted to JSX */}
-
+            {/* Produto 1 */}
             <div className="col-lg-3 col-md-6 col-sm-6 mix new-arrivals">
               <div className="product__item">
-                <div className="product__item__pic set-bg" data-setbg="img/product/product-15.jpeg">
+                <div
+                  className="product__item__pic"
+                  style={{ backgroundImage: "url('img/product/product-15.jpeg')" }}
+                >
                   <span className="label">Novo</span>
                   <ul className="product__hover">
                     <li>
                       <a href="#">
-                        <img src={`/img/icon/heart.png`} alt="" />
+                        <img src="/img/icon/heart.png" alt="Favoritar" />
                       </a>
                     </li>
                     <li>
                       <a href="#">
-                        <img src={`/img/icon/compare.png`} alt="" /> <span>Compare</span>
+                        <img src="/img/icon/compare.png" alt="Comparar" /> <span>Compare</span>
                       </a>
                     </li>
                     <li>
                       <a href="#">
-                        <img src={`/img/icon/search.png`} alt="" />
+                        <img src="/img/icon/search.png" alt="Ver" />
                       </a>
                     </li>
                   </ul>
@@ -279,87 +280,42 @@ export default function MaleFashion() {
                   </div>
                   <h5>$67.24</h5>
                   <div className="product__color__select">
-                    <label htmlFor="pc-1">
-                      <input type="radio" id="pc-1" />
-                    </label>
-                    <label className="active black" htmlFor="pc-2">
-                      <input type="radio" id="pc-2" />
-                    </label>
-                    <label className="grey" htmlFor="pc-3">
-                      <input type="radio" id="pc-3" />
-                    </label>
+                    {["gold", "black", "grey"].map((color) => (
+                      <label
+                        key={color}
+                        className={`${color} ${selectedColor === color ? "active" : ""}`}
+                        onClick={() => setSelectedColor(color)}
+                      >
+                        <input type="radio" name="pc-1" value={color} />
+                      </label>
+                    ))}
                   </div>
                 </div>
               </div>
             </div>
 
+            {/* Produto 2 */}
             <div className="col-lg-3 col-md-6 col-sm-6 mix hot-sales">
-              <div className="product__item">
-                <div className="product__item__pic set-bg" data-setbg="img/product/product-16.jpeg">
-                  <ul className="product__hover">
-                    <li>
-                      <a href="#">
-                        <img src={`/img/icon/heart.png`} alt="" />
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#">
-                        <img src={`/img/icon/compare.png`} alt="" /> <span>Compare</span>
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#">
-                        <img src={`/img/icon/search.png`} alt="" />
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-                <div className="product__item__text">
-                  <h6>Piqué Biker Jacket</h6>
-                  <a href="#" className="add-cart">
-                    + Adicionar ao carrinho
-                  </a>
-                  <div className="rating">
-                    <i className="fa fa-star"></i>
-                    <i className="fa fa-star"></i>
-                    <i className="fa fa-star"></i>
-                    <i className="fa fa-star"></i>
-                    <i className="fa fa-star-o"></i>
-                  </div>
-                  <h5>$67.24</h5>
-                  <div className="product__color__select">
-                    <label htmlFor="pc-4">
-                      <input type="radio" id="pc-4" />
-                    </label>
-                    <label className="active black" htmlFor="pc-5">
-                      <input type="radio" id="pc-5" />
-                    </label>
-                    <label className="grey" htmlFor="pc-6">
-                      <input type="radio" id="pc-6" />
-                    </label>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="col-lg-3 col-md-6 col-sm-6 mix new-arrivals">
               <div className="product__item sale">
-                <div className="product__item__pic set-bg" data-setbg="img/product/product-17.jpeg">
+                <div
+                  className="product__item__pic"
+                  style={{ backgroundImage: "url('img/product/product-16.jpeg')" }}
+                >
                   <span className="label">Sale</span>
                   <ul className="product__hover">
                     <li>
                       <a href="#">
-                        <img src={`/img/icon/heart.png`} alt="" />
+                        <img src="/img/icon/heart.png" alt="Favoritar" />
                       </a>
                     </li>
                     <li>
                       <a href="#">
-                        <img src={`/img/icon/compare.png`} alt="" /> <span>Compare</span>
+                        <img src="/img/icon/compare.png" alt="Comparar" /> <span>Compare</span>
                       </a>
                     </li>
                     <li>
                       <a href="#">
-                        <img src={`/img/icon/search.png`} alt="" />
+                        <img src="/img/icon/search.png" alt="Ver" />
                       </a>
                     </li>
                   </ul>
@@ -378,37 +334,42 @@ export default function MaleFashion() {
                   </div>
                   <h5>$43.48</h5>
                   <div className="product__color__select">
-                    <label htmlFor="pc-7">
-                      <input type="radio" id="pc-7" />
-                    </label>
-                    <label className="active black" htmlFor="pc-8">
-                      <input type="radio" id="pc-8" />
-                    </label>
-                    <label className="grey" htmlFor="pc-9">
-                      <input type="radio" id="pc-9" />
-                    </label>
+                    {["gold", "black", "grey"].map((color) => (
+                      <label
+                        key={color}
+                        className={`${color} ${selectedColor === color ? "active" : ""}`}
+                        onClick={() => setSelectedColor(color)}
+                      >
+                        <input type="radio" name="pc-1" value={color} />
+                      </label>
+                    ))}
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="col-lg-3 col-md-6 col-sm-6 mix hot-sales">
+            {/* Produto 3 */}
+            <div className="col-lg-3 col-md-6 col-sm-6 mix new-arrivals">
               <div className="product__item">
-                <div className="product__item__pic set-bg" data-setbg="img/product/product-18.jpeg">
+                <div
+                  className="product__item__pic"
+                  style={{ backgroundImage: "url('img/product/product-17.jpeg')" }}
+                >
+                  <span className="label">Novo</span>
                   <ul className="product__hover">
                     <li>
                       <a href="#">
-                        <img src={`/img/icon/heart.png`} alt="" />
+                        <img src="/img/icon/heart.png" alt="Favoritar" />
                       </a>
                     </li>
                     <li>
                       <a href="#">
-                        <img src={`/img/icon/compare.png`} alt="" /> <span>Compare</span>
+                        <img src="/img/icon/compare.png" alt="Comparar" /> <span>Compare</span>
                       </a>
                     </li>
                     <li>
                       <a href="#">
-                        <img src={`/img/icon/search.png`} alt="" />
+                        <img src="/img/icon/search.png" alt="Ver" />
                       </a>
                     </li>
                   </ul>
@@ -425,40 +386,43 @@ export default function MaleFashion() {
                     <i className="fa fa-star"></i>
                     <i className="fa fa-star-o"></i>
                   </div>
-                  <h5>$60.9</h5>
+                  <h5>$60.90</h5>
                   <div className="product__color__select">
-                    <label htmlFor="pc-10">
-                      <input type="radio" id="pc-10" />
-                    </label>
-                    <label className="active black" htmlFor="pc-11">
-                      <input type="radio" id="pc-11" />
-                    </label>
-                    <label className="grey" htmlFor="pc-12">
-                      <input type="radio" id="pc-12" />
-                    </label>
+                    {["gold", "black", "grey"].map((color) => (
+                      <label
+                        key={color}
+                        className={`${color} ${selectedColor === color ? "active" : ""}`}
+                        onClick={() => setSelectedColor(color)}
+                      >
+                        <input type="radio" name="pc-1" value={color} />
+                      </label>
+                    ))}
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* remaining product items (5..8) */}
-            <div className="col-lg-3 col-md-6 col-sm-6 mix new-arrivals">
+            {/* Produto 4 */}
+            <div className="col-lg-3 col-md-6 col-sm-6 mix hot-sales">
               <div className="product__item">
-                <div className="product__item__pic set-bg" data-setbg="img/product/product-5.jpg">
+                <div
+                  className="product__item__pic"
+                  style={{ backgroundImage: "url('img/product/product-18.jpeg')" }}
+                >
                   <ul className="product__hover">
                     <li>
                       <a href="#">
-                        <img src={`/img/icon/heart.png`} alt="" />
+                        <img src="/img/icon/heart.png" alt="Favoritar" />
                       </a>
                     </li>
                     <li>
                       <a href="#">
-                        <img src={`/img/icon/compare.png`} alt="" /> <span>Compare</span>
+                        <img src="/img/icon/compare.png" alt="Comparar" /> <span>Compare</span>
                       </a>
                     </li>
                     <li>
                       <a href="#">
-                        <img src={`/img/icon/search.png`} alt="" />
+                        <img src="/img/icon/search.png" alt="Ver" />
                       </a>
                     </li>
                   </ul>
@@ -477,163 +441,15 @@ export default function MaleFashion() {
                   </div>
                   <h5>$31.37</h5>
                   <div className="product__color__select">
-                    <label htmlFor="pc-13">
-                      <input type="radio" id="pc-13" />
-                    </label>
-                    <label className="active black" htmlFor="pc-14">
-                      <input type="radio" id="pc-14" />
-                    </label>
-                    <label className="grey" htmlFor="pc-15">
-                      <input type="radio" id="pc-15" />
-                    </label>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="col-lg-3 col-md-6 col-sm-6 mix hot-sales">
-              <div className="product__item sale">
-                <div className="product__item__pic set-bg" data-setbg="img/product/product-6.jpg">
-                  <span className="label">Sale</span>
-                  <ul className="product__hover">
-                    <li>
-                      <a href="#">
-                        <img src={`/img/icon/heart.png`} alt="" />
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#">
-                        <img src={`/img/icon/compare.png`} alt="" /> <span>Compare</span>
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#">
-                        <img src={`/img/icon/search.png`} alt="" />
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-                <div className="product__item__text">
-                  <h6>Ankle Boots</h6>
-                  <a href="#" className="add-cart">
-                    + Adicionar ao carrinho
-                  </a>
-                  <div className="rating">
-                    <i className="fa fa-star"></i>
-                    <i className="fa fa-star"></i>
-                    <i className="fa fa-star"></i>
-                    <i className="fa fa-star"></i>
-                    <i className="fa fa-star-o"></i>
-                  </div>
-                  <h5>$98.49</h5>
-                  <div className="product__color__select">
-                    <label htmlFor="pc-16">
-                      <input type="radio" id="pc-16" />
-                    </label>
-                    <label className="active black" htmlFor="pc-17">
-                      <input type="radio" id="pc-17" />
-                    </label>
-                    <label className="grey" htmlFor="pc-18">
-                      <input type="radio" id="pc-18" />
-                    </label>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="col-lg-3 col-md-6 col-sm-6 mix new-arrivals">
-              <div className="product__item">
-                <div className="product__item__pic set-bg" data-setbg="img/product/product-7.jpg">
-                  <ul className="product__hover">
-                    <li>
-                      <a href="#">
-                        <img src={`/img/icon/heart.png`} alt="" />
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#">
-                        <img src={`/img/icon/compare.png`} alt="" /> <span>Compare</span>
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#">
-                        <img src={`/img/icon/search.png`} alt="" />
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-                <div className="product__item__text">
-                  <h6>T-shirt Contrast Pocket</h6>
-                  <a href="#" className="add-cart">
-                    + Adicionar ao carrinho
-                  </a>
-                  <div className="rating">
-                    <i className="fa fa-star"></i>
-                    <i className="fa fa-star"></i>
-                    <i className="fa fa-star"></i>
-                    <i className="fa fa-star"></i>
-                    <i className="fa fa-star-o"></i>
-                  </div>
-                  <h5>$49.66</h5>
-                  <div className="product__color__select">
-                    <label htmlFor="pc-19">
-                      <input type="radio" id="pc-19" />
-                    </label>
-                    <label className="active black" htmlFor="pc-20">
-                      <input type="radio" id="pc-20" />
-                    </label>
-                    <label className="grey" htmlFor="pc-21">
-                      <input type="radio" id="pc-21" />
-                    </label>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="col-lg-3 col-md-6 col-sm-6 mix hot-sales">
-              <div className="product__item">
-                <div className="product__item__pic set-bg" data-setbg="img/product/product-8.jpg">
-                  <ul className="product__hover">
-                    <li>
-                      <a href="#">
-                        <img src={`/img/icon/heart.png`} alt="" />
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#">
-                        <img src={`/img/icon/compare.png`} alt="" /> <span>Compare</span>
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#">
-                        <img src={`/img/icon/search.png`} alt="" />
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-                <div className="product__item__text">
-                  <h6>Basic Flowing Scarf</h6>
-                  <a href="#" className="add-cart">
-                    + Adicionar ao carrinho
-                  </a>
-                  <div className="rating">
-                    <i className="fa fa-star"></i>
-                    <i className="fa fa-star"></i>
-                    <i className="fa fa-star"></i>
-                    <i className="fa fa-star"></i>
-                    <i className="fa fa-star-o"></i>
-                  </div>
-                  <h5>$26.28</h5>
-                  <div className="product__color__select">
-                    <label htmlFor="pc-22">
-                      <input type="radio" id="pc-22" />
-                    </label>
-                    <label className="active black" htmlFor="pc-23">
-                      <input type="radio" id="pc-23" />
-                    </label>
-                    <label className="grey" htmlFor="pc-24">
-                      <input type="radio" id="pc-24" />
-                    </label>
+                    {["gold", "black", "grey"].map((color) => (
+                      <label
+                        key={color}
+                        className={`${color} ${selectedColor === color ? "active" : ""}`}
+                        onClick={() => setSelectedColor(color)}
+                      >
+                        <input type="radio" name="pc-1" value={color} />
+                      </label>
+                    ))}
                   </div>
                 </div>
               </div>
@@ -642,7 +458,239 @@ export default function MaleFashion() {
           </div>
         </div>
       </section>
-      {/* Product Section End */}
+
+
+      <section className="product spad">
+        <div className="container">
+          <div className="row">
+            <div className="col-lg-12">
+              <ul className="filter__controls">
+                <li className="active" data-filter="*">
+                  Novidades
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div className="row product__filter">
+            {/* Produto 1 */}
+            <div className="col-lg-3 col-md-6 col-sm-6 mix new-arrivals">
+              <div className="product__item">
+                <div
+                  className="product__item__pic"
+                  style={{ backgroundImage: "url('img/product/product-15.jpeg')" }}
+                >
+                  <span className="label">Novo</span>
+                  <ul className="product__hover">
+                    <li>
+                      <a href="#">
+                        <img src="/img/icon/heart.png" alt="Favoritar" />
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#">
+                        <img src="/img/icon/compare.png" alt="Comparar" /> <span>Compare</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#">
+                        <img src="/img/icon/search.png" alt="Ver" />
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+                <div className="product__item__text">
+                  <h6>Piqué Biker Jacket</h6>
+                  <a href="#" className="add-cart">
+                    + Adicionar ao carrinho
+                  </a>
+                  <div className="rating">
+                    <i className="fa fa-star"></i>
+                    <i className="fa fa-star"></i>
+                    <i className="fa fa-star"></i>
+                    <i className="fa fa-star"></i>
+                    <i className="fa fa-star-o"></i>
+                  </div>
+                  <h5>$67.24</h5>
+                  <div className="product__color__select">
+                    {["gold", "black", "grey"].map((color) => (
+                      <label
+                        key={color}
+                        className={`${color} ${selectedColor === color ? "active" : ""}`}
+                        onClick={() => setSelectedColor(color)}
+                      >
+                        <input type="radio" name="pc-1" value={color} />
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Produto 2 */}
+            <div className="col-lg-3 col-md-6 col-sm-6 mix hot-sales">
+              <div className="product__item sale">
+                <div
+                  className="product__item__pic"
+                  style={{ backgroundImage: "url('img/product/product-16.jpeg')" }}
+                >
+                  <span className="label">Sale</span>
+                  <ul className="product__hover">
+                    <li>
+                      <a href="#">
+                        <img src="/img/icon/heart.png" alt="Favoritar" />
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#">
+                        <img src="/img/icon/compare.png" alt="Comparar" /> <span>Compare</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#">
+                        <img src="/img/icon/search.png" alt="Ver" />
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+                <div className="product__item__text">
+                  <h6>Multi-pocket Chest Bag</h6>
+                  <a href="#" className="add-cart">
+                    + Adicionar ao carrinho
+                  </a>
+                  <div className="rating">
+                    <i className="fa fa-star"></i>
+                    <i className="fa fa-star"></i>
+                    <i className="fa fa-star"></i>
+                    <i className="fa fa-star"></i>
+                    <i className="fa fa-star-o"></i>
+                  </div>
+                  <h5>$43.48</h5>
+                  <div className="product__color__select">
+                    {["gold", "black", "grey"].map((color) => (
+                      <label
+                        key={color}
+                        className={`${color} ${selectedColor === color ? "active" : ""}`}
+                        onClick={() => setSelectedColor(color)}
+                      >
+                        <input type="radio" name="pc-1" value={color} />
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Produto 3 */}
+            <div className="col-lg-3 col-md-6 col-sm-6 mix new-arrivals">
+              <div className="product__item">
+                <div
+                  className="product__item__pic"
+                  style={{ backgroundImage: "url('img/product/product-17.jpeg')" }}
+                >
+                  <span className="label">Novo</span>
+                  <ul className="product__hover">
+                    <li>
+                      <a href="#">
+                        <img src="/img/icon/heart.png" alt="Favoritar" />
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#">
+                        <img src="/img/icon/compare.png" alt="Comparar" /> <span>Compare</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#">
+                        <img src="/img/icon/search.png" alt="Ver" />
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+                <div className="product__item__text">
+                  <h6>Diagonal Textured Cap</h6>
+                  <a href="#" className="add-cart">
+                    + Adicionar ao carrinho
+                  </a>
+                  <div className="rating">
+                    <i className="fa fa-star"></i>
+                    <i className="fa fa-star"></i>
+                    <i className="fa fa-star"></i>
+                    <i className="fa fa-star"></i>
+                    <i className="fa fa-star-o"></i>
+                  </div>
+                  <h5>$60.90</h5>
+                  <div className="product__color__select">
+                    {["gold", "black", "grey"].map((color) => (
+                      <label
+                        key={color}
+                        className={`${color} ${selectedColor === color ? "active" : ""}`}
+                        onClick={() => setSelectedColor(color)}
+                      >
+                        <input type="radio" name="pc-1" value={color} />
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Produto 4 */}
+            <div className="col-lg-3 col-md-6 col-sm-6 mix hot-sales">
+              <div className="product__item">
+                <div
+                  className="product__item__pic"
+                  style={{ backgroundImage: "url('img/product/product-18.jpeg')" }}
+                >
+                  <ul className="product__hover">
+                    <li>
+                      <a href="#">
+                        <img src="/img/icon/heart.png" alt="Favoritar" />
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#">
+                        <img src="/img/icon/compare.png" alt="Comparar" /> <span>Compare</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#">
+                        <img src="/img/icon/search.png" alt="Ver" />
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+                <div className="product__item__text">
+                  <h6>Lether Backpack</h6>
+                  <a href="#" className="add-cart">
+                    + Adicionar ao carrinho
+                  </a>
+                  <div className="rating">
+                    <i className="fa fa-star"></i>
+                    <i className="fa fa-star"></i>
+                    <i className="fa fa-star"></i>
+                    <i className="fa fa-star"></i>
+                    <i className="fa fa-star-o"></i>
+                  </div>
+                  <h5>$31.37</h5>
+                  <div className="product__color__select">
+                    {["gold", "black", "grey"].map((color) => (
+                      <label
+                        key={color}
+                        className={`${color} ${selectedColor === color ? "active" : ""}`}
+                        onClick={() => setSelectedColor(color)}
+                      >
+                        <input type="radio" name="pc-1" value={color} />
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
 
       {/* Categories Section Begin */}
       <section className="categories spad">
@@ -778,7 +826,7 @@ export default function MaleFashion() {
       </section>
       {/* Latest Blog Section End */}
 
-      
+
 
       {/* Search Begin */}
       <div className="search-model">
@@ -791,7 +839,7 @@ export default function MaleFashion() {
       </div>
       {/* Search End */}
 
-      
+
     </div>
   );
 }
