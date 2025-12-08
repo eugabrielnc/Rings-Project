@@ -1,5 +1,19 @@
 import React, { useEffect } from "react";
-
+import { Swiper, SwiperSlide } from 'swiper/react'; 
+import { Autoplay, Navigation, Pagination, EffectFade } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
+import 'swiper/css/effect-fade';
+import '../assets/Css/bootstrap.min.css';
+import '../assets/Css/font-awesome.min.css';
+import  '../assets/Css/elegant-icons.css';
+import  '../assets/Css/magnific-popup.css';
+import '../assets/Css/nice-select.css';
+import '../assets/Css/owl.carousel.min.css';
+import '../assets/Css/slicknav.min.css';
+import '../assets/Css/style.css'; 
+import "@fortawesome/fontawesome-free/css/all.min.css";
 
 // NOTE:
 // 1) Put the Google Font <link> tags and meta tags (charset/viewport) into your public/index.html head.
@@ -13,14 +27,7 @@ import React, { useEffect } from "react";
 //    template JS files in public/index.html or convert the behaviors to React.
 
 // Example CSS imports (optional if you keep CSS in public and load via index.html):
-import '../assets/Css/bootstrap.min.css';
-import '../assets/Css/font-awesome.min.css';
-import  '../assets/Css/elegant-icons.css';
-import  '../assets/Css/magnific-popup.css';
-import '../assets/Css/nice-select.css';
-import '../assets/Css/owl.carousel.min.css';
-import '../assets/Css/slicknav.min.css';
-import '../assets/Css/style.css'; 
+
 
 
 export default function MaleFashion() {
@@ -93,78 +100,88 @@ export default function MaleFashion() {
 
       {/* Hero Section Begin */}
       <section className="hero">
-        <div className="hero__slider owl-carousel">
-          <div className="hero__items set-bg" 
-          style={{ backgroundImage: "url('/img/hero/hero-1.jpg')" }}
+      <Swiper
+        modules={[Autoplay, Navigation, Pagination, EffectFade]}
+        effect="fade"
+        loop={true}
+        autoplay={{
+          delay: 3500,
+          disableOnInteraction: false,
+        }}
+        navigation={true}
+        pagination={{ clickable: true }}
+        className="hero__slider"
       >
+        
+        {/* SLIDE 1 */}
+        <SwiperSlide>
+          <div
+            className="hero__items set-bg"
+            style={{
+              backgroundImage: "url('/img/hero/aliancaof.png')",
+            }}
+          >
             <div className="container">
               <div className="row">
                 <div className="col-xl-5 col-lg-7 col-md-8">
                   <div className="hero__text">
-                    <h6>Summer Collection</h6>
-                    <h2>Fall - Winter Collections 2030</h2>
+                    <h6>Alianças</h6>
+                    <h2>Aliança com banho a ouro 18k</h2>
                     <p>
-                      A specialist label creating luxury essentials. Ethically crafted with an unwavering
-                      commitment to exceptional quality.
+                      Par de alianças de moedas com banho a ouro 18k, anatômicas abauladas com anel solitário de pedra central
                     </p>
                     <a href="#" className="primary-btn">
-                      Shop now <span className="arrow_right"></span>
+                      Compre agora 
                     </a>
                     <div className="hero__social">
-                      <a href="#">
-                        <i className="fa fa-facebook"></i>
-                      </a>
-                      <a href="#">
-                        <i className="fa fa-twitter"></i>
-                      </a>
-                      <a href="#">
-                        <i className="fa fa-pinterest"></i>
-                      </a>
-                      <a href="#">
-                        <i className="fa fa-instagram"></i>
-                      </a>
+                      <a href="#"><i className="fab fa-facebook"></i></a>
+                      <a href="#"><i className="fab fa-twitter"></i></a>
+                      <a href="#"><i className="fab fa-pinterest"></i></a>
+                      <a href="#"><i className="fab fa-instagram"></i></a>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          <div className="hero__items set-bg" 
-          style={{ backgroundImage: "url('/img/hero/hero-2.jpg')" }}>
+        </SwiperSlide>
+
+        {/* SLIDE 2 */}
+        <SwiperSlide>
+          <div
+            className="hero__items set-bg"
+            style={{
+              backgroundImage: "url('/img/hero/alianca4.png')",
+            }}
+          >
             <div className="container">
               <div className="row">
                 <div className="col-xl-5 col-lg-7 col-md-8">
                   <div className="hero__text">
-                    <h6>Summer Collection</h6>
-                    <h2>Fall - Winter Collections 2030</h2>
+                    <h6>Winter</h6>
+                    <h2>New Arrivals 2030</h2>
                     <p>
-                      A specialist label creating luxury essentials. Ethically crafted with an unwavering
-                      commitment to exceptional quality.
+                      Comfortable, durable luxury pieces crafted with style and
+                      minimalism in mind.
                     </p>
                     <a href="#" className="primary-btn">
-                      Shop now <span className="arrow_right"></span>
+                      Compre agora 
                     </a>
                     <div className="hero__social">
-                      <a href="#">
-                        <i className="fa fa-facebook"></i>
-                      </a>
-                      <a href="#">
-                        <i className="fa fa-twitter"></i>
-                      </a>
-                      <a href="#">
-                        <i className="fa fa-pinterest"></i>
-                      </a>
-                      <a href="#">
-                        <i className="fa fa-instagram"></i>
-                      </a>
+                      <a href="#"><i className="fab fa-facebook"></i></a>
+                      <a href="#"><i className="fab fa-twitter"></i></a>
+                      <a href="#"><i className="fab fa-pinterest"></i></a>
+                      <a href="#"><i className="fab fa-instagram"></i></a>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      </section>
+        </SwiperSlide>
+
+      </Swiper>
+    </section>
       {/* Hero Section End */}
 
       {/* Banner Section Begin */}
@@ -254,10 +271,10 @@ export default function MaleFashion() {
                     + Adicionar ao carrinho
                   </a>
                   <div className="rating">
-                    <i className="fa fa-star-o"></i>
-                    <i className="fa fa-star-o"></i>
-                    <i className="fa fa-star-o"></i>
-                    <i className="fa fa-star-o"></i>
+                    <i className="fa fa-star"></i>
+                    <i className="fa fa-star"></i>
+                    <i className="fa fa-star"></i>
+                    <i className="fa fa-star"></i>
                     <i className="fa fa-star-o"></i>
                   </div>
                   <h5>$67.24</h5>
@@ -303,10 +320,10 @@ export default function MaleFashion() {
                     + Adicionar ao carrinho
                   </a>
                   <div className="rating">
-                    <i className="fa fa-star-o"></i>
-                    <i className="fa fa-star-o"></i>
-                    <i className="fa fa-star-o"></i>
-                    <i className="fa fa-star-o"></i>
+                    <i className="fa fa-star"></i>
+                    <i className="fa fa-star"></i>
+                    <i className="fa fa-star"></i>
+                    <i className="fa fa-star"></i>
                     <i className="fa fa-star-o"></i>
                   </div>
                   <h5>$67.24</h5>
@@ -402,10 +419,10 @@ export default function MaleFashion() {
                     + Adicionar ao carrinho
                   </a>
                   <div className="rating">
-                    <i className="fa fa-star-o"></i>
-                    <i className="fa fa-star-o"></i>
-                    <i className="fa fa-star-o"></i>
-                    <i className="fa fa-star-o"></i>
+                    <i className="fa fa-star"></i>
+                    <i className="fa fa-star"></i>
+                    <i className="fa fa-star"></i>
+                    <i className="fa fa-star"></i>
                     <i className="fa fa-star-o"></i>
                   </div>
                   <h5>$60.9</h5>
@@ -452,10 +469,10 @@ export default function MaleFashion() {
                     + Adicionar ao carrinho
                   </a>
                   <div className="rating">
-                    <i className="fa fa-star-o"></i>
-                    <i className="fa fa-star-o"></i>
-                    <i className="fa fa-star-o"></i>
-                    <i className="fa fa-star-o"></i>
+                    <i className="fa fa-star"></i>
+                    <i className="fa fa-star"></i>
+                    <i className="fa fa-star"></i>
+                    <i className="fa fa-star"></i>
                     <i className="fa fa-star-o"></i>
                   </div>
                   <h5>$31.37</h5>
@@ -551,10 +568,10 @@ export default function MaleFashion() {
                     + Adicionar ao carrinho
                   </a>
                   <div className="rating">
-                    <i className="fa fa-star-o"></i>
-                    <i className="fa fa-star-o"></i>
-                    <i className="fa fa-star-o"></i>
-                    <i className="fa fa-star-o"></i>
+                    <i className="fa fa-star"></i>
+                    <i className="fa fa-star"></i>
+                    <i className="fa fa-star"></i>
+                    <i className="fa fa-star"></i>
                     <i className="fa fa-star-o"></i>
                   </div>
                   <h5>$49.66</h5>
@@ -600,10 +617,10 @@ export default function MaleFashion() {
                     + Adicionar ao carrinho
                   </a>
                   <div className="rating">
-                    <i className="fa fa-star-o"></i>
-                    <i className="fa fa-star-o"></i>
-                    <i className="fa fa-star-o"></i>
-                    <i className="fa fa-star-o"></i>
+                    <i className="fa fa-star"></i>
+                    <i className="fa fa-star"></i>
+                    <i className="fa fa-star"></i>
+                    <i className="fa fa-star"></i>
                     <i className="fa fa-star-o"></i>
                   </div>
                   <h5>$26.28</h5>
