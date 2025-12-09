@@ -34,7 +34,7 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 export default function MaleFashion() {
   useEffect(() => {
     // Set page title
-    document.title = "Male-Fashion | Template";
+    
 
     // Apply backgrounds for elements that use data-setbg in the original template
     const setBgElements = document.querySelectorAll('[data-setbg]');
