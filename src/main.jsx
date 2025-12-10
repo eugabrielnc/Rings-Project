@@ -11,7 +11,10 @@ import ShopDetails from "./pages/ShopDetails";
 import Checkout from "./pages/Checkout";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
-
+import Layout from "./pages/painel";
+import Dashboard from "./pages/dashboard";
+import Usuarios from "./pages/usuarios";
+import Produtos from "./pages/produtos";
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <BrowserRouter>
@@ -26,6 +29,11 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/admin" element={<Layout />}>
+        <Route path="/admin/dashboard" element={<Dashboard/>}></Route>
+        <Route path="/admin/usuarios" element={<Usuarios/>}></Route>
+        <Route path="/admin/produto" element={<Produtos/>}></Route>
+        </Route>
       </Routes>
 
       <Footer />

@@ -1,0 +1,93 @@
+/* ===== SIDEBAR LUXO ===== */
+.sidebar {
+    width: 260px;
+    background: #ffffff;
+    height: 100vh;
+    border-right: 1px solid #e8e8e8;
+    display: flex;
+    flex-direction: column;
+    padding: 25px 20px;
+    position: sticky;
+    top: 0;
+
+    box-shadow: 0 0 20px rgba(0,0,0,0.05);
+    transition: 0.3s ease;
+}
+
+/* ===== TÍTULO/LOGO ===== */
+.sidebar .title {
+    font-size: 22px;
+    font-weight: 700;
+    color: #C9A86A; /* dourado premium */
+    text-align: center;
+    margin-bottom: 30px;
+    letter-spacing: 1px;
+}
+
+/* ===== LISTA ===== */
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* ===== LINKS ===== */
+.sidebar ul li a {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    margin-bottom: 10px;
+
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 600;
+    
+    color: #444;
+    background: #fff;
+    border-radius: 12px;
+
+    transition: 0.3s ease;
+    border: 1px solid transparent;
+}
+
+/* ===== ÍCONES ===== */
+.sidebar ul li a i {
+    font-size: 20px;
+    color: #C9A86A;
+    margin-right: 15px;
+    transition: 0.3s ease;
+}
+
+/* ===== HOVER ===== */
+.sidebar ul li a:hover {
+    background: linear-gradient(135deg, #ffffff, #f7f2e9);
+    border: 1px solid #C9A86A;
+    transform: translateX(6px);
+    box-shadow: 0 4px 10px rgba(201, 168, 106, 0.25);
+}
+
+/* Ícone muda no hover */
+.sidebar ul li a:hover i {
+    color: #b4873e;
+}
+
+/* ===== LINK ATIVO ===== */
+.sidebar ul li.active a {
+    background: linear-gradient(135deg, #fff7e3, #f1e0c3);
+    border: 1px solid #C9A86A;
+    color: #b4873e;
+    box-shadow: 0 4px 12px rgba(201, 168, 106, 0.30);
+}
+
+.sidebar ul li.active a i {
+    color: #b4873e;
+}
+
+/* ===== RODAPÉ DA SIDEBAR ===== */
+.sidebar .footer {
+    margin-top: auto;
+    font-size: 12px;
+    text-align: center;
+    color: #999;
+    opacity: 0.8;
+}
