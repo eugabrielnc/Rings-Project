@@ -1,0 +1,118 @@
+/* Variáveis de Cores */
+:root {
+  --color-white: #ffffff;
+  --color-gold-light: #f7e1b5; /* Dourado mais suave/claro */
+  --color-gold-accent: #a87d32; /* Dourado escuro/forte para destaque */
+  --color-text-dark: #333333;
+  --color-background-soft: #f4f4f4;
+  --color-shadow: rgba(0, 0, 0, 0.1);
+}
+
+/* 1. Estilo da Página (Sem Header/Footer) */
+.login-page {
+  /* Ocupa a tela inteira */
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* Fundo suave para contraste */
+  background-color: var(--color-background-soft);
+  margin: 0;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* 2. Container Principal do Formulário */
+.login-container {
+  background-color: var(--color-white);
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px var(--color-shadow);
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+
+/* 3. Título */
+.login-title {
+  font-size: 2em;
+  color: var(--color-gold-accent); /* Título em Dourado Forte */
+  margin-bottom: 30px;
+  font-family: 'Georgia', serif; /* Fonte mais clássica */
+  letter-spacing: 1px;
+}
+
+/* 4. Formulário e Grupos de Input */
+.login-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.input-group {
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.input-label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--color-text-dark);
+  font-weight: bold;
+}
+
+.input-field {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid var(--color-gold-light); /* Borda Dourada Clara */
+  border-radius: 5px;
+  font-size: 1em;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  box-sizing: border-box; /* Garante que o padding não aumente o tamanho */
+}
+
+.input-field:focus {
+  border-color: var(--color-gold-accent); /* Borda Dourada Forte no foco */
+  outline: none;
+  box-shadow: 0 0 5px rgba(168, 125, 50, 0.5); /* Sombra suave dourada */
+}
+
+/* 5. Botão de Login */
+.login-button {
+  background-color: var(--color-gold-accent);
+  color: var(--color-white);
+  padding: 15px;
+  border: none;
+  border-radius: 5px;
+  font-size: 1.1em;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background-color 0.3s, transform 0.1s;
+  letter-spacing: 0.5px;
+}
+
+.login-button:hover {
+  /* Tom ligeiramente mais escuro ao passar o mouse */
+  background-color: #926a2d; 
+}
+
+.login-button:active {
+  transform: scale(0.98); /* Efeito de clique */
+}
+
+/* 6. Link de Senha Esquecida */
+.forgot-password {
+  margin-top: 20px;
+  font-size: 0.9em;
+}
+
+.forgot-password a {
+  color: var(--color-gold-accent); /* Link em Dourado Forte */
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.forgot-password a:hover {
+  text-decoration: underline;
+  color: #c9a56e; /* Dourado mais claro no hover */
+}

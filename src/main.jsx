@@ -15,6 +15,8 @@ import Layout from "./pages/painel";
 import Dashboard from "./pages/dashboard";
 import Usuarios from "./pages/usuarios";
 import Produtos from "./pages/produtos";
+import Login from "./pages/login";
+import Signup from "./pages/cadastro";
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <BrowserRouter>
@@ -24,6 +26,8 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/shopcart" element={<ShoppingCart />} />
+        <Route path="/login" element={<Login/>} />
+        <Route path="/cadastro" element={<Signup/>} />
         <Route path="/shop" element={<Shop />} />
         <Route path="/shopdetails" element={<ShopDetails />} />
         <Route path="/checkout" element={<Checkout />} />

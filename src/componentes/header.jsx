@@ -87,7 +87,7 @@ export default function Header() {
           <div className="col-lg-3 col-md-3">
             <div className="header__nav__option">
               
-              <a href="#" style={{ color: "black" }}>
+              <a href="/login" style={{ color: "black" }}>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="18"
