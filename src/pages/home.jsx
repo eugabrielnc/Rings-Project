@@ -33,10 +33,6 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 
 export default function MaleFashion() {
   useEffect(() => {
-    // Set page title
-    
-
-    // Apply backgrounds for elements that use data-setbg in the original template
     const setBgElements = document.querySelectorAll('[data-setbg]');
     setBgElements.forEach((el) => {
       const bg = el.getAttribute('data-setbg');
@@ -53,6 +49,25 @@ export default function MaleFashion() {
 
   const currentYear = new Date().getFullYear();
   const [selectedColor, setSelectedColor] = useState("gold");
+  const url = import.meta.env.VITE_API_URL;
+  const [products, setProducts] = useState([]);
+  useEffect(() => {
+    fetch(`${url}/products`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "accept": "application/json"
+      }
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Products:", data);
+        setProducts(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching products:", error);
+      });
+  }, [url]);
 
   return (
     <div>
