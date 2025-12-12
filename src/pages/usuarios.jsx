@@ -1,10 +1,25 @@
+import { useEffect, useState } from "react";
+
 export default function Usuarios() {
-  const usuarios = [
-    { id: 1, nome: "Maria Silva", email: "maria@email.com", cargo: "Cliente" },
-    { id: 2, nome: "João Ferreira", email: "joao@email.com", cargo: "Administrador" },
-    { id: 3, nome: "Ana Souza", email: "ana@email.com", cargo: "Cliente" },
-    { id: 4, nome: "Carlos Eduardo", email: "carlos@email.com", cargo: "Vendedor" },
-  ];
+  const [usuarios, setUsuarios] = useState([]);
+  const url = import.meta.env.VITE_API_URL;
+  // ===== GET NA API AO CARREGAR A PÁGINA =====
+  useEffect(() => {
+    fetch(`${url}/`)   // ⬅ troque pelo seu endpoint
+      .then(response => response.json())
+      .then(data => {
+        // A API retorna name e email — adaptamos para a tabela
+        const usuariosFormatados = data.map(u => ({
+          id: u.id,
+          nome: u.name,
+          email: u.email,
+          cargo: "—" // API não tem cargo, então deixei vazio
+        }));
+
+        setUsuarios(usuariosFormatados);
+      })
+      .catch(err => console.error("Erro ao buscar usuários:", err));
+  }, []);
 
   return (
     <div style={{ padding: "20px" }}>
@@ -83,7 +98,7 @@ export default function Usuarios() {
   );
 }
 
-/* ======= ESTILOS (REUTILIZÁVEIS) ======= */
+/* ======= ESTILOS ======= */
 
 const thStyle = {
   padding: "12px",

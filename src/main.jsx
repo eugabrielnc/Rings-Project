@@ -17,6 +17,7 @@ import Usuarios from "./pages/usuarios";
 import Produtos from "./pages/produtos";
 import Login from "./pages/login";
 import Signup from "./pages/cadastro";
+import CreateProductPage from "./pages/produtosform";
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <BrowserRouter>
@@ -37,6 +38,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         <Route path="/admin/dashboard" element={<Dashboard/>}></Route>
         <Route path="/admin/usuarios" element={<Usuarios/>}></Route>
         <Route path="/admin/produto" element={<Produtos/>}></Route>
+        <Route path="/admin/produtoforms" element={<CreateProductPage/>}></Route>
         </Route>
       </Routes>
 
