@@ -24,7 +24,7 @@ export default function Header() {
     }
 
     loadProducts();
-  }, []);
+  }, [url]);
 
   // Filtro dos produtos conforme a pesquisa
   useEffect(() => {
@@ -37,7 +37,7 @@ export default function Header() {
       product.name.toLowerCase().includes(query.toLowerCase())
     );
 
-    setFilteredProducts(filtered.slice(0, 5));  // Limitar a 5 produtos
+    setFilteredProducts(filtered.slice(0, 5));
   }, [query, products]);
 
   return (
@@ -61,7 +61,7 @@ export default function Header() {
                 style={{
                   width: "100%",
                   maxWidth: "550px",
-                  position: "relative"
+                  position: "relative",
                 }}
               >
                 <div
@@ -115,57 +115,79 @@ export default function Header() {
                   </button>
                 </div>
 
-                {/* DROPDOWN */}
+                {/* DROPDOWN MELHORADO */}
                 {filteredProducts.length > 0 && (
                   <div
                     style={{
                       position: "absolute",
-                      top: "100%",
+                      top: "105%",
                       left: 0,
                       right: 0,
                       background: "#fff",
-                      border: "1px solid #ddd",
-                      borderTop: "none",
-                      zIndex: 999,
-                      borderRadius: "0 0 12px 12px",
-                      maxHeight: "300px",
-                      overflowY: "auto",
+                      borderRadius: "20px",
+                      boxShadow: "0 10px 25px rgba(0,0,0,0.08)",
+                      zIndex: 9999,
+                      overflow: "hidden",
                     }}
                   >
-                    {filteredProducts.map((product) => (
+                    {filteredProducts.map((product, index) => (
                       <Link
                         key={product.id}
                         to={`/product/${product.id}`}
-                        onClick={() => setQuery("")} // Limpar o campo de pesquisa ao clicar
+                        onClick={() => setQuery("")}
                         style={{
                           display: "flex",
                           alignItems: "center",
-                          gap: "12px",
-                          padding: "10px 14px",
+                          gap: "14px",
+                          padding: "12px 18px",
                           textDecoration: "none",
                           color: "#000",
-                          borderBottom: "1px solid #eee",
+                          background: "#fff",
+                          borderBottom:
+                            index !== filteredProducts.length - 1
+                              ? "1px solid #f0f0f0"
+                              : "none",
+                          transition: "background 0.2s",
                         }}
+                        onMouseEnter={(e) =>
+                          (e.currentTarget.style.background = "#faf7f2")
+                        }
+                        onMouseLeave={(e) =>
+                          (e.currentTarget.style.background = "#fff")
+                        }
                       >
                         <img
                           src={`${url}/products/${product.id}/image`}
                           alt={product.name}
                           style={{
-                            width: "45px",
-                            height: "45px",
+                            width: "44px",
+                            height: "44px",
                             objectFit: "cover",
-                            borderRadius: "8px"
+                            borderRadius: "10px",
+                            border: "1px solid #eee",
                           }}
                         />
 
-                        <div>
-                          <div style={{ fontSize: "14px", fontWeight: 600 }}>
+                        <div style={{ lineHeight: "1.2" }}>
+                          <div
+                            style={{
+                              fontSize: "14px",
+                              fontWeight: 600,
+                            }}
+                          >
                             {product.name}
                           </div>
-                          <div style={{ fontSize: "13px", color: "#777" }}>
+                          <div
+                            style={{
+                              fontSize: "13px",
+                              color: "#C9A86A",
+                              marginTop: "4px",
+                              fontWeight: 500,
+                            }}
+                          >
                             {product.price.toLocaleString("pt-BR", {
                               style: "currency",
-                              currency: "BRL"
+                              currency: "BRL",
                             })}
                           </div>
                         </div>
@@ -180,50 +202,20 @@ export default function Header() {
             <div className="col-lg-3 col-md-3">
               <div className="header__nav__option">
                 <a href="/login">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="18"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="black"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="16" viewBox="0 0 24 24" fill="none" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
                     <circle cx="12" cy="7" r="4" />
                   </svg>
                 </a>
 
                 <a href="#">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="18"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="black"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="16" viewBox="0 0 24 24" fill="none" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
                   </svg>
                 </a>
 
                 <a href="#">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="18"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="black"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="16" viewBox="0 0 24 24" fill="none" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <circle cx="9" cy="21" r="1" />
                     <circle cx="20" cy="21" r="1" />
                     <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
