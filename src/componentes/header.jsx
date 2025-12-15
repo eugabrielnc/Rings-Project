@@ -241,6 +241,9 @@ export default function Header() {
                   <li className={currentPath === "/contact" ? "active" : ""}>
                     <Link to="/contact">Contato</Link>
                   </li>
+                    <li className={currentPath === "/medida" ? "active" : ""}>
+                  <Link to="/medida">Medida Virtual</Link>
+                </li>
                 </ul>
               </nav>
             </div>

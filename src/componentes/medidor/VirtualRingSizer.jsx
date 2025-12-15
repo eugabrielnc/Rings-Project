@@ -1,0 +1,262 @@
+import React, { useState, useEffect } from 'react';
+import { findClosestRingSize } from '../../utils/ringSizeUtils';
+const VirtualRingSizer = ({ 
+  pixelsToMm,
+  onComplete,
+  onRecalibrate 
+}) => {
+  // Ring inner diameter in pixels (user adjusts this)
+  const [ringDiameterPx, setRingDiameterPx] = useState(150);
+  
+  // Calculated ring size based on diameter
+  const [ringSize, setRingSize] = useState(null);
+  
+  /**
+   * Real-time ring size calculation
+   * Triggered whenever ring diameter changes
+   */
+  useEffect(() => {
+    // Convert pixels to millimeters using calibration scale
+    const diameterMm = pixelsToMm(ringDiameterPx);
+    
+    // Find closest ring size in Brazilian table
+    const size = findClosestRingSize(diameterMm);
+    setRingSize(size);
+    
+    console.log('📏 Ring measurement:', {
+      diameterPx: ringDiameterPx,
+      diameterMm: diameterMm.toFixed(2),
+      aro: size?.aro,
+      us: size?.us,
+      eu: size?.eu
+    });
+  }, [ringDiameterPx, pixelsToMm]);
+  
+  // Ring thickness for visual representation (4mm ≈ typical ring width)
+  const ringThicknessPx = 6;
+  
+  return (
+    <section className="contact spad">
+      <div className="container">
+        <div className="row mb-4">
+          <div className="col-12 text-center">
+            <h2 style={{ 
+              fontSize: "32px", 
+              color: "#111", 
+              marginBottom: "15px",
+              fontWeight: "700"
+            }}>
+              Agora é fácil!
+            </h2>
+            <p style={{ fontSize: "16px", color: "#666", maxWidth: "650px", margin: "0 auto 30px" }}>
+              Coloque seu anel físico sobre o círculo virtual e ajuste até que{" "}
+              <strong>o círculo interno fique exatamente do mesmo tamanho</strong> que o 
+              diâmetro interno do seu anel (onde o dedo passa).
+            </p>
+          </div>
+        </div>
+
+        <div className="row">
+          <div className="col-lg-8 offset-lg-2">
+            {/* Ring Visualization */}
+            <div style={{
+              background: "#f8f8f8",
+              borderRadius: "20px",
+              padding: "40px 20px",
+              textAlign: "center",
+              boxShadow: "0 10px 30px rgba(0,0,0,0.1)",
+              marginBottom: "30px"
+            }}>
+              {/* Virtual Ring (SVG) */}
+              <div style={{
+                position: "relative",
+                display: "inline-block",
+                marginBottom: "40px"
+              }}>
+                <svg 
+                  width={Math.min(ringDiameterPx + 100, window.innerWidth * 0.8)} 
+                  height={Math.min(ringDiameterPx + 100, window.innerHeight * 0.5)}
+                  style={{
+                    maxWidth: "90vw",
+                    maxHeight: "70vh"
+                  }}
+                >
+                  {/* Ring circle - single border */}
+                  <circle
+                    cx={(ringDiameterPx + 100) / 2}
+                    cy={(ringDiameterPx + 100) / 2}
+                    r={ringDiameterPx / 2}
+                    fill="none"
+                    stroke="#d4a574"
+                    strokeWidth="3"
+                  />
+                  
+                  {/* Center crosshair for alignment */}
+                  <line
+                    x1={(ringDiameterPx + 100) / 2 - 15}
+                    y1={(ringDiameterPx + 100) / 2}
+                    x2={(ringDiameterPx + 100) / 2 + 15}
+                    y2={(ringDiameterPx + 100) / 2}
+                    stroke="#999"
+                    strokeWidth="1"
+                    opacity="0.5"
+                  />
+                  <line
+                    x1={(ringDiameterPx + 100) / 2}
+                    y1={(ringDiameterPx + 100) / 2 - 15}
+                    x2={(ringDiameterPx + 100) / 2}
+                    y2={(ringDiameterPx + 100) / 2 + 15}
+                    stroke="#999"
+                    strokeWidth="1"
+                    opacity="0.5"
+                  />
+                  
+                  {/* Measurement label */}
+                  <text
+                    x={(ringDiameterPx + 100) / 2}
+                    y={(ringDiameterPx + 100) / 2 + 5}
+                    textAnchor="middle"
+                    fill="#999"
+                    fontSize="11"
+                    fontWeight="600"
+                  >
+                    {ringDiameterPx}px = {pixelsToMm(ringDiameterPx).toFixed(1)}mm
+                  </text>
+                </svg>
+              </div>
+
+              {/* Real-time Size Display */}
+              {ringSize && (
+                <div style={{
+                  background: "linear-gradient(135deg, #fff9f0 0%, #fff5e6 100%)",
+                  border: "2px solid #d4a574",
+                  borderRadius: "15px",
+                  padding: "20px",
+                  marginBottom: "30px",
+                  maxWidth: "400px",
+                  margin: "0 auto 30px"
+                }}>
+                  <div style={{ fontSize: "14px", color: "#666", marginBottom: "10px" }}>
+                    Seu tamanho é:
+                  </div>
+                  <div style={{ fontSize: "48px", color: "#d4a574", fontWeight: "bold", marginBottom: "10px" }}>
+                    {ringSize.aro}
+                  </div>
+                  <div style={{ fontSize: "14px", color: "#666" }}>
+                    Aro Brasileiro
+                  </div>
+                  <div style={{ 
+                    fontSize: "12px", 
+                    color: "#999",
+                    marginTop: "10px",
+                    display: "flex",
+                    justifyContent: "center",
+                    gap: "15px"
+                  }}>
+                    <span>US {ringSize.us}</span>
+                    <span>•</span>
+                    <span>EU {ringSize.eu}</span>
+                  </div>
+                  <div style={{
+                    fontSize: "11px",
+                    color: "#999",
+                    marginTop: "10px",
+                    paddingTop: "10px",
+                    borderTop: "1px solid #e0e0e0"
+                  }}>
+                    Ø {ringSize.diameter}mm • ⌀ {ringSize.circumference}mm
+                  </div>
+                </div>
+              )}
+
+              {/* Slider Control */}
+              <div style={{ maxWidth: "600px", margin: "0 auto" }}>
+                <p style={{ 
+                  fontSize: "14px", 
+                  color: "#999", 
+                  marginBottom: "15px",
+                  fontStyle: "italic"
+                }}>
+                  Arraste para ajustar ↔
+                </p>
+                
+                <input
+                  type="range"
+                  min="80"
+                  max="400"
+                  value={ringDiameterPx}
+                  onChange={(e) => setRingDiameterPx(Number(e.target.value))}
+                  style={{
+                    width: "100%",
+                    height: "8px",
+                    borderRadius: "5px",
+                    outline: "none",
+                    marginBottom: "30px",
+                    cursor: "pointer",
+                    WebkitAppearance: "none",
+                    background: "#ddd"
+                  }}
+                />
+
+                <button
+                  onClick={() => onComplete(ringSize)}
+                  className="site-btn"
+                  style={{
+                    background: "linear-gradient(135deg, #d4a574 0%, #c8935e 100%)",
+                    border: "none",
+                    padding: "14px 40px",
+                    fontSize: "14px",
+                    fontWeight: "600",
+                    textTransform: "uppercase",
+                    letterSpacing: "2px",
+                    cursor: "pointer",
+                    marginRight: "10px"
+                  }}
+                >
+                  Confirmar Tamanho
+                </button>
+              </div>
+            </div>
+
+            {/* Helper Text */}
+            <div style={{
+              background: "#fff9e6",
+              borderLeft: "4px solid #d4a574",
+              padding: "15px 20px",
+              borderRadius: "5px",
+              marginBottom: "20px"
+            }}>
+              <p style={{ 
+                fontSize: "14px", 
+                color: "#666",
+                marginBottom: 0
+              }}>
+                <strong>💡 Dica:</strong> O círculo interno tracejado representa o diâmetro interno do anel. 
+                Ajuste até que ele tenha exatamente o mesmo tamanho que a abertura do seu anel físico.
+              </p>
+            </div>
+
+            {/* Back Button */}
+            <div style={{ textAlign: "center" }}>
+              <button
+                onClick={onRecalibrate}
+                style={{
+                  background: "none",
+                  border: "none",
+                  color: "#d4a574",
+                  fontSize: "14px",
+                  cursor: "pointer",
+                  textDecoration: "underline"
+                }}
+              >
+                ← Recalibrar tela
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default VirtualRingSizer;
