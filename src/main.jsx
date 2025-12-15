@@ -18,6 +18,8 @@ import Produtos from "./pages/produtos";
 import Login from "./pages/login";
 import Signup from "./pages/cadastro";
 import CreateProductPage from "./pages/produtosform";
+import MedidaNovo from "./pages/MedidaNovo";
+
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <BrowserRouter>
@@ -26,6 +28,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
 
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/medida" element={<MedidaNovo />} />
         <Route path="/shopcart" element={<ShoppingCart />} />
         <Route path="/login" element={<Login/>} />
         <Route path="/cadastro" element={<Signup/>} />
