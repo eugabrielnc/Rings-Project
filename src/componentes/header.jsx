@@ -1,174 +1,263 @@
 import { useLocation, Link } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function Header() {
   const location = useLocation();
   const currentPath = location.pathname;
 
   const [query, setQuery] = useState("");
+  const [products, setProducts] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
+
+  const url = import.meta.env.VITE_API_URL;
+
+  // Carregar produtos da API
+  useEffect(() => {
+    async function loadProducts() {
+      try {
+        const res = await fetch(`${url}/products`);
+        const data = await res.json();
+        setProducts(data);
+      } catch (err) {
+        console.log("Erro ao carregar produtos", err);
+      }
+    }
+
+    loadProducts();
+  }, []);
+
+  // Filtro dos produtos conforme a pesquisa
+  useEffect(() => {
+    if (!query.trim()) {
+      setFilteredProducts([]);
+      return;
+    }
+
+    const filtered = products.filter((product) =>
+      product.name.toLowerCase().includes(query.toLowerCase())
+    );
+
+    setFilteredProducts(filtered.slice(0, 5));  // Limitar a 5 produtos
+  }, [query, products]);
 
   return (
     <header className="header">
+      <div className="header__inner">
+        <div className="container">
+          <div className="row">
 
-    <div class="header__inner">
-
-      {/* Main Navbar */}
-      <div className="container">
-        <div className="row">
-
-          {/* Logo */}
-          <div className="col-lg-3 col-md-3">
-            <div className="header__logo">
-              <a href="/">
-                <img src="/img/logo.png" alt="logo" />
-              </a>
+            {/* Logo */}
+            <div className="col-lg-3 col-md-3">
+              <div className="header__logo">
+                <a href="/">
+                  <img src="/img/logo.png" alt="logo" />
+                </a>
+              </div>
             </div>
-          </div>
 
-          {/* SEARCH BAR CENTRAL */}
-          <div
-            className="col-lg-6 col-md-6 d-flex align-items-center justify-content-center"
-          >
-            <div
-              style={{
-                width: "100%",
-                maxWidth: "550px",
-                display: "flex",
-                borderRadius: "30px",
-                background: "#fff",
-                border: "1px solid #ddd",
-                overflow: "hidden",
-              }}
-            >
-              <input
-                type="text"
-                placeholder="Pesquise suas alianças..."
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
+            {/* SEARCH BAR */}
+            <div className="col-lg-6 col-md-6 d-flex align-items-center justify-content-center">
+              <div
                 style={{
-                  flex: 1,
-                  padding: "12px 16px",
-                  border: "none",
-                  outline: "none",
-                  fontSize: "15px",
-                }}
-              />
-
-              <button
-                style={{
-                  background: "#f6c200",
-                  border: "none",
-                  width: "55px",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  cursor: "pointer",
+                  width: "100%",
+                  maxWidth: "550px",
+                  position: "relative"
                 }}
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="black"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
+                <div
+                  style={{
+                    display: "flex",
+                    borderRadius: "30px",
+                    background: "#fff",
+                    border: "1px solid #ddd",
+                    overflow: "hidden",
+                  }}
                 >
-                  <circle cx="11" cy="11" r="8" />
-                  <path d="m21 21-4.35-4.35" />
-                </svg>
-              </button>
+                  <input
+                    type="text"
+                    placeholder="Pesquise suas alianças..."
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                    style={{
+                      flex: 1,
+                      padding: "12px 16px",
+                      border: "none",
+                      outline: "none",
+                      fontSize: "15px",
+                    }}
+                  />
+
+                  <button
+                    style={{
+                      background: "#f6c200",
+                      border: "none",
+                      width: "55px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      cursor: "pointer",
+                    }}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="black"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <circle cx="11" cy="11" r="8" />
+                      <path d="m21 21-4.35-4.35" />
+                    </svg>
+                  </button>
+                </div>
+
+                {/* DROPDOWN */}
+                {filteredProducts.length > 0 && (
+                  <div
+                    style={{
+                      position: "absolute",
+                      top: "100%",
+                      left: 0,
+                      right: 0,
+                      background: "#fff",
+                      border: "1px solid #ddd",
+                      borderTop: "none",
+                      zIndex: 999,
+                      borderRadius: "0 0 12px 12px",
+                      maxHeight: "300px",
+                      overflowY: "auto",
+                    }}
+                  >
+                    {filteredProducts.map((product) => (
+                      <Link
+                        key={product.id}
+                        to={`/product/${product.id}`}
+                        onClick={() => setQuery("")} // Limpar o campo de pesquisa ao clicar
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "12px",
+                          padding: "10px 14px",
+                          textDecoration: "none",
+                          color: "#000",
+                          borderBottom: "1px solid #eee",
+                        }}
+                      >
+                        <img
+                          src={`${url}/products/${product.id}/image`}
+                          alt={product.name}
+                          style={{
+                            width: "45px",
+                            height: "45px",
+                            objectFit: "cover",
+                            borderRadius: "8px"
+                          }}
+                        />
+
+                        <div>
+                          <div style={{ fontSize: "14px", fontWeight: 600 }}>
+                            {product.name}
+                          </div>
+                          <div style={{ fontSize: "13px", color: "#777" }}>
+                            {product.price.toLocaleString("pt-BR", {
+                              style: "currency",
+                              currency: "BRL"
+                            })}
+                          </div>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Icons */}
+            <div className="col-lg-3 col-md-3">
+              <div className="header__nav__option">
+                <a href="/login">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="18"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="black"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                    <circle cx="12" cy="7" r="4" />
+                  </svg>
+                </a>
+
+                <a href="#">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="18"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="black"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                  </svg>
+                </a>
+
+                <a href="#">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="18"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="black"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <circle cx="9" cy="21" r="1" />
+                    <circle cx="20" cy="21" r="1" />
+                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+                  </svg>
+                </a>
+
+                <div className="price">$0.00</div>
+              </div>
             </div>
           </div>
 
-          {/* Icons */}
-          <div className="col-lg-3 col-md-3">
-            <div className="header__nav__option">
-              
-              <a href="/login" style={{ color: "black" }}>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="18"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                  <circle cx="12" cy="7" r="4" />
-                </svg>
-              </a>
-
-              <a href="#" style={{ color: "black" }}>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="18"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
-                </svg>
-              </a>
-
-              <a href="#" style={{ color: "black" }}>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="18"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <circle cx="9" cy="21" r="1" />
-                  <circle cx="20" cy="21" r="1" />
-                  <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
-                </svg>
-              </a>
-
-              <div className="price">$0.00</div>
+          {/* Menu */}
+          <div className="row mt-3">
+            <div className="col-lg-12">
+              <nav className="header__menu mobile-menu">
+                <ul>
+                  <li className={currentPath === "/" ? "active" : ""}>
+                    <Link to="/">Inicio</Link>
+                  </li>
+                  <li className={currentPath === "/shop" ? "active" : ""}>
+                    <Link to="/shop">Produtos</Link>
+                  </li>
+                  <li className={currentPath === "/contact" ? "active" : ""}>
+                    <Link to="/contact">Contato</Link>
+                  </li>
+                </ul>
+              </nav>
             </div>
           </div>
-        </div>
 
-        {/* Menu abaixo - mantém INÍCIO E PRODUTOS */}
-        <div className="row mt-3">
-          <div className="col-lg-12">
-            <nav className="header__menu mobile-menu">
-              <ul>
-                <li className={currentPath === "/" ? "active" : ""}>
-                  <Link to="/">Inicio</Link>
-                </li>
-
-                <li className={currentPath === "/shop" ? "active" : ""}>
-                  <Link to="/shop">Produtos</Link>
-                </li>
-
-                <li className={currentPath === "/contact" ? "active" : ""}>
-                  <Link to="/contact">Contato</Link>
-                </li>
-              </ul>
-            </nav>
+          <div className="canvas__open">
+            <i className="fa fa-bars"></i>
           </div>
         </div>
-
-        {/* Mobile Menu Icon */}
-        <div className="canvas__open">
-          <i className="fa fa-bars"></i>
-        </div>
-      </div>
       </div>
     </header>
   );

@@ -42,7 +42,7 @@ function Login() {
   return (
     <div className="login-page">
       <div className="login-container">
-        <h2 className="login-title">Acesso Restrito</h2>
+        <h2 className="login-title">Login</h2>
         <form className="login-form" onSubmit={handleSubmit}>
           
           <div className="input-group">
