@@ -2,7 +2,7 @@ import React, { use, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Select from "react-select";
 import { useNavigate } from "react-router-dom";
-
+import { getAuthData } from "../utils/dadosuser";
 
 // NOTE:
 // - This component is a direct JSX conversion of the original HTML template.
@@ -64,16 +64,16 @@ export default function ShopDetails() {
   // Buscar produto atual e produtos relacionados em paralelo
   useEffect(() => {
     setLoading(true);
-    
+
     // Fazer ambas requisições ao mesmo tempo
     Promise.all([
-      fetch(`${url}products/${id}`).then(res => res.json()),
-      fetch(`${url}products/`).then(res => res.json())
+      fetch(`${url}/products/${id}`).then(res => res.json()),
+      fetch(`${url}/products/`).then(res => res.json())
     ])
       .then(([productData, allProducts]) => {
         console.log("Product Details:", productData);
         console.log("Todos os produtos:", allProducts);
-        
+
         setProduct(productData[0] || {});
         setProdutos(allProducts || []);
         setLoading(false);
@@ -84,15 +84,59 @@ export default function ShopDetails() {
       });
   }, [id, url]);
   const navigate = useNavigate();
+  const imageUrl = `${url}/products/${id}/image`;
+ const handleBuy = async () => {
+  try {
+    const authData = getAuthData();
 
+    if (!authData || !authData.token || !authData.id) {
+      alert("Você precisa estar logado para comprar.");
+      navigate("/login");
+      return;
+    }
 
+    const amount = 1; // pode ligar ao input depois
+    const value = Number(product.price) * amount;
+
+    const body = {
+      value,
+      product_id: product.id,
+      amount,
+      user_cep: "01001-000", // CEP fixo
+      authorization: authData.token,
+      status: "cart" // 👈 AQUI
+    };
+
+    const response = await fetch(`${url}/sales/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${authData.token}`
+      },
+      body: JSON.stringify(body)
+    });
+
+    if (!response.ok) {
+      throw new Error("Erro ao adicionar ao carrinho");
+    }
+
+    const sale = await response.json();
+    console.log("Item adicionado ao carrinho:", sale);
+
+    alert("Produto adicionado ao carrinho!");
+    navigate("/cart"); // se tiver página de carrinho
+  } catch (error) {
+    console.error("Erro ao adicionar ao carrinho:", error);
+    alert("Erro ao adicionar produto ao carrinho.");
+  }
+};
   // Mostrar loading enquanto carrega
   if (loading) {
     return (
-      <div style={{ 
-        display: 'flex', 
-        justifyContent: 'center', 
-        alignItems: 'center', 
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
         minHeight: '60vh',
         flexDirection: 'column',
         gap: '20px'
@@ -152,7 +196,13 @@ export default function ShopDetails() {
                 <div className="tab-content">
                   <div className="tab-pane active" id="tabs-1" role="tabpanel">
                     <div className="product__details__pic__item">
-                      <img src="img/shop-details/product-big-2.png" alt="" />
+                      <img
+                        src={imageUrl}
+                        alt={product.name}
+                        onError={(e) => {
+                          e.target.src = "/img/placeholder.png";
+                        }}
+                      />
                     </div>
                   </div>
                   <div className="tab-pane" id="tabs-2" role="tabpanel">
@@ -231,9 +281,13 @@ export default function ShopDetails() {
                         <input type="text" defaultValue={1} />
                       </div>
                     </div>
-                    <a href="#" className="primary-btn">
+                    <button
+                      type="button"
+                      className="primary-btn"
+                      onClick={handleBuy}
+                    >
                       Comprar
-                    </a>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -377,7 +431,7 @@ export default function ShopDetails() {
         <div className="container">
           <div className="row">
             <div className="col-lg-12">
-              <h3 className="related-title">Related Product</h3>
+              <h3 className="related-title">Produtos Semelhantes</h3>
             </div>
           </div>
           <div className="row">
@@ -390,54 +444,64 @@ export default function ShopDetails() {
                   key={produtos.id}
                   className="col-lg-3 col-md-6 col-sm-6 col-sm-6"
                 >
-              <div className="product__item">
-                <div className="product__item__pic set-bg" data-setbg="img/product/product-1.jpg">
-                  <span className="label">New</span>
-                  <ul className="product__hover">
-                    <li>
-                      <a href="#">
-                        <img src="img/icon/heart.png" alt="" />
+                  <div className="product__item">
+                    <div className="product__item__pic">
+                      <img
+                        src={`${url}/products/${produtos.id}/image`}
+                        alt={produtos.name}
+                        style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                        onError={(e) => {
+                          e.target.src = "/img/placeholder.png";
+                        }}
+                      />
+
+                      <span className="label">New</span>
+
+                      <ul className="product__hover">
+                        <li>
+                          <a href="#">
+                            <img src="img/icon/heart.png" alt="" />
+                          </a>
+                        </li>
+                        <li>
+                          <a href="#">
+                            <img src="img/icon/compare.png" alt="" /> <span>Compare</span>
+                          </a>
+                        </li>
+                        <li>
+                          <a href="#">
+                            <img src="img/icon/search.png" alt="" />
+                          </a>
+                        </li>
+                      </ul>
+                    </div>
+                    <div className="product__item__text">
+                      <h6>{produtos.name}</h6>
+                      <div className="rating">
+                        <i className="fa fa-star-o" />
+                        <i className="fa fa-star-o" />
+                        <i className="fa fa-star-o" />
+                        <i className="fa fa-star-o" />
+                        <i className="fa fa-star-o" />
+                      </div>
+                      <h5>${produtos.price ? Number(produtos.price).toFixed(2) : '0.00' || "Carregando"}</h5>
+                      <a href="#" className="add-cart">
+                        Adicionar ao carrinho
                       </a>
-                    </li>
-                    <li>
-                      <a href="#">
-                        <img src="img/icon/compare.png" alt="" /> <span>Compare</span>
+                      <br />
+                      <a onClick={() => navigate(`/shopdetails/${produtos.id}`)} className="add-cart">
+                        Ver
                       </a>
-                    </li>
-                    <li>
-                      <a href="#">
-                        <img src="img/icon/search.png" alt="" />
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-                <div className="product__item__text">
-                  <h6>{produtos.name}</h6>
-                  <div className="rating">
-                    <i className="fa fa-star-o" />
-                    <i className="fa fa-star-o" />
-                    <i className="fa fa-star-o" />
-                    <i className="fa fa-star-o" />
-                    <i className="fa fa-star-o" />
+                    </div>
                   </div>
-                  <h5>${produtos.price ? Number(produtos.price).toFixed(2) : '0.00' || "Carregando"}</h5>
-                  <a href="#" className="add-cart">
-                    Adicionar ao carrinho
-                  </a>
-                  <br />
-                  <a onClick={() => navigate(`/shopdetails/${produtos.id}`)} className="add-cart">
-                    Ver
-                  </a>
                 </div>
-              </div>
-            </div>
               ))}
           </div>
         </div>
       </section>
       {/* Related Section End */}
 
-     
+
 
       {/* Search Begin */}
       <div className="search-model">
