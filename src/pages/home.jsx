@@ -16,19 +16,8 @@ import '../assets/Css/owl.carousel.min.css';
 import '../assets/Css/slicknav.min.css';
 import '../assets/Css/style.css';
 import "@fortawesome/fontawesome-free/css/all.min.css";
+import { getAuthData } from '../utils/dadosuser'
 
-// NOTE:
-// 1) Put the Google Font <link> tags and meta tags (charset/viewport) into your public/index.html head.
-// 2) All CSS and image assets referenced below assume they're located in the public folder
-//    (`public/css/...`, `public/img/...`). You can also import CSS from src if you prefer.
-// 3) This component implements the markup in JSX and a small useEffect to apply `data-setbg`
-//    backgrounds and the dynamic current year. Many interactive features in the original
-//    template (menu, carousel, countdown, mixitup filtering, search modal) depend on jQuery
-//    plugins and the JS files that came with the template. To keep this file React-only
-//    I removed the <script> tags; if you still need the original behaviours, include the
-//    template JS files in public/index.html or convert the behaviors to React.
-
-// Example CSS imports (optional if you keep CSS in public and load via index.html):
 
 
 
@@ -69,7 +58,9 @@ export default function MaleFashion() {
         console.error("Error fetching products:", error);
       });
   }, [url]);
-   const navigate = useNavigate();
+  const navigate = useNavigate();
+
+
 
   return (
     <div>
@@ -245,7 +236,7 @@ export default function MaleFashion() {
       </section>
       {/* Banner Section End */}
 
-     {/* ================= MAIS VENDIDOS ================= */}
+      {/* ================= MAIS VENDIDOS ================= */}
       <section className="product spad">
         <div className="container">
           <div className="row">
@@ -304,10 +295,13 @@ export default function MaleFashion() {
                         <i className="fa fa-star-o"></i>
                       </div>
                       <h5>R$ {product.price.toFixed(2)}</h5>
-                      <a onClick= {() => navigate(`/shopdetails/${product.id}`)} className="add-cart">
+                      <a onClick={() => navigate(`/shopdetails/${product.id}`)} className="add-cart">
                         Comprar
                       </a>
-                      <a href="#" className="add-cart">
+                      <a
+                        href="#"
+                        className="add-cart"
+                      >
                         + Adicionar ao carrinho
                       </a>
                     </div>

@@ -148,7 +148,7 @@ export default function Header() {
                     {filteredProducts.map((product, index) => (
                       <Link
                         key={product.id}
-                        to={`/product/${product.id}`}
+                        to={`/shopdetails/${product.id}`}
                         onClick={() => setQuery("")}
                         style={{
                           display: "flex",

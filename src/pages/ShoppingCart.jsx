@@ -1,4 +1,4 @@
-
+import { useEffect, useState } from "react";
 import '../assets/Css/bootstrap.min.css';
 import '../assets/Css/font-awesome.min.css';
 import '../assets/Css/elegant-icons.css';
@@ -11,38 +11,88 @@ import { getAuthData } from '../utils/dadosuser'
 export default function ShoppingCart() {
   const url = import.meta.env.VITE_API_URL;
 
-
   const authData = getAuthData();
   const token = authData?.token;
+  const [cartTotal, setCartTotal] = useState(0);
+  const [products, setProducts] = useState([]);
+  const [cart, setCart] = useState([]);
+  const [cartProducts, setCartProducts] = useState([]);
 
+  // 🔹 BUSCAR PRODUTOS
+  useEffect(() => {
+    fetch(`${url}/products/`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        accept: "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("Products:", data);
+        setProducts(Array.isArray(data) ? data : []);
+      })
+      .catch((err) => console.error("Erro produtos:", err));
+  }, [url]);
 
+  // 🔹 BUSCAR CARRINHO
+  useEffect(() => {
+    if (!token) return;
 
- fetch(`${url}/sales/carts`, {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json",
-    "accept": "application/json"
-  },
-  body: JSON.stringify({
-    authorization: token
-  })
-})
-  .then(async (response) => {
-    const data = await response.json();
+    fetch(`${url}/sales/carts`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        accept: "application/json",
+      },
+      body: JSON.stringify({
+        authorization: token,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("Cart:", data);
+        setCart(Array.isArray(data) ? data : [data]);
+      })
+      .catch((err) => console.error("Erro carrinho:", err));
+  }, [url, token]);
 
-    if (!response.ok) {
-      throw new Error(data.message || 'Erro ao buscar carrinho');
+  // 🔹 COMPARAR productId
+  useEffect(() => {
+  if (!Array.isArray(products) || !Array.isArray(cart)) {
+    setCartProducts([]);
+    return;
+  }
+
+  const cartIds = cart
+    .filter(item => item.status === "cart")
+    .map(item => item.product_id);
+
+  const filtered = products.filter(product =>
+    cartIds.includes(product.id)
+  );
+
+  setCartProducts(filtered);
+}, [products, cart]);
+
+  useEffect(() => {
+    if (!cartProducts.length || !cart.length) {
+      setCartTotal(0);
+      return;
     }
 
-    return data;
-  })
-  .then((data) => {
-    console.log('Success:', data);
-  })
-  .catch((error) => {
-    console.error('Erro:', error.message);
-  });
+    const total = cartProducts.reduce((sum, product) => {
+      const cartItem = cart.find(
+        (item) => item.product_id === product.id
+      );
 
+      const quantity = cartItem?.amount || 1;
+
+      return sum + product.price * quantity;
+    }, 0);
+
+    setCartTotal(total);
+  }, [cartProducts, cart]);
 
   return (
     <>
@@ -80,34 +130,59 @@ export default function ShoppingCart() {
                     </tr>
                   </thead>
                   <tbody>
-                    {[1, 2, 3, 4].map((i) => (
-                      <tr key={i}>
-                        <td className="product__cart__item">
-                          <div className="product__cart__item__pic">
-                            <img
-                              src={`/img/shopping-cart/cart-${i}.jpg`}
-                              alt=""
-                            />
-                          </div>
-                          <div className="product__cart__item__text">
-                            <h6>Product {i}</h6>
-                            <h5>$98.49</h5>
-                          </div>
-                        </td>
-                        <td className="quantity__item">
-                          <div className="quantity">
-                            <div className="pro-qty-2">
-                              <input type="text" defaultValue="1" />
-                            </div>
-                          </div>
-                        </td>
-                        <td className="cart__price">$ 30.00</td>
-                        <td className="cart__close">
-                          <i className="fa fa-close"></i>
-                        </td>
+                    {cartProducts.length === 0 && (
+                      <tr>
+                        <td colSpan="4">Carrinho vazio</td>
                       </tr>
-                    ))}
+                    )}
+
+                    {cartProducts.map((product) => {
+                      const cartItem = cart.find(
+                        (item) => item.product_id === product.id
+                      );
+
+                      const quantity = cartItem?.amount || 1;
+
+                      return (
+                        <tr key={product.id}>
+                          <td className="product__cart__item">
+                            <div className="product__cart__item__pic">
+                              <img
+                                src={product.image || `url(${url}/products/${product.id}/image)`}
+                                alt={product.name}
+                              />
+                            </div>
+                            <div className="product__cart__item__text">
+                              <h6>{product.name}</h6>
+                              <h5>R$ {product.price}</h5>
+                            </div>
+                          </td>
+
+                          <td className="quantity__item">
+                            <div className="quantity">
+                              <div className="pro-qty-2">
+                                <input
+                                  type="text"
+                                  value={quantity}
+                                  readOnly
+                                />
+                              </div>
+                            </div>
+                          </td>
+
+                          <td className="cart__price">
+                            R$ {(product.price * quantity).toFixed(2)}
+                          </td>
+
+                          <td className="cart__close">
+                            <i className="fa fa-close"></i>
+                          </td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
+
+
                 </table>
               </div>
 
@@ -139,10 +214,10 @@ export default function ShoppingCart() {
                 <h6>Cart total</h6>
                 <ul>
                   <li>
-                    Subtotal <span>$ 169.50</span>
+                    Subtotal <span>R$ {cartTotal.toFixed(2)}</span>
                   </li>
                   <li>
-                    Total <span>$ 169.50</span>
+                    Total <span>R$ {cartTotal.toFixed(2)}</span>
                   </li>
                 </ul>
                 <a href="#" className="primary-btn">

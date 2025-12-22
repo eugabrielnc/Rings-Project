@@ -35,23 +35,24 @@ function Login() {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log('Success:', data);
-        
+  console.log("RESPOSTA LOGIN:", data);
 
-        saveAuthData({
-          id: data.id,
-          email: data.email,
-          role: data.role,
-          token: data.token
-        });
+  if (!data.access_token?.token) {
+    console.error("BACKEND NÃO RETORNOU TOKEN");
+    return;
+  }
 
-        navigate('/');
-      })
-      .catch((error) => {
-        console.error('Erro ao buscar dados:', error);
-      });
-    console.log('Tentativa de Login:', { email, password });
-    alert('Login submetido! (Lógica real deve ser implementada)');
+  saveAuthData({
+    id: data.id,
+    email: data.email,
+    role: data.role,
+    token: data.access_token.token
+  });
+
+  console.log("SALVO:", localStorage.getItem("user_data"));
+
+  navigate('/');
+});
   };
 
   return (
@@ -61,9 +62,9 @@ function Login() {
         <form className="login-form" onSubmit={handleSubmit}>
 
           <div className="input-group">
-            <label htmlFor="email" className="input-label">E-mail</label>
+            <label  className="input-label">E-mail</label>
             <input
-              type="email"
+              
               id="email"
               name='email'
               className="input-field"

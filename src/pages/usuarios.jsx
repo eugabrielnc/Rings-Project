@@ -1,25 +1,52 @@
 import { useEffect, useState } from "react";
+import { getAuthData } from "../utils/dadosuser"; // ajuste o caminho
 
 export default function Usuarios() {
   const [usuarios, setUsuarios] = useState([]);
   const url = import.meta.env.VITE_API_URL;
-  // ===== GET NA API AO CARREGAR A PÁGINA =====
+
   useEffect(() => {
-    fetch(`${url}/`)   // ⬅ troque pelo seu endpoint
-      .then(response => response.json())
+    const authData = getAuthData();
+
+    if (!authData || !authData.token) {
+      console.error("Token não encontrado no localStorage");
+      return;
+    }
+
+    fetch(`${url}/users/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "accept": "application/json"
+      },
+      body: JSON.stringify({
+        authorization: authData.token, // 🔴 AQUI está o ponto-chave
+      }),
+    })
+      .then(async response => {
+        const data = await response.json();
+
+        if (!response.ok) {
+          console.error("Erro da API:", data);
+          throw new Error("Erro ao buscar usuários");
+        }
+
+        return data;
+      })
       .then(data => {
-        // A API retorna name e email — adaptamos para a tabela
         const usuariosFormatados = data.map(u => ({
           id: u.id,
           nome: u.name,
           email: u.email,
-          cargo: "—" // API não tem cargo, então deixei vazio
+          cargo: "—",
         }));
 
         setUsuarios(usuariosFormatados);
       })
-      .catch(err => console.error("Erro ao buscar usuários:", err));
+      .catch(err => console.error(err));
   }, []);
+
+
 
   return (
     <div style={{ padding: "20px" }}>
@@ -36,7 +63,7 @@ export default function Usuarios() {
           Gerenciar Usuários
         </h2>
         
-        <button style={{
+        <a href="/cadastro"><button  style={{
           background: "#C9A86A",
           color: "#fff",
           padding: "10px 18px",
@@ -47,7 +74,7 @@ export default function Usuarios() {
           transition: "0.3s"
         }}>
           + Adicionar Usuário
-        </button>
+        </button></a>
 
       </div>
 
