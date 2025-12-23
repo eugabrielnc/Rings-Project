@@ -38,7 +38,7 @@ export default function Usuarios() {
           id: u.id,
           nome: u.name,
           email: u.email,
-          cargo: "—",
+          cargo: u.role,
         }));
 
         setUsuarios(usuariosFormatados);
@@ -46,50 +46,95 @@ export default function Usuarios() {
       .catch(err => console.error(err));
   }, []);
 
+  const handleDelete = async (userId) => {
+    const authData = getAuthData();
+
+    if (!authData || !authData.token) {
+      alert("Token não encontrado");
+      return;
+    }
+
+    const confirmacao = window.confirm(
+      "Tem certeza que deseja excluir este usuário?"
+    );
+
+    if (!confirmacao) return;
+
+    try {
+      const response = await fetch(`${url}/users/user/delete`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          accept: "application/json",
+        },
+        body: JSON.stringify({
+          user_id: userId,
+          authorization: authData.token,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        console.error("Erro ao deletar:", data);
+        alert("Erro ao excluir usuário");
+        return;
+      }
+
+      // Remove da lista sem recarregar a página
+      setUsuarios((prev) => prev.filter((u) => u.id !== userId));
+
+      alert("Usuário excluído com sucesso!");
+    } catch (error) {
+      console.error(error);
+      alert("Erro de conexão com o servidor");
+    }
+  };
 
 
   return (
     <div style={{ padding: "20px" }}>
-      
       {/* TÍTULO E BOTÃO */}
-      <div style={{ 
-        display: "flex", 
-        justifyContent: "space-between", 
-        alignItems: "center",
-        marginBottom: "25px"
-      }}>
-        
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginBottom: "25px",
+        }}
+      >
         <h2 style={{ fontSize: "26px", color: "#C9A86A" }}>
           Gerenciar Usuários
         </h2>
-        
-        <a href="/cadastro"><button  style={{
-          background: "#C9A86A",
-          color: "#fff",
-          padding: "10px 18px",
-          borderRadius: "8px",
-          border: "none",
-          cursor: "pointer",
-          fontWeight: "600",
-          transition: "0.3s"
-        }}>
-          + Adicionar Usuário
-        </button></a>
 
+        <a href="/cadastro">
+          <button
+            style={{
+              background: "#C9A86A",
+              color: "#fff",
+              padding: "10px 18px",
+              borderRadius: "8px",
+              border: "none",
+              cursor: "pointer",
+              fontWeight: "600",
+              transition: "0.3s",
+            }}
+          >
+            + Adicionar Usuário
+          </button>
+        </a>
       </div>
 
       {/* TABELA */}
-      <div style={{
-        background: "#fff",
-        borderRadius: "12px",
-        padding: "20px",
-        boxShadow: "0 2px 10px rgba(0,0,0,0.08)"
-      }}>
-        
-        <table style={{
-          width: "100%",
-          borderCollapse: "collapse"
-        }}>
+      <div
+        style={{
+          background: "#fff",
+          borderRadius: "12px",
+          padding: "20px",
+          boxShadow: "0 2px 10px rgba(0,0,0,0.08)",
+        }}
+      >
+        <table style={{ width: "100%", borderCollapse: "collapse" }}>
           <thead>
             <tr style={{ background: "#F9F5EE" }}>
               <th style={thStyle}>ID</th>
@@ -101,26 +146,28 @@ export default function Usuarios() {
           </thead>
 
           <tbody>
-            {usuarios.map(user => (
+            {usuarios.map((user) => (
               <tr key={user.id} style={{ borderBottom: "1px solid #eee" }}>
                 <td style={tdStyle}>{user.id}</td>
                 <td style={tdStyle}>{user.nome}</td>
                 <td style={tdStyle}>{user.email}</td>
-                <td style={tdStyle}>{user.cargo}</td>
+                <td style={tdStyle}>{user.role}</td>
                 <td style={tdStyle}>
-                  
                   <button style={btnEdit}>Editar</button>
-                  <button style={btnDel}>Excluir</button>
-                
+
+                  {/* 🔴 BOTÃO DELETAR CONECTADO */}
+                  <button
+                    style={btnDel}
+                    onClick={() => handleDelete(user.id)}
+                  >
+                    Excluir
+                  </button>
                 </td>
               </tr>
             ))}
           </tbody>
-
         </table>
-
       </div>
-
     </div>
   );
 }

@@ -64,7 +64,7 @@ export default function ShopDetails() {
   // Buscar produto atual e produtos relacionados em paralelo
   useEffect(() => {
     setLoading(true);
-
+      
     // Fazer ambas requisições ao mesmo tempo
     Promise.all([
       fetch(`${url}/products/${id}`).then(res => res.json()),
@@ -85,50 +85,25 @@ export default function ShopDetails() {
   }, [id, url]);
   const navigate = useNavigate();
   const imageUrl = `${url}/products/${id}/image`;
- const handleBuy = async () => {
-  try {
+ const handleBuy = () => {
+   {
     const authData = getAuthData();
-
-    if (!authData || !authData.token || !authData.id) {
+    console.log("AuthData:", authData);
+    if (!authData || !authData?.token ) {
       alert("Você precisa estar logado para comprar.");
       navigate("/login");
       return;
     }
 
-    const amount = 1; // pode ligar ao input depois
-    const value = Number(product.price) * amount;
+     const checkoutUrl = product.checkout_link || id;
 
-    const body = {
-      value,
-      product_id: product.id,
-      amount,
-      user_cep: "01001-000", // CEP fixo
-      authorization: authData.token,
-      status: "cart" // 👈 AQUI
-    };
-
-    const response = await fetch(`${url}/sales/`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${authData.token}`
-      },
-      body: JSON.stringify(body)
-    });
-
-    if (!response.ok) {
-      throw new Error("Erro ao adicionar ao carrinho");
-    }
-
-    const sale = await response.json();
-    console.log("Item adicionado ao carrinho:", sale);
-
-    alert("Produto adicionado ao carrinho!");
-    navigate("/cart"); // se tiver página de carrinho
-  } catch (error) {
-    console.error("Erro ao adicionar ao carrinho:", error);
-    alert("Erro ao adicionar produto ao carrinho.");
+  if (!checkoutUrl) {
+    alert("Checkout indisponível.");
+    return;
   }
+
+  window.location.href = checkoutUrl;
+};
 };
   // Mostrar loading enquanto carrega
   if (loading) {

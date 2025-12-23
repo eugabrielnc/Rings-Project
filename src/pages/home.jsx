@@ -60,7 +60,49 @@ export default function MaleFashion() {
   }, [url]);
   const navigate = useNavigate();
 
+  const addToCart = async (product) => {
+    try {
+      const authData = getAuthData(); // supondo que aqui vem token, cep etc
 
+      const body = {
+        value: product.price,
+        product_id: product.id,
+        amount: 1,
+        user_cep: "",
+        authorization: authData?.token || "",
+        sizes: "M", // ajuste se tiver tamanho dinâmico
+        status: "cart",
+        code: "",
+        state: "",
+        city: "",
+        neighboor: "",
+        street: "",
+        complement: ""
+      };
+
+      const response = await fetch(`${url}/sales/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "accept": "application/json",
+          "Authorization": `Bearer ${authData?.token}`
+        },
+        body: JSON.stringify(body)
+      });
+
+      if (!response.ok) {
+        throw new Error("Erro ao adicionar ao carrinho");
+      }
+
+      const data = await response.json();
+      console.log("Adicionado ao carrinho:", data);
+      alert("Produto adicionado ao carrinho 🛒");
+
+    } catch (error) {
+      console.error(error);
+      alert("Erro ao adicionar ao carrinho");
+    }
+  };
 
   return (
     <div>
@@ -301,6 +343,10 @@ export default function MaleFashion() {
                       <a
                         href="#"
                         className="add-cart"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          addToCart(product);
+                        }}
                       >
                         + Adicionar ao carrinho
                       </a>
@@ -367,7 +413,17 @@ export default function MaleFashion() {
 
                     <div className="product__item__text">
                       <h6>{product.name}</h6>
-                      <a href="#" className="add-cart">
+                       <a onClick={() => navigate(`/shopdetails/${product.id}`)} className="add-cart">
+                        Comprar
+                      </a>
+                       <a
+                        href="#"
+                        className="add-cart"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          addToCart(product);
+                        }}
+                      >
                         + Adicionar ao carrinho
                       </a>
                       <div className="rating">
