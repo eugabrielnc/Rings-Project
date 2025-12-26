@@ -26,6 +26,8 @@ function Sidebar() {
         { label: "Dashboard", icon: "fa-tachometer-alt", path: "/admin/dashboard" },
         { label: "Produtos", icon: "fa-box", path: "/admin/produto" },
         { label: "Usuários", icon: "fa-users", path: "/admin/usuarios" },
+        { label: "Vendas", icon: "fa-cash-register", path: "/admin/vendas" },
+        { label: "Carrinho", icon: "fa-cart-shopping", path: "/admin/carrinho" },
     ];
 
     return (

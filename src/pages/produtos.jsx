@@ -116,7 +116,8 @@ const authData = getAuthData();
                 </td>
                 <td style={tdStyle}>{produto.sales}</td>
                 <td style={tdStyle}>
-                  <button style={btnEdit}>Editar</button>
+                  <Link to={`/admin/produtos/editar/${produto.id}`}>
+                  <button style={btnEdit}>Editar</button></Link>
                   <button
                     style={btnDel}
                     onClick={() => handleDelete(produto.id)}

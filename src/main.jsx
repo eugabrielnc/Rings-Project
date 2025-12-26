@@ -19,7 +19,9 @@ import Login from "./pages/login";
 import Signup from "./pages/cadastro";
 import CreateProductPage from "./pages/produtosform";
 import MedidaNovo from "./pages/MedidaNovo";
-
+import Vendas from "./pages/vendas";
+import EditProductPage from "./pages/editar";
+import Carrinho from "./pages/carrinho";
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <BrowserRouter>
@@ -42,6 +44,9 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         <Route path="/admin/usuarios" element={<Usuarios/>}></Route>
         <Route path="/admin/produto" element={<Produtos/>}></Route>
         <Route path="/admin/produtoforms" element={<CreateProductPage/>}></Route>
+        <Route path="/admin/vendas" element={<Vendas/>}></Route>
+        <Route path="/admin/carrinho" element={<Carrinho/>}></Route>
+        <Route path="/admin/produtos/editar/:id" element={<EditProductPage/>}></Route>
         </Route>
       </Routes>
 
