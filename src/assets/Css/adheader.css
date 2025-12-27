@@ -1,0 +1,39 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&display=swap');
+
+.announcement-bar {
+  background: black;
+  color: white;
+  padding: 5px 0;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+}
+
+.announcement-bar__content {
+  display: flex;
+  width: 100%;
+  overflow: hidden;
+}
+
+.announcement-bar__text {
+font-family: 'Playfair Display', serif;
+  display: inline-block;
+  white-space: nowrap;
+  animation: scroll-left 30s linear infinite;
+  font-size: 16px;
+  font-weight: 500;
+  padding-left: 100%;
+}
+
+@keyframes scroll-left {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.announcement-bar__text:hover {
+  animation-play-state: paused;
+}

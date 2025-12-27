@@ -1,7 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-
+import Adheader from "./componentes/adheader";
+import Subheader from "./componentes/subheader";
 import Header from "../src/componentes/header";
 import Footer from "./componentes/footer";
 import Home from "../src/pages/home";
@@ -25,8 +26,9 @@ import Carrinho from "./pages/carrinho";
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <BrowserRouter>
-
+      <Adheader />
       <Header />
+      <Subheader />
 
       <Routes>
         <Route path="/" element={<Home />} />
