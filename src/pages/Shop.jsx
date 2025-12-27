@@ -15,6 +15,29 @@ export default function Shop() {
   const [products, setProducts] = useState([]);
   const [displayProducts, setDisplayProducts] = useState([]);
   const [sort, setSort] = useState("");
+  const [renderKey, setRenderKey] = useState(0);
+  
+  // Filtros múltiplos
+  const [categoryFilters, setCategoryFilters] = useState([]);
+  const [brandFilters, setBrandFilters] = useState([]);
+  const [priceFilters, setPriceFilters] = useState([]);
+  
+  // Estados para controlar os acordeões
+  const [openAccordions, setOpenAccordions] = useState({
+    categories: true,
+    brand: true,
+    price: true,
+    size: false,
+    colors: false,
+    tags: false
+  });
+
+  const toggleAccordion = (section) => {
+    setOpenAccordions(prev => ({
+      ...prev,
+      [section]: !prev[section]
+    }));
+  };
 
   useEffect(() => {
     async function carregarProdutos() {
@@ -31,70 +54,291 @@ export default function Shop() {
     carregarProdutos();
   }, [url]);
 
-  function handleSort(value) {
-  let lista = [...products];
+  function applyFiltersAndSort() {
+    let lista = [...products];
 
-  switch (value) {
-    case "price_low":
-      lista.sort((a, b) => Number(a.price) - Number(b.price));
-      break;
+    // Aplicar filtro de categorias
+    if (categoryFilters.length > 0) {
+      lista = lista.filter(product => 
+        categoryFilters.includes(product.category)
+      );
+    }
 
-    case "price_high":
-      lista.sort((a, b) => Number(b.price) - Number(a.price));
-      break;
+    // Aplicar filtro de marcas
+    if (brandFilters.length > 0) {
+      lista = lista.filter(product => 
+        brandFilters.includes(product.brand)
+      );
+    }
 
-    case "az":
-      lista.sort((a, b) => a.name.localeCompare(b.name));
-      break;
+    // Aplicar filtros de preço
+    if (priceFilters.length > 0) {
+      lista = lista.filter(product => {
+        const price = Number(product.price);
+        return priceFilters.some(filter => 
+          price >= filter.min && price <= filter.max
+        );
+      });
+    }
 
-    case "sales":
-      lista.sort((a, b) => Number(b.sales) - Number(a.sales));
-      break;
+    // Aplicar ordenação
+    switch (sort) {
+      case "price_low":
+        lista.sort((a, b) => Number(a.price) - Number(b.price));
+        break;
+      case "price_high":
+        lista.sort((a, b) => Number(b.price) - Number(a.price));
+        break;
+      case "az":
+        lista.sort((a, b) => a.name.localeCompare(b.name));
+        break;
+      case "sales":
+        lista.sort((a, b) => Number(b.sales) - Number(a.sales));
+        break;
+    }
 
-    default:
-      lista = [...products];
+    setDisplayProducts(lista);
+    setRenderKey(prev => prev + 1);
   }
 
-  setSort(value);
-  setDisplayProducts(lista);
-}
+  useEffect(() => {
+    applyFiltersAndSort();
+  }, [categoryFilters, brandFilters, priceFilters, sort]);
+
+  function handleSort(value) {
+    setSort(value);
+  }
+
+  // Toggle de categoria
+  function toggleCategoryFilter(category) {
+    setCategoryFilters(prev => {
+      if (prev.includes(category)) {
+        return prev.filter(c => c !== category);
+      } else {
+        return [...prev, category];
+      }
+    });
+  }
+
+  // Toggle de marca
+  function toggleBrandFilter(brand) {
+    setBrandFilters(prev => {
+      if (prev.includes(brand)) {
+        return prev.filter(b => b !== brand);
+      } else {
+        return [...prev, brand];
+      }
+    });
+  }
+
+  // Toggle de preço
+  function togglePriceFilter(min, max) {
+    setPriceFilters(prev => {
+      const exists = prev.find(f => f.min === min && f.max === max);
+      
+      if (exists) {
+        return prev.filter(f => !(f.min === min && f.max === max));
+      } else {
+        return [...prev, { min, max }];
+      }
+    });
+  }
+
+  function clearAllFilters() {
+    setCategoryFilters([]);
+    setBrandFilters([]);
+    setPriceFilters([]);
+  }
+
+  const totalActiveFilters = categoryFilters.length + brandFilters.length + priceFilters.length;
 
   return (
     <>
+      <style>{`
+        .collapse {
+          transition: all 0.3s ease-in-out;
+          max-height: 0;
+          overflow: hidden;
+          opacity: 0;
+        }
+        
+        .collapse.show {
+          max-height: 2000px;
+          opacity: 1;
+        }
+        
+        .card-heading a {
+          position: relative;
+          display: block;
+          transition: color 0.2s ease;
+        }
+        
+        .card-heading a:hover {
+          color: #d4a574 !important;
+        }
+        
+        .card-heading a::after {
+          content: '▼';
+          position: absolute;
+          right: 0;
+          font-size: 12px;
+          transition: transform 0.3s ease;
+        }
+        
+        .card-heading a.open::after {
+          transform: rotate(180deg);
+        }
+
+        .filter-checkbox {
+          display: flex;
+          align-items: center;
+          margin-bottom: 8px;
+          cursor: pointer;
+          transition: all 0.2s ease;
+        }
+
+        .filter-checkbox:hover {
+          color: #d4a574;
+        }
+
+        .filter-checkbox input[type="checkbox"] {
+          width: 16px;
+          height: 16px;
+          margin-right: 10px;
+          cursor: pointer;
+          accent-color: #d4a574;
+        }
+
+        .shop__sidebar__categories ul,
+        .shop__sidebar__brand ul,
+        .shop__sidebar__price ul {
+          list-style: none;
+          padding: 0;
+        }
+
+        .shop__sidebar__categories ul li,
+        .shop__sidebar__brand ul li,
+        .shop__sidebar__price ul li {
+          margin-bottom: 5px;
+        }
+
+        .clear-filters-btn {
+          margin-top: 15px;
+          padding: 8px 20px;
+          background: #d4a574;
+          color: #fff;
+          border: none;
+          border-radius: 5px;
+          cursor: pointer;
+          fontSize: 14px;
+          width: 100%;
+          font-weight: 600;
+        }
+
+        .clear-filters-btn:hover {
+          background: #c59563;
+        }
+      `}</style>
+      
       {/* Shop Section Begin */}
       <section className="shop spad">
         <div className="container">
           <div className="row">
 
-            {/* ===== SIDEBAR (100% ORIGINAL) ===== */}
+            {/* ===== SIDEBAR ===== */}
             <div className="col-lg-3 col-md-3">
               <div className="shop__sidebar">
                 <div className="shop__sidebar__accordion">
                   <div className="accordion" id="accordionExample">
-
+                    {console.log(products)}
                     {/* Categories */}
                     <div className="card">
                       <div className="card-heading">
-                        <a data-toggle="collapse" data-target="#collapseOne">
-                          Categorias
+                        <a 
+                          href="#"
+                          onClick={(e) => { e.preventDefault(); toggleAccordion('categories'); }}
+                          style={{ cursor: 'pointer' }}
+                          className={openAccordions.categories ? 'open' : ''}
+                        >
+                          Categorias {categoryFilters.length > 0 && `(${categoryFilters.length})`}
                         </a>
                       </div>
                       <div
-                        id="collapseOne"
-                        className="collapse show"
-                        data-parent="#accordionExample"
+                        className={`collapse ${openAccordions.categories ? 'show' : ''}`}
                       >
                         <div className="card-body">
                           <div className="shop__sidebar__categories">
-                            <ul className="nice-scroll">
-                              <li><a href="#">Men (20)</a></li>
-                              <li><a href="#">Women (20)</a></li>
-                              <li><a href="#">Bags (20)</a></li>
-                              <li><a href="#">Clothing (20)</a></li>
-                              <li><a href="#">Shoes (20)</a></li>
-                              <li><a href="#">Accessories (20)</a></li>
-                              <li><a href="#">Kids (20)</a></li>
-                              <li><a href="#">Kids (20)</a></li>
+                            <ul>
+                              <li>
+                                <label className="filter-checkbox">
+                                  <input
+                                    type="checkbox"
+                                    checked={categoryFilters.includes("Men")}
+                                    onChange={() => toggleCategoryFilter("Men")}
+                                  />
+                                  <span>Men (20)</span>
+                                </label>
+                              </li>
+                              <li>
+                                <label className="filter-checkbox">
+                                  <input
+                                    type="checkbox"
+                                    checked={categoryFilters.includes("Women")}
+                                    onChange={() => toggleCategoryFilter("Women")}
+                                  />
+                                  <span>Women (20)</span>
+                                </label>
+                              </li>
+                              <li>
+                                <label className="filter-checkbox">
+                                  <input
+                                    type="checkbox"
+                                    checked={categoryFilters.includes("Bags")}
+                                    onChange={() => toggleCategoryFilter("Bags")}
+                                  />
+                                  <span>Bags (20)</span>
+                                </label>
+                              </li>
+                              <li>
+                                <label className="filter-checkbox">
+                                  <input
+                                    type="checkbox"
+                                    checked={categoryFilters.includes("Clothing")}
+                                    onChange={() => toggleCategoryFilter("Clothing")}
+                                  />
+                                  <span>Clothing (20)</span>
+                                </label>
+                              </li>
+                              <li>
+                                <label className="filter-checkbox">
+                                  <input
+                                    type="checkbox"
+                                    checked={categoryFilters.includes("Shoes")}
+                                    onChange={() => toggleCategoryFilter("Shoes")}
+                                  />
+                                  <span>Shoes (20)</span>
+                                </label>
+                              </li>
+                              <li>
+                                <label className="filter-checkbox">
+                                  <input
+                                    type="checkbox"
+                                    checked={categoryFilters.includes("Accessories")}
+                                    onChange={() => toggleCategoryFilter("Accessories")}
+                                  />
+                                  <span>Accessories (20)</span>
+                                </label>
+                              </li>
+                              <li>
+                                <label className="filter-checkbox">
+                                  <input
+                                    type="checkbox"
+                                    checked={categoryFilters.includes("Kids")}
+                                    onChange={() => toggleCategoryFilter("Kids")}
+                                  />
+                                  <span>Kids (20)</span>
+                                </label>
+                              </li>
                             </ul>
                           </div>
                         </div>
@@ -104,26 +348,101 @@ export default function Shop() {
                     {/* Brand */}
                     <div className="card">
                       <div className="card-heading">
-                        <a data-toggle="collapse" data-target="#collapseTwo">
-                          Marca
+                        <a 
+                          href="#"
+                          onClick={(e) => { e.preventDefault(); toggleAccordion('brand'); }}
+                          style={{ cursor: 'pointer' }}
+                          className={openAccordions.brand ? 'open' : ''}
+                        >
+                          Marca {brandFilters.length > 0 && `(${brandFilters.length})`}
                         </a>
                       </div>
                       <div
-                        id="collapseTwo"
-                        className="collapse show"
-                        data-parent="#accordionExample"
+                        className={`collapse ${openAccordions.brand ? 'show' : ''}`}
                       >
                         <div className="card-body">
                           <div className="shop__sidebar__brand">
                             <ul>
-                              <li><a href="#">Louis Vuitton</a></li>
-                              <li><a href="#">Chanel</a></li>
-                              <li><a href="#">Hermes</a></li>
-                              <li><a href="#">Gucci</a></li>
-                              <li><a href="#">Prada</a></li>
-                              <li><a href="#">Dolce & Gabbana</a></li>
-                              <li><a href="#">Balenciaga</a></li>
-                              <li><a href="#">Versace</a></li>
+                              <li>
+                                <label className="filter-checkbox">
+                                  <input
+                                    type="checkbox"
+                                    checked={brandFilters.includes("Louis Vuitton")}
+                                    onChange={() => toggleBrandFilter("Louis Vuitton")}
+                                  />
+                                  <span>Louis Vuitton</span>
+                                </label>
+                              </li>
+                              <li>
+                                <label className="filter-checkbox">
+                                  <input
+                                    type="checkbox"
+                                    checked={brandFilters.includes("Chanel")}
+                                    onChange={() => toggleBrandFilter("Chanel")}
+                                  />
+                                  <span>Chanel</span>
+                                </label>
+                              </li>
+                              <li>
+                                <label className="filter-checkbox">
+                                  <input
+                                    type="checkbox"
+                                    checked={brandFilters.includes("Hermes")}
+                                    onChange={() => toggleBrandFilter("Hermes")}
+                                  />
+                                  <span>Hermes</span>
+                                </label>
+                              </li>
+                              <li>
+                                <label className="filter-checkbox">
+                                  <input
+                                    type="checkbox"
+                                    checked={brandFilters.includes("Gucci")}
+                                    onChange={() => toggleBrandFilter("Gucci")}
+                                  />
+                                  <span>Gucci</span>
+                                </label>
+                              </li>
+                              <li>
+                                <label className="filter-checkbox">
+                                  <input
+                                    type="checkbox"
+                                    checked={brandFilters.includes("Prada")}
+                                    onChange={() => toggleBrandFilter("Prada")}
+                                  />
+                                  <span>Prada</span>
+                                </label>
+                              </li>
+                              <li>
+                                <label className="filter-checkbox">
+                                  <input
+                                    type="checkbox"
+                                    checked={brandFilters.includes("Dolce & Gabbana")}
+                                    onChange={() => toggleBrandFilter("Dolce & Gabbana")}
+                                  />
+                                  <span>Dolce & Gabbana</span>
+                                </label>
+                              </li>
+                              <li>
+                                <label className="filter-checkbox">
+                                  <input
+                                    type="checkbox"
+                                    checked={brandFilters.includes("Balenciaga")}
+                                    onChange={() => toggleBrandFilter("Balenciaga")}
+                                  />
+                                  <span>Balenciaga</span>
+                                </label>
+                              </li>
+                              <li>
+                                <label className="filter-checkbox">
+                                  <input
+                                    type="checkbox"
+                                    checked={brandFilters.includes("Versace")}
+                                    onChange={() => toggleBrandFilter("Versace")}
+                                  />
+                                  <span>Versace</span>
+                                </label>
+                              </li>
                             </ul>
                           </div>
                         </div>
@@ -133,100 +452,96 @@ export default function Shop() {
                     {/* Price */}
                     <div className="card">
                       <div className="card-heading">
-                        <a data-toggle="collapse" data-target="#collapseThree">
-                          Filtrar pelo preço
+                        <a 
+                          href="#"
+                          onClick={(e) => { e.preventDefault(); toggleAccordion('price'); }}
+                          style={{ cursor: 'pointer' }}
+                          className={openAccordions.price ? 'open' : ''}
+                        >
+                          Filtrar pelo preço {priceFilters.length > 0 && `(${priceFilters.length})`}
                         </a>
                       </div>
                       <div
-                        id="collapseThree"
-                        className="collapse show"
-                        data-parent="#accordionExample"
+                        className={`collapse ${openAccordions.price ? 'show' : ''}`}
                       >
                         <div className="card-body">
                           <div className="shop__sidebar__price">
                             <ul>
-                              <li><a href="#">$0.00 - $50.00</a></li>
-                              <li><a href="#">$50.00 - $100.00</a></li>
-                              <li><a href="#">$100.00 - $150.00</a></li>
-                              <li><a href="#">$150.00 - $200.00</a></li>
-                              <li><a href="#">$200.00 - $250.00</a></li>
-                              <li><a href="#">250.00+</a></li>
+                              <li>
+                                <label className="filter-checkbox">
+                                  <input
+                                    type="checkbox"
+                                    checked={priceFilters.some(f => f.min === 0 && f.max === 250)}
+                                    onChange={() => togglePriceFilter(0, 250)}
+                                  />
+                                  <span>R$ 0,00 - R$ 250,00</span>
+                                </label>
+                              </li>
+                              <li>
+                                <label className="filter-checkbox">
+                                  <input
+                                    type="checkbox"
+                                    checked={priceFilters.some(f => f.min === 250 && f.max === 400)}
+                                    onChange={() => togglePriceFilter(250, 400)}
+                                  />
+                                  <span>R$ 250,00 - R$ 400,00</span>
+                                </label>
+                              </li>
+                              <li>
+                                <label className="filter-checkbox">
+                                  <input
+                                    type="checkbox"
+                                    checked={priceFilters.some(f => f.min === 400 && f.max === 450)}
+                                    onChange={() => togglePriceFilter(400, 450)}
+                                  />
+                                  <span>R$ 400,00 - R$ 450,00</span>
+                                </label>
+                              </li>
+                              <li>
+                                <label className="filter-checkbox">
+                                  <input
+                                    type="checkbox"
+                                    checked={priceFilters.some(f => f.min === 450 && f.max === 600)}
+                                    onChange={() => togglePriceFilter(450, 600)}
+                                  />
+                                  <span>R$ 450,00 - R$ 600,00</span>
+                                </label>
+                              </li>
+                              <li>
+                                <label className="filter-checkbox">
+                                  <input
+                                    type="checkbox"
+                                    checked={priceFilters.some(f => f.min === 600 && f.max === 2000)}
+                                    onChange={() => togglePriceFilter(600, 2000)}
+                                  />
+                                  <span>R$ 600,00 - R$ 2000,00</span>
+                                </label>
+                              </li>
+                              <li>
+                                <label className="filter-checkbox">
+                                  <input
+                                    type="checkbox"
+                                    checked={priceFilters.some(f => f.min === 2500 && f.max === 999999)}
+                                    onChange={() => togglePriceFilter(2500, 999999)}
+                                  />
+                                  <span>R$ 2000,00+</span>
+                                </label>
+                              </li>
                             </ul>
                           </div>
                         </div>
                       </div>
                     </div>
 
-                    {/* Size */}
-                    <div className="card">
-                      <div className="card-heading">
-                        <a data-toggle="collapse" data-target="#collapseFour">
-                          Size
-                        </a>
-                      </div>
-                      <div
-                        id="collapseFour"
-                        className="collapse show"
-                        data-parent="#accordionExample"
+                    {/* Botão de Limpar Filtros */}
+                    {totalActiveFilters > 0 && (
+                      <button 
+                        onClick={clearAllFilters}
+                        className="clear-filters-btn"
                       >
-                        <div className="card-body">
-                          <div className="shop__sidebar__size">
-                            <label htmlFor="xs">xs<input type="radio" id="xs" /></label>
-                            <label htmlFor="sm">s<input type="radio" id="sm" /></label>
-                            <label htmlFor="md">m<input type="radio" id="md" /></label>
-                            <label htmlFor="xl">xl<input type="radio" id="xl" /></label>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Colors */}
-                    <div className="card">
-                      <div className="card-heading">
-                        <a data-toggle="collapse" data-target="#collapseFive">
-                          Colors
-                        </a>
-                      </div>
-                      <div
-                        id="collapseFive"
-                        className="collapse show"
-                        data-parent="#accordionExample"
-                      >
-                        <div className="card-body">
-                          <div className="shop__sidebar__color">
-                            <label className="c-1"><input type="radio" /></label>
-                            <label className="c-2"><input type="radio" /></label>
-                            <label className="c-3"><input type="radio" /></label>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Tags */}
-                    <div className="card">
-                      <div className="card-heading">
-                        <a data-toggle="collapse" data-target="#collapseSix">
-                          Tags
-                        </a>
-                      </div>
-                      <div
-                        id="collapseSix"
-                        className="collapse show"
-                        data-parent="#accordionExample"
-                      >
-                        <div className="card-body">
-                          <div className="shop__sidebar__tags">
-                            <a href="#">Product</a>
-                            <a href="#">Bags</a>
-                            <a href="#">Shoes</a>
-                            <a href="#">Fashion</a>
-                            <a href="#">Clothing</a>
-                            <a href="#">Hats</a>
-                            <a href="#">Accessories</a>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+                        Limpar Todos os Filtros ({totalActiveFilters})
+                      </button>
+                    )}
 
                   </div>
                 </div>
@@ -242,21 +557,21 @@ export default function Shop() {
                     <div className="row">
                       <div className="col-lg-7 col-md-7">
                         <div className="shop__product__option__left">
-                          <p>Showing {displayProducts.length} results</p>
+                          <p>{displayProducts.length} Resultados</p>
                         </div>
                       </div>
                       <div className="col-lg-5 col-md-5">
                         <div className="shop__product__option__right">
-                          <p>Sort by:</p>
+                          <p>Ordenar por:</p>
                           <select
                             value={sort}
                             onChange={(e) => handleSort(e.target.value)}
                           >
-                            <option value="">Default</option>
+                            <option value="">Padrão</option>
                             <option value="az">A-Z</option>
-                            <option value="price_low">Price: low to high</option>
-                            <option value="price_high">Price: high to low</option>
-                            <option value="sales">Best sellers</option>
+                            <option value="price_low">Do menor para o maior</option>
+                            <option value="price_high">Do maior para o menor</option>
+                            <option value="sales">Mais vendidos</option>
                           </select>
                         </div>
                       </div>
@@ -265,8 +580,8 @@ export default function Shop() {
                 </div>
 
                 {/* PRODUCTS GRID */}
-                {displayProducts.map((product) => (
-                  <div key={product.id} className="col-lg-4 col-md-6 col-sm-6">
+                {displayProducts.map((product, index) => (
+                  <div key={`${product.id}-${renderKey}-${index}`} className="col-lg-4 col-md-6 col-sm-6">
                     <div className="product__item">
                       <div
                         className="product__item__pic set-bg"
@@ -281,7 +596,7 @@ export default function Shop() {
                         </ul>
                       </div>
                       <div className="product__item__text">
-                        <h6><a href="#">{product.name}</a></h6>
+                        <h6><a href="#" style={{color: '#d4af37'}}>{product.name}</a></h6>
                         <div className="product__price">
                           R$ {product.price.toFixed(2)}
                         </div>
@@ -293,11 +608,11 @@ export default function Shop() {
                 {/* Pagination */}
                 <div className="col-lg-12 text-center">
                   <div className="pagination__option">
-                    <a href="#"><i className="fa fa-angle-left" /></a>
-                    <a href="#">1</a>
-                    <a href="#">2</a>
-                    <a href="#">3</a>
-                    <a href="#"><i className="fa fa-angle-right" /></a>
+                    <a href="#" style={{color: '#d4af37'}}><i className="fa fa-angle-left" /></a>
+                    <a href="#" style={{color: '#d4af37'}}>1</a>
+                    <a href="#" style={{color: '#d4af37'}}>2</a>
+                    <a href="#" style={{color: '#d4af37'}}>3</a>
+                    <a href="#" style={{color: '#d4af37'}}><i className="fa fa-angle-right" /></a>
                   </div>
                 </div>
 

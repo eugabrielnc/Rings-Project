@@ -2,6 +2,7 @@ import { useLocation, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { getAuthData } from '../utils/dadosuser'
+import Subheader from "./subheader.jsx";
 export default function Header() {
 
 
@@ -273,7 +274,7 @@ export default function Header() {
             </div>
           </div>
 
-          {/* Menu */}
+          {/* Menu 
           <div className="row mt-3">
             <div className="col-lg-12">
               <nav className="header__menu mobile-menu">
@@ -294,6 +295,7 @@ export default function Header() {
               </nav>
             </div>
           </div>
+          */}
 
           <div className="canvas__open">
             <i className="fa fa-bars"></i>

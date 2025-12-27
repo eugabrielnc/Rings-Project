@@ -1,0 +1,65 @@
+.subheader {
+    background: black;
+    color: white;
+    display: flex;
+    position: relative;
+    z-index: 1000;
+    justify-content: center; 
+}
+.container-header{
+    padding: 5px 5px;
+}
+
+.subheader__menu {
+    width: 100%;
+}
+
+.subheader__menu ul {
+    display: flex;
+    list-style: none;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+}
+
+.subheader__menu ul li {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.subheader__menu ul li a {
+    padding: 15px 20px;
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    height: 100%;
+}
+
+.subheader__menu ul li a:hover {
+    color: #d4a574;
+}
+
+.subheader__menu ul li.active a {
+    color: #d4a574;
+}
+
+/* Setinha animada */
+.subheader__menu ul li a .arrow {
+    display: inline-block;
+    font-size: 10px;
+    transition: transform 0.3s ease;
+    transform: rotate(180deg);
+    margin-left: 3px;
+}
+
+.subheader__menu ul li a .arrow.rotate {
+    transform: rotate(0deg);
+}
