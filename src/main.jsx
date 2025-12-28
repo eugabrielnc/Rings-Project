@@ -23,6 +23,9 @@ import MedidaNovo from "./pages/MedidaNovo";
 import Vendas from "./pages/vendas";
 import EditProductPage from "./pages/editar";
 import Carrinho from "./pages/carrinho";
+import Layout2 from "./pages/painel2";
+import DadosPessoais from "./pages/dados";
+import MeusPedidos from "./pages/rastreio";
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <BrowserRouter>
@@ -34,21 +37,25 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         <Route path="/" element={<Home />} />
         <Route path="/medida" element={<MedidaNovo />} />
         <Route path="/shopcart" element={<ShoppingCart />} />
-        <Route path="/login" element={<Login/>} />
-        <Route path="/cadastro" element={<Signup/>} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/cadastro" element={<Signup />} />
         <Route path="/shop" element={<Shop />} />
         <Route path="/shopdetails/:id" element={<ShopDetails />} />
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/perfil" element={<Layout2 />}>
+          <Route path="dados" element={<DadosPessoais />} />
+          <Route path="rastreio" element={<MeusPedidos />} />
+        </Route>
         <Route path="/admin" element={<Layout />}>
-        <Route path="/admin/dashboard" element={<Dashboard/>}></Route>
-        <Route path="/admin/usuarios" element={<Usuarios/>}></Route>
-        <Route path="/admin/produto" element={<Produtos/>}></Route>
-        <Route path="/admin/produtoforms" element={<CreateProductPage/>}></Route>
-        <Route path="/admin/vendas" element={<Vendas/>}></Route>
-        <Route path="/admin/carrinho" element={<Carrinho/>}></Route>
-        <Route path="/admin/produtos/editar/:id" element={<EditProductPage/>}></Route>
+          <Route path="/admin/dashboard" element={<Dashboard />}></Route>
+          <Route path="/admin/usuarios" element={<Usuarios />}></Route>
+          <Route path="/admin/produto" element={<Produtos />}></Route>
+          <Route path="/admin/produtoforms" element={<CreateProductPage />}></Route>
+          <Route path="/admin/vendas" element={<Vendas />}></Route>
+          <Route path="/admin/carrinho" element={<Carrinho />}></Route>
+          <Route path="/admin/produtos/editar/:id" element={<EditProductPage />}></Route>
         </Route>
       </Routes>
 

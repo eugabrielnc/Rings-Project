@@ -25,7 +25,7 @@ function Signup() {
       return;
     }
 
-    fetch(`${url}/create-user`, {
+    fetch(`${url}/users/create-user`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

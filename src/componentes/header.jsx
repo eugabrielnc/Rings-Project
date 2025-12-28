@@ -1,5 +1,5 @@
 import { useLocation, Link } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { getAuthData } from '../utils/dadosuser'
 import Subheader from "./subheader.jsx";
@@ -8,6 +8,7 @@ export default function Header() {
 
   const navigate = useNavigate();
   const authData = getAuthData();
+  const isAdmin = authData?.role === "admin";
   const isLogged = !!authData?.token;
   const handleProfileClick = () => {
     const authData = getAuthData();
@@ -26,7 +27,8 @@ export default function Header() {
   const [query, setQuery] = useState("");
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
-
+  const [openProfile, setOpenProfile] = useState(false);
+  const profileRef = useRef(null);
   const url = import.meta.env.VITE_API_URL;
 
   // Carregar produtos da API
@@ -59,6 +61,39 @@ export default function Header() {
 
     setFilteredProducts(filtered.slice(0, 5));
   }, [query, products]);
+  const handleLogout = () => {
+    localStorage.removeItem("authData"); // mesmo nome usado no login
+    navigate("/login");
+    window.location.reload();
+  };
+
+  const dropdownItemStyle = {
+    display: "block",
+    padding: "12px 16px",
+    fontSize: "14px",
+    cursor: "pointer",
+    textDecoration: "none",
+    color: "#333"
+  };
+
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (
+        openProfile &&
+        profileRef.current &&
+        !profileRef.current.contains(event.target)
+      ) {
+        setOpenProfile(false);
+      }
+    }
+
+    document.addEventListener("click", handleClickOutside, true); // 👈 capture
+
+    return () => {
+      document.removeEventListener("click", handleClickOutside, true);
+    };
+  }, [openProfile]);
 
 //console.log(authData)
 
@@ -251,12 +286,72 @@ export default function Header() {
                   </Link>
                 ) : (
                   <>
-                    <a href="/perfil">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="16" viewBox="0 0 24 24" fill="none" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                        <circle cx="12" cy="7" r="4" />
-                      </svg>
-                    </a>
+                    <div ref={profileRef} style={{ position: "relative" }}>
+                      <button
+                        onClick={() => setOpenProfile(!openProfile)}
+                        style={{
+                          background: "none",
+                          border: "none",
+                          cursor: "pointer",
+                          padding: 0
+                        }}
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="16" viewBox="0 0 24 24" fill="none" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                          <circle cx="12" cy="7" r="4" />
+                        </svg>
+                      </button>
+
+                      {openProfile && (
+                        <div
+                          style={{
+                            position: "absolute",
+                            top: "140%",
+                            right: 0,
+                            width: "220px",
+                            background: "#ffffff",
+                            borderRadius: "14px",
+                            boxShadow: "0 12px 30px rgba(0,0,0,0.15)",
+                            border: "1px solid #f0f0f0",
+                            zIndex: 9999,
+                            overflow: "hidden",
+                            animation: "fadeSlide 0.2s ease-out"
+                          }}
+                        >
+                          <Link
+                            to="/perfil"
+                            onClick={() => setOpenProfile(false)}
+                            style={dropdownItemStyle}
+                          >
+                            Minha conta
+                          </Link>
+
+                          {isAdmin && (
+                            <Link
+                              to="/admin"
+                              onClick={() => setOpenProfile(false)}
+                              style={dropdownItemStyle}
+                            >
+                              Administração
+                            </Link>
+                          )}
+
+                          <button
+                            onClick={handleLogout}
+                            style={{
+                              ...dropdownItemStyle,
+                              border: "none",
+                              background: "none",
+                              width: "100%",
+                              textAlign: "left",
+                              color: "#b00020"
+                            }}
+                          >
+                            Sair
+                          </button>
+                        </div>
+                      )}
+                    </div>
 
                     <a href="#">
                       <svg xmlns="http://www.w3.org/2000/svg" width="18" height="16" viewBox="0 0 24 24" fill="none" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
