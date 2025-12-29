@@ -100,64 +100,65 @@ body {
 .pagination__option a:active {
 	transform: translateY(0);
 }
+
 .pagination__option {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 8px;
-          margin-top: 30px;
-        }
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	margin-top: 30px;
+}
 
-        .pagination__option a {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          min-width: 40px;
-          height: 40px;
-          padding: 0 12px;
-          border: 2px solid #e5e5e5;
-          border-radius: 8px;
-          color: #666;
-          font-weight: 500;
-          font-size: 14px;
-          text-decoration: none;
-          transition: all 0.3s ease;
-          background: #fff;
-        }
+.pagination__option a {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 40px;
+	height: 40px;
+	padding: 0 12px;
+	border: 2px solid #e5e5e5;
+	border-radius: 8px;
+	color: #666;
+	font-weight: 500;
+	font-size: 14px;
+	text-decoration: none;
+	transition: all 0.3s ease;
+	background: #fff;
+}
 
-        .pagination__option a:hover {
-          border-color: #d4af37;
-          color: #d4af37;
-          transform: translateY(-2px);
-          box-shadow: 0 4px 8px rgba(212, 175, 55, 0.2);
-        }
+.pagination__option a:hover {
+	border-color: #d4af37;
+	color: #d4af37;
+	transform: translateY(-2px);
+	box-shadow: 0 4px 8px rgba(212, 175, 55, 0.2);
+}
 
-        .pagination__option a.active {
-          background: linear-gradient(135deg, #d4af37 0%, #f4d03f 100%);
-          border-color: #d4af37;
-          color: #fff;
-          font-weight: 700;
-          box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
-        }
+.pagination__option a.active {
+	background: linear-gradient(135deg, #d4af37 0%, #f4d03f 100%);
+	border-color: #d4af37;
+	color: #fff;
+	font-weight: 700;
+	box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+}
 
-        .pagination__option a.arrow {
-          background: #f8f8f8;
-          border-color: #ddd;
-        }
+.pagination__option a.arrow {
+	background: #f8f8f8;
+	border-color: #ddd;
+}
 
-        .pagination__option a.arrow:hover {
-          background: #d4af37;
-          border-color: #d4af37;
-          color: #fff;
-        }
+.pagination__option a.arrow:hover {
+	background: #d4af37;
+	border-color: #d4af37;
+	color: #fff;
+}
 
-        .pagination__option a.arrow i {
-          font-size: 16px;
-        }
+.pagination__option a.arrow i {
+	font-size: 16px;
+}
 
-        .pagination__option a:active {
-          transform: translateY(0);
-        }
+.pagination__option a:active {
+	transform: translateY(0);
+}
 
 h1,
 h2,
@@ -1129,7 +1130,6 @@ ol {
   Product
 -----------------------*/
 
-/* Container da seção de produtos */
 .product {
 	padding-top: 0;
 	padding-bottom: 60px;

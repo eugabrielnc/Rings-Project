@@ -23,6 +23,8 @@ export default function ShopDetails() {
   const [selectedSize, setSelectedSize] = useState(null);
   const [produtos, setProdutos] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [gravacaoMasculino, setGravacaoMasculino] = useState('');
+  const [gravacaoFeminino, setGravacaoFeminino] = useState('');
   const url = import.meta.env.VITE_API_URL;
   const { id } = useParams();
 
@@ -139,7 +141,6 @@ export default function ShopDetails() {
                 </div>
               </div>
             </div>
-            product
             <div className="row">
               <div className="col-lg-3 col-md-3">
                 <ul className="nav nav-tabs" role="tablist">
@@ -156,13 +157,6 @@ export default function ShopDetails() {
                   <li className="nav-item">
                     <a className="nav-link" data-toggle="tab" href="#tabs-3" role="tab">
                       <div className="product__thumb__pic set-bg" data-setbg="img/shop-details/thumb-3.png"></div>
-                    </a>
-                  </li>
-                  <li className="nav-item">
-                    <a className="nav-link" data-toggle="tab" href="#tabs-4" role="tab">
-                      <div className="product__thumb__pic set-bg" data-setbg="img/shop-details/thumb-4.png">
-                        <i className="fa fa-play" />
-                      </div>
                     </a>
                   </li>
                 </ul>
@@ -224,15 +218,10 @@ export default function ShopDetails() {
                   <h3>
                     R$ {product.price ? Number(product.price).toFixed(2) : '0.00'}
                   </h3>
-                  <p>
-                    Coat with quilted lining and an adjustable hood. Featuring long sleeves with adjustable
-                    cuff tabs, adjustable asymmetric hem with elastic side tabs and a front zip fastening with
-                    placket.
-                  </p>
                   <div className="product__details__option">
                     <div className="product__details__option__size">
                       <span style={{ display: 'block', marginBottom: '10px', fontWeight: '600' }}>
-                        Selecione o Tamanho (Aro):
+                        Selecione o Tamanho  (Masculino):
                       </span>
                       <Select
                         options={sizeOptions}
@@ -248,6 +237,78 @@ export default function ShopDetails() {
                           Não sabe seu tamanho? <a href="/medida" style={{ color: '#d4a574', fontWeight: '600' }}>Meça aqui!</a>
                         </p>
                       )}
+                      
+                      {/* Campo de Gravação Masculino */}
+                      <div style={{ marginTop: '20px' }}>
+                        <p style={{ display: 'block', marginBottom: '10px', fontWeight: '600', color: '#333' }}>
+                          Gravação (Masculino):
+                        </p>
+                        <input
+                          type="text"
+                          value={gravacaoMasculino}
+                          onChange={(e) => setGravacaoMasculino(e.target.value)}
+                          placeholder="Digite o texto para gravação..."
+                          maxLength={15}
+                          style={{
+                            width: '100%',
+                            padding: '12px 15px',
+                            border: '1px solid #e1e1e1',
+                            borderRadius: '4px',
+                            fontSize: '14px',
+                            outline: 'none',
+                            boxShadow: 'none'
+                          }}
+                        />
+                        <p style={{ marginTop: '5px', fontSize: '12px', color: '#999' }}>
+                          Máximo 15 caracteres ({gravacaoMasculino.length}/15)
+                        </p>
+                      </div>
+                    </div>
+                    
+                    <div className="product__details__option__size">
+                      <span style={{ display: 'block', marginBottom: '10px', fontWeight: '600' }}>
+                        Selecione o Tamanho  (Feminino):
+                      </span>
+                      <Select
+                        options={sizeOptions}
+                        value={selectedSize}
+                        onChange={setSelectedSize}
+                        styles={customStyles}
+                        placeholder="Escolha o tamanho..."
+                        isSearchable={false}
+                      />
+                      {selectedSize && (
+                        <p style={{ marginTop: '10px', fontSize: '13px', color: '#666' }}>
+                          <i className="fa fa-info-circle" style={{ marginRight: '5px' }}></i>
+                          Não sabe seu tamanho? <a href="/medida" style={{ color: '#d4a574', fontWeight: '600' }}>Meça aqui!</a>
+                        </p>
+                      )}
+                      
+                      {/* Campo de Gravação Feminino */}
+                      <div style={{ marginTop: '20px' }}>
+                        <p style={{ display: 'block', marginBottom: '10px', fontWeight: '600', color: '#333' }}>
+                          Gravação (Feminino):
+                        </p>
+                        <input
+                          type="text"
+                          value={gravacaoFeminino}
+                          onChange={(e) => setGravacaoFeminino(e.target.value)}
+                          placeholder="Digite o texto para gravação..."
+                          maxLength={15}
+                          style={{
+                            width: '100%',
+                            padding: '12px 15px',
+                            border: '1px solid #e1e1e1',
+                            borderRadius: '4px',
+                            fontSize: '14px',
+                            outline: 'none',
+                            boxShadow: 'none'
+                          }}
+                        />
+                        <p style={{ marginTop: '5px', fontSize: '12px', color: '#999' }}>
+                          Máximo 15 caracteres ({gravacaoFeminino.length}/15)
+                        </p>
+                      </div>
                     </div>
                   </div>
                   <div className="product__details__cart__option">
@@ -263,135 +324,6 @@ export default function ShopDetails() {
                     >
                       Comprar
                     </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="row">
-              <div className="col-lg-12">
-                <div className="product__details__tab">
-                  <ul className="nav nav-tabs" role="tablist">
-                    <li className="nav-item">
-                      <a className="nav-link active" data-toggle="tab" href="#tabs-5" role="tab">
-                        Description
-                      </a>
-                    </li>
-                    <li className="nav-item">
-                      <a className="nav-link" data-toggle="tab" href="#tabs-6" role="tab">
-                        Customer Previews(5)
-                      </a>
-                    </li>
-                    <li className="nav-item">
-                      <a className="nav-link" data-toggle="tab" href="#tabs-7" role="tab">
-                        Additional information
-                      </a>
-                    </li>
-                  </ul>
-                  <div className="tab-content">
-                    <div className="tab-pane active" id="tabs-5" role="tabpanel">
-                      <div className="product__details__tab__content">
-                        <p className="note">
-                          Nam tempus turpis at metus scelerisque placerat nulla deumantos solicitud felis.
-                          Pellentesque diam dolor, elementum etos lobortis des mollis ut risus. Sedcus
-                          faucibus an sullamcorper mattis drostique des commodo pharetras loremos.
-                        </p>
-                        <div className="product__details__tab__content__item">
-                          <h5>Products Infomation</h5>
-                          <p>
-                            A Pocket PC is a handheld computer, which features many of the same capabilities as a
-                            modern PC. These handy little devices allow individuals to retrieve and store e-mail
-                            messages, create a contact file, coordinate appointments, surf the internet, exchange
-                            text messages and more. Every product that is labeled as a Pocket PC must be accompanied
-                            with specific software to operate the unit and must feature a touchscreen and touchpad.
-                          </p>
-                          <p>
-                            As is the case with any new technology product, the cost of a Pocket PC was substantial
-                            during it’s early release. For approximately $700.00, consumers could purchase one of
-                            top-of-the-line Pocket PCs in 2003. These days, customers are finding that prices have
-                            become much more reasonable now that the newness is wearing off. For approximately
-                            $350.00, a new Pocket PC can now be purchased.
-                          </p>
-                        </div>
-                        <div className="product__details__tab__content__item">
-                          <h5>Material used</h5>
-                          <p>
-                            Polyester is deemed lower quality due to its none natural quality’s. Made from synthetic
-                            materials, not natural like wool. Polyester suits become creased easily and are known for
-                            not being breathable. Polyester suits tend to have a shine to them compared to wool and
-                            cotton suits, this can make the suit look cheap. The texture of velvet is luxurious and
-                            breathable. Velvet is a great choice for dinner party jacket and can be worn all year round.
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="tab-pane" id="tabs-6" role="tabpanel">
-                      <div className="product__details__tab__content">
-                        <div className="product__details__tab__content__item">
-                          <h5>Products Infomation</h5>
-                          <p>
-                            A Pocket PC is a handheld computer, which features many of the same capabilities as a
-                            modern PC. These handy little devices allow individuals to retrieve and store e-mail
-                            messages, create a contact file, coordinate appointments, surf the internet, exchange
-                            text messages and more. Every product that is labeled as a Pocket PC must be accompanied
-                            with specific software to operate the unit and must feature a touchscreen and touchpad.
-                          </p>
-                          <p>
-                            As is the case with any new technology product, the cost of a Pocket PC was substantial
-                            during it’s early release. For approximately $700.00, consumers could purchase one of
-                            top-of-the-line Pocket PCs in 2003. These days, customers are finding that prices have
-                            become much more reasonable now that the newness is wearing off. For approximately
-                            $350.00, a new Pocket PC can now be purchased.
-                          </p>
-                        </div>
-                        <div className="product__details__tab__content__item">
-                          <h5>Material used</h5>
-                          <p>
-                            Polyester is deemed lower quality due to its none natural quality’s. Made from synthetic
-                            materials, not natural like wool. Polyester suits become creased easily and are known for
-                            not being breathable. Polyester suits tend to have a shine to them compared to wool and
-                            cotton suits, this can make the suit look cheap. The texture of velvet is luxurious and
-                            breathable. Velvet is a great choice for dinner party jacket and can be worn all year round.
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="tab-pane" id="tabs-7" role="tabpanel">
-                      <div className="product__details__tab__content">
-                        <p className="note">
-                          Nam tempus turpis at metus scelerisque placerat nulla deumantos solicitud felis.
-                          Pellentesque diam dolor, elementum etos lobortis des mollis ut risus. Sedcus faucibus an
-                          sullamcorper mattis drostique des commodo pharetras loremos.
-                        </p>
-                        <div className="product__details__tab__content__item">
-                          <h5>Products Infomation</h5>
-                          <p>
-                            A Pocket PC is a handheld computer, which features many of the same capabilities as a
-                            modern PC. These handy little devices allow individuals to retrieve and store e-mail
-                            messages, create a contact file, coordinate appointments, surf the internet, exchange
-                            text messages and more. Every product that is labeled as a Pocket PC must be accompanied
-                            with specific software to operate the unit and must feature a touchscreen and touchpad.
-                          </p>
-                          <p>
-                            As is the case with any new technology product, the cost of a Pocket PC was substantial
-                            during it’s early release. For approximately $700.00, consumers could purchase one of
-                            top-of-the-line Pocket PCs in 2003. These days, customers are finding that prices have
-                            become much more reasonable now that the newness is wearing off. For approximately
-                            $350.00, a new Pocket PC can now be purchased.
-                          </p>
-                        </div>
-                        <div className="product__details__tab__content__item">
-                          <h5>Material used</h5>
-                          <p>
-                            Polyester is deemed lower quality due to its none natural quality’s. Made from synthetic
-                            materials, not natural like wool. Polyester suits become creased easily and are known for
-                            not being breathable. Polyester suits tend to have a shine to them compared to wool and
-                            cotton suits, this can make the suit look cheap. The texture of velvet is luxurious and
-                            breathable. Velvet is a great choice for dinner party jacket and can be worn all year round.
-                          </p>
-                        </div>
-                      </div>
-                    </div>
                   </div>
                 </div>
               </div>

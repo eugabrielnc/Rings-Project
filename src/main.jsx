@@ -23,6 +23,9 @@ import MedidaNovo from "./pages/MedidaNovo";
 import Vendas from "./pages/vendas";
 import EditProductPage from "./pages/editar";
 import Carrinho from "./pages/carrinho";
+import Layout2 from "./pages/painel2";
+import DadosPessoais from "./pages/dados";
+import MeusPedidos from "./pages/rastreio";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
@@ -42,6 +45,10 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/perfil" element={<Layout2 />}>
+          <Route path="dados" element={<DadosPessoais />} />
+          <Route path="rastreio" element={<MeusPedidos />} />
+        </Route>
         <Route path="/admin" element={<Layout />}>
         <Route path="/admin/dashboard" element={<Dashboard/>}></Route>
         <Route path="/admin/usuarios" element={<Usuarios/>}></Route>

@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import Select from "react-select";
 import { FILTER_CONFIG } from "../utils/filters";
-
+import { useNavigate } from "react-router-dom";
+import { getAuthData } from '../utils/dadosuser'
 import "../assets/Css/bootstrap.min.css";
 import "../assets/Css/font-awesome.min.css";
 import "../assets/Css/elegant-icons.css";
@@ -12,6 +13,7 @@ import "../assets/Css/owl.carousel.min.css";
 import "../assets/Css/slicknav.min.css";
 import "../assets/Css/style.css";
 
+
 export default function Shop() {
   const url = import.meta.env.VITE_API_URL;
   const [searchParams] = useSearchParams();
@@ -20,6 +22,7 @@ export default function Shop() {
   const title = searchParams.get("title");
   console.log("Título da URL:", title);
 
+  const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const [displayProducts, setDisplayProducts] = useState([]);
   const [sort, setSort] = useState("");
@@ -52,7 +55,49 @@ export default function Shop() {
     colors: false,
     tags: false
   });
-
+  const addToCart = async (product) => {
+      try {
+        const authData = getAuthData(); // supondo que aqui vem token, cep etc
+  
+        const body = {
+          value: product.price,
+          product_id: product.id,
+          amount: 1,
+          user_cep: "",
+          authorization: authData?.token || "",
+          sizes: "M", // ajuste se tiver tamanho dinâmico
+          status: "cart",
+          code: "",
+          state: "",
+          city: "",
+          neighboor: "",
+          street: "",
+          complement: ""
+        };
+  
+        const response = await fetch(`${url}/sales/`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "accept": "application/json",
+            "Authorization": `Bearer ${authData?.token}`
+          },
+          body: JSON.stringify(body)
+        });
+  
+        if (!response.ok) {
+          throw new Error("Erro ao adicionar ao carrinho");
+        }
+  
+        const data = await response.json();
+        console.log("Adicionado ao carrinho:", data);
+        alert("Produto adicionado ao carrinho 🛒");
+  
+      } catch (error) {
+        console.error(error);
+        alert("Erro ao adicionar ao carrinho");
+      }
+    };
   const toggleAccordion = (section) => {
     setOpenAccordions(prev => ({
       ...prev,
@@ -580,6 +625,7 @@ export default function Shop() {
                 </div>
 
                 {/* PRODUCTS GRID */}
+                <div className="row product-grid">
                 {currentProducts.map((product, index) => (
                   <div key={`${product.id}-${renderKey}-${index}`} className="col-lg-4 col-md-6 col-sm-6">
                     <div className="product__item">
@@ -600,10 +646,24 @@ export default function Shop() {
                         <div className="product__price">
                           R$ {product.price.toFixed(2)}
                         </div>
+                        <a onClick={() => navigate(`/shopdetails/${product.id}`)} className="add-cart">
+                        Comprar
+                      </a>
+                       <a
+                        href="#"
+                        className="add-cart"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          addToCart(product);
+                        }}
+                      >
+                        + Adicionar ao carrinho
+                      </a>
                       </div>
                     </div>
                   </div>
                 ))}
+                </div>
 
                 {/* Pagination */}
                 <div className="col-lg-12 text-center">
