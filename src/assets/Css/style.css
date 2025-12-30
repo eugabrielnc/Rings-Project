@@ -30,7 +30,7 @@
 /* Template default CSS
 /*----------------------------------------*/
 :root {
-	--primary-color: linear-gradient(90deg, #ffffff 0%, #f7e9b3 35%, #d4af37 90%);
+	--primary-color: linear-gradient(90deg, #ffffff 0%, #f7e9b3 10%, #d4af37 95%);
 }
 
 html,
@@ -39,6 +39,86 @@ body {
 	font-family: "Nunito Sans", sans-serif;
 	-webkit-font-smoothing: antialiased;
 
+}
+
+/* Seta do swiper no home dos produtos*/
+.product-swiper {
+	position: relative;
+	padding: 0 50px;
+}
+
+.swiper-nav-arrow {
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+	width: 45px;
+	height: 45px;
+	background: linear-gradient(135deg, #d4af37 0%, #f4d03f 100%);
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	z-index: 10;
+	transition: all 0.3s ease;
+	box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+}
+
+.swiper-nav-arrow:hover {
+	background: linear-gradient(135deg, #f4d03f 0%, #d4af37 100%);
+	transform: translateY(-50%) scale(1.1);
+	box-shadow: 0 6px 16px rgba(212, 175, 55, 0.5);
+}
+
+.swiper-nav-arrow i {
+	color: #fff;
+	font-size: 20px;
+	font-weight: bold;
+}
+
+.swiper-button-prev-vendidos,
+.swiper-button-prev-novidades {
+	left: 0;
+}
+
+.swiper-button-next-vendidos,
+.swiper-button-next-novidades {
+	right: 0;
+}
+
+.swiper-button-disabled {
+	opacity: 0.5;
+	cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+	.product-swiper {
+		padding: 0 40px;
+	}
+
+	.swiper-nav-arrow {
+		width: 35px;
+		height: 35px;
+	}
+
+	.swiper-nav-arrow i {
+		font-size: 16px;
+	}
+}
+
+@media (max-width: 576px) {
+	.product-swiper {
+		padding: 0 35px;
+	}
+
+	.swiper-nav-arrow {
+		width: 30px;
+		height: 30px;
+	}
+
+	.swiper-nav-arrow i {
+		font-size: 14px;
+	}
 }
 
 /*Paginação */
@@ -1260,6 +1340,12 @@ ol {
 	font-weight: 700;
 	font-size: 18px;
 	margin-bottom: 10px;
+}
+.product__item__text h5.old-price {
+  font-size: 18px;
+  color: #999;
+  text-decoration: line-through;
+  font-weight: 400;
 }
 
 /* Botão adicionar ao carrinho */

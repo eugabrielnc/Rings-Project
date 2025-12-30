@@ -643,8 +643,9 @@ export default function Shop() {
                       </div>
                       <div className="product__item__text">
                         <h6><a href="#" style={{ color: '#d4af37' }}>{product.name}</a></h6>
+                        <h5 className="old-price">R$ {(Math.floor(product.price * 2) + 0.90).toFixed(2)}</h5>
                         <div className="product__price">
-                          R$ {product.price.toFixed(2)}
+                          R$ {product.price.toFixed(2)} 
                         </div>
                         <a onClick={() => navigate(`/shopdetails/${product.id}`)} className="add-cart">
                         Comprar
