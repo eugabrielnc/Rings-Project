@@ -100,23 +100,22 @@ export default function ShoppingCart() {
   }, [products, cart]);
 
   useEffect(() => {
-    if (!cartProducts.length || !cart.length) {
-      setCartTotal(0);
-      return;
-    }
+  if (!cart.length) {
+    setCartTotal(0);
+    return;
+  }
 
-    const total = cartProducts.reduce((sum, product) => {
-      const cartItem = cart.find(
-        (item) => item.product_id === product.id
-      );
+  const total = cart.reduce((sum, item) => {
+    const product = products.find(p => p.id === item.product_id);
+    if (!product) return sum;
 
-      const quantity = cartItem?.amount || 1;
+    const quantity = item.amount || 1;
+    return sum + product.price * quantity;
+  }, 0);
 
-      return sum + product.price * quantity;
-    }, 0);
+  setCartTotal(total);
+}, [cart, products]);
 
-    setCartTotal(total);
-  }, [cartProducts, cart]);
 
   return (
     <>
