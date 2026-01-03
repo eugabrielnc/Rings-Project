@@ -63,3 +63,63 @@
 .subheader__menu ul li a .arrow.rotate {
     transform: rotate(0deg);
 }
+
+/* TABLET */
+@media (max-width: 991px) {
+
+	.subheader {
+		padding: 0 10px;
+	}
+
+	.subheader__menu ul {
+		gap: 25px;
+		flex-wrap: nowrap;
+		overflow-x: auto;
+		white-space: nowrap;
+		padding: 5px 0;
+	}
+
+	/* Scroll horizontal discreto */
+	.subheader__menu ul::-webkit-scrollbar {
+		height: 4px;
+	}
+
+	.subheader__menu ul::-webkit-scrollbar-thumb {
+		background: rgba(255,255,255,0.3);
+		border-radius: 4px;
+	}
+
+	.subheader__menu ul li a {
+		padding: 12px 16px;
+		font-size: 15px;
+	}
+}
+
+/* MOBILE */
+@media (max-width: 767px) {
+
+	.subheader {
+		justify-content: flex-start;
+	}
+
+	.container-header {
+		width: 100%;
+	}
+
+	.subheader__menu ul {
+		justify-content: flex-start;
+		gap: 18px;
+		overflow-x: auto;
+		padding: 5px 10px;
+	}
+
+	.subheader__menu ul li a {
+		padding: 10px 14px;
+		font-size: 14px;
+	}
+
+	/* Setinha menor no mobile */
+	.subheader__menu ul li a .arrow {
+		font-size: 9px;
+	}
+}

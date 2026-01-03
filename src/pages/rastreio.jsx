@@ -10,6 +10,14 @@ export default function MeusPedidos() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 600);
+
+  useEffect(() => {
+    const resize = () => setIsMobile(window.innerWidth <= 600);
+    window.addEventListener("resize", resize);
+    return () => window.removeEventListener("resize", resize);
+  }, []);
+
   useEffect(() => {
     if (!id) return;
 
@@ -61,87 +69,84 @@ export default function MeusPedidos() {
     }
   }
 
-  // 🔥 Junta sale + product
   const salesWithProduct = sales
-    .filter((sale) => sale.status !== "cart") // 👈 remove cart
+    .filter((sale) => sale.status !== "cart")
     .map((sale) => {
       const product = products.find(
         (product) => product.id === sale.product_id
       );
-
       if (!product) return null;
-
-      return {
-        ...sale,
-        product
-      };
+      return { ...sale, product };
     })
     .filter(Boolean);
 
   return (
-    <section className="perfil-wrapper">
-      <header className="perfil-header">
+    <section style={{ padding: "20px", maxWidth: "1200px", margin: "0 auto" }}>
+      <header style={{ marginBottom: "25px" }}>
         <h1>Meus Pedidos</h1>
-        <span className="perfil-subtitle">
+        <span style={{ color: "#777", fontSize: "14px" }}>
           Acompanhe o status dos seus pedidos
         </span>
       </header>
 
-      <div className="perfil-card">
-        <div className="perfil-grid">
-          {loading && <p>Carregando pedidos...</p>}
+      {loading && <p>Carregando pedidos...</p>}
+      {!loading && salesWithProduct.length === 0 && (
+        <p>Nenhum pedido encontrado.</p>
+      )}
 
-          {!loading && salesWithProduct.length === 0 && (
-            <p>Nenhum pedido encontrado.</p>
-          )}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: isMobile ? "1fr" : "repeat(3, 1fr)",
+          gap: "20px",
+        }}
+      >
+        {salesWithProduct.map((sale) => (
+          <div
+            key={sale.id}
+            style={{
+              background: "#fff",
+              borderRadius: "14px",
+              padding: "16px",
+              boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
+              display: "flex",
+              flexDirection: "column",
+              gap: "8px",
+            }}
+          >
+            <strong>Pedido #{sale.id}</strong>
 
-          {!loading &&
-            salesWithProduct.map((sale) => (
-              <div className="perfil-item" key={sale.id}>
-                <span className="perfil-label">Pedido</span>
-                <p className="perfil-value">#{sale.id}</p>
-                <span className="perfil-label">Código</span>
-                <a
-                  href={`https://rastreamento.correios.com.br/app/index.php#`}
-                  className="perfil-value perfil-link"
-                >
-                  {sale.code}
-                </a>
+            <span style={{ fontSize: "13px", color: "#777" }}>
+              Código de rastreio
+            </span>
+            <a
+              href="https://rastreamento.correios.com.br/app/index.php#"
+              style={{ color: "#b89634", wordBreak: "break-word" }}
+            >
+              {sale.code || "-"}
+            </a>
 
-                <span className="perfil-label">Produto</span>
-                <p className="perfil-value">{sale.product.name}</p>
+            <p>{sale.product.name}</p>
 
-                <img
-                  src={`${url}/products/${sale.product.id}/image`}
-                  alt={sale.product.name}
-                  className="perfil-product-image"
-                  onError={(e) => {
-                    e.target.style.display = "none";
-                  }}
-                />
+            <img
+              src={`${url}/products/${sale.product.id}/image`}
+              alt={sale.product.name}
+              style={{
+                width: "100%",
+                height: "180px",
+                objectFit: "cover",
+                borderRadius: "10px",
+              }}
+              onError={(e) => (e.target.style.display = "none")}
+            />
 
-                <span className="perfil-label">Preço</span>
-                <p className="perfil-value">
-                  R$ {Number(sale.product.price).toFixed(2)}
-                </p>
+            <p>R$ {Number(sale.product.price).toFixed(2)}</p>
 
-                <span className="perfil-label">Data</span>
-                <p className="perfil-value">
-                  {sale.created_at
-                    ? new Date(sale.created_at).toLocaleDateString("pt-BR")
-                    : "-"}
-                </p>
-
-                <span className="perfil-label">Status</span>
-                <p
-                  className="perfil-value"
-                  style={{ color: getStatusColor(sale.status) }}
-                >
-                  {getStatusLabel(sale.status)}
-                </p>
-              </div>
-            ))}
-        </div>
+            <p style={{ color: getStatusColor(sale.status), fontWeight: 600 }}>
+              {getStatusLabel(sale.status)}
+            </p>
+          </div>
+        ))}
       </div>
     </section>
   );
