@@ -141,3 +141,90 @@ body {
 .summary-item:last-child {
   border-bottom: none;
 }
+/* TABLET */
+@media (max-width: 991px) {
+
+  .container {
+    padding: 15px;
+  }
+
+  .card {
+    padding: 18px;
+  }
+
+  .image-grid {
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 10px;
+  }
+
+  .image-preview img {
+    height: 90px;
+  }
+
+  /* Resumo deixa de ser sticky em telas menores */
+  .summary-card {
+    position: relative;
+    top: auto;
+    margin-top: 20px;
+  }
+}
+
+/* MOBILE */
+@media (max-width: 767px) {
+
+  body {
+    font-size: 14px;
+  }
+
+  .container {
+    padding: 12px;
+  }
+
+  .card {
+    padding: 15px;
+    border-radius: 10px;
+  }
+
+  .label {
+    font-size: 13px;
+  }
+
+  .input,
+  textarea,
+  select {
+    font-size: 14px;
+    padding: 9px;
+  }
+
+  .button-primary,
+  .button-secondary {
+    width: 100%;
+    padding: 12px;
+    font-size: 15px;
+  }
+
+  /* Upload mais compacto */
+  .upload-zone {
+    padding: 15px;
+    font-size: 14px;
+  }
+
+  /* Grid de imagens menor */
+  .image-grid {
+    grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+  }
+
+  .image-preview img {
+    height: 80px;
+  }
+
+  /* Resumo ocupa largura total */
+  .summary-card {
+    margin-top: 15px;
+    padding: 15px;
+  }
+
+  .summary-item {
+    font-size: 13px;
+  }
+}
