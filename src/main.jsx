@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Adheader from "./componentes/adheader";
+import Adheader from "./componentes/Adheader";
 import Subheader from "./componentes/Subheader";
 import Header from "../src/componentes/header";
 import Footer from "./componentes/footer";
@@ -26,6 +26,7 @@ import Carrinho from "./pages/carrinho";
 import Layout2 from "./pages/painel2";
 import DadosPessoais from "./pages/dados";
 import MeusPedidos from "./pages/rastreio";
+import EditarVenda from "./pages/EditarVenda";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
@@ -57,7 +58,9 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         <Route path="/admin/vendas" element={<Vendas/>}></Route>
         <Route path="/admin/carrinho" element={<Carrinho/>}></Route>
         <Route path="/admin/produtos/editar/:id" element={<EditProductPage/>}></Route>
-        </Route>
+           
+        <Route path="/admin/vendas/editar/:id" element={<EditarVenda/>}></Route>
+      </Route>
       </Routes>
 
       <Footer />

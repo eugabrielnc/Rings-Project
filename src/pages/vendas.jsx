@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { getAuthData } from "../utils/dadosuser";
 
+import { getAuthData } from "../utils/dadosuser";
 export default function Vendas() {
   const [produtos, setProdutos] = useState([]);
   const url = import.meta.env.VITE_API_URL;
@@ -144,6 +144,7 @@ export default function Vendas() {
               <th style={thStyle}>CEP cliente</th>
               <th style={thStyle}>Endereço</th>
               <th style={thStyle}>Complemento do endereço</th>
+              <th style={thStyle}>Ações</th>
           </tr>
           </thead>
           <tbody>
@@ -176,11 +177,17 @@ export default function Vendas() {
               }
                 </td>
                 <td style={tdStyle} onClick={() => {setInputCode(true); setCode(produto.code); setSaleID(produto.key)}}>
-              {inputCode || produto.code.length > 0 ?  produto.code : <button > add codigo </button>  }  
+              {produto.code }  
               </td>
                 <td style={tdStyle}>{produto.user_cep}</td>
                 <td style={tdStyle}>{produto.address}</td>
                 <td style={tdStyle}>{produto.complement}</td>
+                <td style={tdStyle}>
+                  <Link to={`/admin/vendas/editar/${produto.id}`}>
+                    <button >Editar </button>
+
+                  </Link>
+              </td>
               </tr>
             ))}
           </tbody>
