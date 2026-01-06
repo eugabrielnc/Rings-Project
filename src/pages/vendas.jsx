@@ -19,11 +19,23 @@ const statusColors = {
 };
 
 
+const btnEdit = {
+  background: "#C9A86A",
+  color: "#fff",
+  border: "none",
+  padding: "6px 12px",
+  marginRight: "10px",
+  borderRadius: "6px",
+  cursor: "pointer",
+};
+
+
   useEffect(() => {
     async function carregarDados() {
       try {
         const resSales = await fetch(`${url}/sales/`);
         const resProducts = await fetch(`${url}/products`);
+
 
         const salesRaw = await resSales.json();
         const productsRaw = await resProducts.json();
@@ -46,7 +58,8 @@ const statusColors = {
               sizes: sale.sizes.split("/")[0],
               gravacoes: sale.sizes.split("/")[1],
               name: produto?.name || "Produto não encontrado",
-              price: produto?.price || 0,
+              price: sale.value || 0,
+              amount: sale.amount, 
               code:sale.code,
               user_cep:sale.user_cep,
               address:`${sale.state},${sale.city},${sale.neighboor},${sale.street}`,
@@ -110,31 +123,6 @@ const statusColors = {
         Gerenciar Vendas
       </h2>
 
-    {inputCode &&
-        <div  style={{
-        background: "#fff",
-        borderRadius: "12px",
-        padding: "20px",
-<<<<<<< HEAD
-            boxShadow: "0 2px 10px rgba(0,0,0,0.08)",
-
-      }}>
-    <h3>Atualizar código de rastreio ${saleID}</h3>
-          <input type="text" value={code} onChange={(e) => setCode(e.target.value)} className="input-field"></input>
-
-              <button onClick={(e) => atualizarCodigo()} className="login-button" style={{borderRadius:"20px",padding:"5px"}}> confirmar </button>
-              <button onClick={(e) => setInputCode(false) }className="login-button" style={{borderRadius:"20px",padding:"5px", background:"red"}}> cancelar </button>
-=======
-        boxShadow: "0 2px 10px rgba(0,0,0,0.08)",
-      }}>
-    <h3>Atualizar código de rastreio ${saleID}</h3>
-          <input type="text" value={code} onChange={(e) => setCode(e.target.value)} ></input>
-              <button onClick={(e) => atualizarCodigo()}> confirmar </button>
-              <button onClick={(e) => setInputCode(false) }> cancelar </button>
->>>>>>> 637f50e (feat: criação de novas colunas e edição de codigo de rastreio)
-        </div>
-    }
-      
       <div style={{
         background: "#fff",
         borderRadius: "12px",
@@ -185,7 +173,7 @@ const statusColors = {
                 <td style={tdStyle}>{produto.complement}</td>
               <td style={tdStyle}>
                   <Link to={`/admin/vendas/editar/${produto.id}`}>
-                    <button >Editar </button>
+                    <button  style={btnEdit} >Editar </button>
                   </Link>
               </td>
               </tr>

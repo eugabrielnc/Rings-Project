@@ -146,173 +146,193 @@ if (loading) {
         Editar Vendas 
       </h1>
 
-      <form onSubmit={handleSubmit} className="card">
-    <label className="label">Status</label>
+     <form onSubmit={handleSubmit} className="card">
+
+  <div
+    style={{
+      display: "grid",
+      gridTemplateColumns: "1fr 1fr",
+      gap: "16px"
+    }}
+  >
     {/* STATUS */}
-    <select
-      name="status"
-      className="input"
-      value={form.status}
-      onChange={handleChange}
-    >
-      <option value="">Selecione</option>
-      <option value="Aguardando pagamento">Aguardando pagamento</option>
-      <option value="pagamento concluido">pagamento concluido</option>
-      <option value="em produção">em produção</option>
-      <option value="a caminho">a caminho</option>
-      <option value="entregue">entregue</option>
-    </select>
+    <div style={{ display: "flex", flexDirection: "column" }}>
+      <label className="label">Status</label>
+      <select
+        name="status"
+        className="input"
+        value={form.status}
+        onChange={handleChange}
+      >
+        <option value="">Selecione</option>
+        <option value="aguardando pagamento">aguardando pagamento</option>
+        <option value="pagamento confirmado">pagamento confirmado</option>
+        <option value="em produção">em produção</option>
+        <option value="a caminho">a caminho</option>
+        <option value="entregue">entregue</option>
+      </select>
+    </div>
 
+    {/* CÓDIGO */}
+    <div style={{ display: "flex", flexDirection: "column" }}>
+      <label className="label">Código de rastreio</label>
+      <input
+        name="code"
+        className="input"
+        value={form.code}
+        onChange={handleChange}
+      />
+    </div>
 
-        {/* NOME */}
-        <label className="label"> Código de rastreio</label>
-        <input
-          name="code"
-          className="input"
-          value={form.code}
-          onChange={handleChange}
-        />
+    {/* QUANTIDADE */}
+    <div style={{ display: "flex", flexDirection: "column" }}>
+      <label className="label">Quantidade</label>
+      <input
+        name="amount"
+        type="number"
+        className="input"
+        value={form.amount}
+        onChange={handleChange}
+      />
+    </div>
 
-        
+    {/* GRAVAÇÃO MASC */}
+    <div style={{ display: "flex", flexDirection: "column" }}>
+      <label className="label">Gravação Masculina</label>
+      <input
+        name="gravacaoMasc"
+        className="input"
+        value={form.gravacaoMasc}
+        onChange={handleChange}
+      />
+    </div>
 
-        {/* PREÇO */}
-        <label className="label">Quantidade</label>
-        <input
-          name="amount"
-          type="number"
-          className="input"
-          value={form.amount}
-         // onChange={handleChange}
-        />
-        
-    <label className="label">Gravação Masculina</label>
-        <input
-          name="gravacaoMasc"
-          className="input"
-          value={form.gravacaoMasc}
-          onChange={handleChange}
-        />
+    {/* GRAVAÇÃO FEM */}
+    <div style={{ display: "flex", flexDirection: "column" }}>
+      <label className="label">Gravação Feminina</label>
+      <input
+        name="gravacaoFem"
+        className="input"
+        value={form.gravacaoFem}
+        onChange={handleChange}
+      />
+    </div>
 
+    {/* TAM FEM */}
+    <div style={{ display: "flex", flexDirection: "column" }}>
+      <label className="label">Tamanho Aliança Feminina</label>
+      <input
+        name="sizeFem"
+        className="input"
+        value={form.sizeFem}
+        onChange={handleChange}
+      />
+    </div>
 
-         <label className="label">Gravação Feminina</label>
-        <input
-          name="gravacaoFem"
-          className="input"
-          value={form.gravacaoFem}
-          onChange={handleChange}
-        />
+    {/* TAM MASC */}
+    <div style={{ display: "flex", flexDirection: "column" }}>
+      <label className="label">Tamanho Aliança Masculina</label>
+      <input
+        name="sizeMasc"
+        className="input"
+        value={form.sizeMasc}
+        onChange={handleChange}
+      />
+    </div>
 
+    {/* CEP */}
+    <div style={{ display: "flex", flexDirection: "column" }}>
+      <label className="label">CEP do cliente</label>
+      <input
+        name="user_cep"
+        className="input"
+        value={form.user_cep}
+        onChange={handleChange}
+      />
+    </div>
 
-         <label className="label">Tamanho Aliança Feminina</label>
-        <input
-          name="sizeFem"
-          className="input"
-          value={form.sizeFem}
-          onChange={handleChange}
-        />
+    {/* ESTADO */}
+    <div style={{ display: "flex", flexDirection: "column" }}>
+      <label className="label">Estado</label>
+      <input
+        name="state"
+        className="input"
+        value={form.state}
+        onChange={handleChange}
+      />
+    </div>
 
+    {/* CIDADE */}
+    <div style={{ display: "flex", flexDirection: "column" }}>
+      <label className="label">Cidade</label>
+      <input
+        name="city"
+        className="input"
+        value={form.city}
+        onChange={handleChange}
+      />
+    </div>
 
-         <label className="label">Tamanho Aliança Masculina</label>
-        <input
-          name="sizeMasc"
-          className="input"
-          value={form.sizeMasc}
-          onChange={handleChange}
-        />
-
-
-
-    
-        {/* TIPO */}
-        <label className="label">CEP do cliente</label>
-        <input
-          name="user_cep"
-          className="input"
-          value={form.user_cep}
-          onChange={handleChange}
-        />
-
-        {/* MATERIAL */}
-        <label className="label">Estado</label>
-        <input
-          name="state"
-          className="input"
-          value={form.state}
-          onChange={handleChange}
-        />
-
-        {/* CHECKOUT */}
-        <label className="label">Cidade</label>
-        <input
-          name="city"
-          className="input"
-          value={form.city}
-          onChange={handleChange}
-        />
-
+    {/* BAIRRO */}
+    <div style={{ display: "flex", flexDirection: "column" }}>
       <label className="label">Bairro</label>
-        <input
-          name="neighboor"
-          className="input"
-          value={form.neighboor}
-          onChange={handleChange}
-        />
+      <input
+        name="neighboor"
+        className="input"
+        value={form.neighboor}
+        onChange={handleChange}
+      />
+    </div>
 
+    {/* RUA */}
+    <div style={{ display: "flex", flexDirection: "column" }}>
       <label className="label">Rua</label>
-        <input
-          name="street"
-          className="input"
-          value={form.street}
-          onChange={handleChange}
-        />
+      <input
+        name="street"
+        className="input"
+        value={form.street}
+        onChange={handleChange}
+      />
+    </div>
 
-        <label className="label">Número da rua</label>
-        <input
-          name="number"
-          className="input"
-          value={form.number}
-          onChange={handleChange}
-        />
+    {/* NÚMERO */}
+    <div style={{ display: "flex", flexDirection: "column" }}>
+      <label className="label">Número da rua</label>
+      <input
+        name="number"
+        className="input"
+        value={form.number}
+        onChange={handleChange}
+      />
+    </div>
 
-         <label className="label">Complemento de endereço</label>
-        <input
-          name="complement"
-          className="input"
-          value={form.complement}
-          onChange={handleChange}
-        />
+    {/* COMPLEMENTO */}
+    <div style={{ display: "flex", flexDirection: "column" }}>
+      <label className="label">Complemento</label>
+      <input
+        name="complement"
+        className="input"
+        value={form.complement}
+        onChange={handleChange}
+      />
+    </div>
+  </div>
 
+  <button
+    className="button-primary"
+    disabled={submitting}
+    style={{ marginTop: "20px" }}
+  >
+    {submitting ? "Salvando..." : "Salvar Alterações"}
+  </button>
 
+  {successMessage && (
+    <p style={{ color: "green", marginTop: "10px" }}>
+      {successMessage}
+    </p>
+  )}
+</form>
 
-
-                {/* PREVIEW */}
-        {images.length > 0 && (
-          <div className="image-grid">
-            {images.map((img, i) => (
-              <div key={i} className="image-preview">
-                <img src={img.url} alt="preview" />
-                <button
-                  type="button"
-                  className="image-remove"
-                  onClick={() => setImages([])}
-                >
-                  ×
-                </button>
-              </div>
-            ))}
-          </div>
-        )}
-
-        <button className="button-primary" disabled={submitting}>
-          {submitting ? "Salvando..." : "Salvar Alterações"}
-        </button>
-
-        {successMessage && (
-          <p style={{ color: "green", marginTop: "10px" }}>
-            {successMessage}
-          </p>
-        )}
-      </form>
     </div>
   );
 }
