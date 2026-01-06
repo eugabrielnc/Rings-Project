@@ -9,15 +9,15 @@ export default function Vendas() {
   const authData = getAuthData();
   const [inputCode, setInputCode] = useState(false)
   const [code, setCode] = useState("");
-  const [saleID, setSaleID] = useState("");  
+  const [saleID, setSaleID] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-const statusColors = {
-  "aguardando pagamento": "#FACC15",
-  "pagamento confirmado": "#86EFAC",
-  "em produção": "#BFDBFE",
-  "a caminho": "#C4B5FD",
-  "entregue": "#22C55E",
-};
+  const statusColors = {
+    "aguardando pagamento": "#FACC15",
+    "pagamento confirmado": "#86EFAC",
+    "em produção": "#BFDBFE",
+    "a caminho": "#C4B5FD",
+    "entregue": "#22C55E",
+  };
 
   /* RESPONSIVO */
   useEffect(() => {
@@ -27,15 +27,15 @@ const statusColors = {
     return () => media.removeEventListener("change", handler);
   }, []);
 
-const btnEdit = {
-  background: "#C9A86A",
-  color: "#fff",
-  border: "none",
-  padding: "6px 12px",
-  marginRight: "10px",
-  borderRadius: "6px",
-  cursor: "pointer",
-};
+  const btnEdit = {
+    background: "#C9A86A",
+    color: "#fff",
+    border: "none",
+    padding: "6px 12px",
+    marginRight: "10px",
+    borderRadius: "6px",
+    cursor: "pointer",
+  };
 
 
   useEffect(() => {
@@ -44,47 +44,68 @@ const btnEdit = {
         const resSales = await fetch(`${url}/sales/`);
         const resProducts = await fetch(`${url}/products`);
 
+        const resUsers = await fetch(`${url}/users`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            authorization: authData?.token, // ou authData.token
+          }),
+        });
 
         const salesRaw = await resSales.json();
         const productsRaw = await resProducts.json();
+        const usersRaw = await resUsers.json();
 
         const salesArray = Array.isArray(salesRaw) ? salesRaw : salesRaw.data || [];
         const productsArray = Array.isArray(productsRaw) ? productsRaw : productsRaw.data || [];
+        const usersArray = Array.isArray(usersRaw) ? usersRaw : usersRaw.data || [];
 
+        // 🔹 Map de produtos
         const productsMap = new Map(
           productsArray.map(p => [String(p.id), p])
+        );
+
+        // 🔹 Map de usuários
+        const usersMap = new Map(
+          usersArray.map(u => [String(u.id), u])
         );
 
         const completos = salesArray
           .filter(sale => sale.status !== "cart")
           .map(sale => {
             const produto = productsMap.get(String(sale.product_id));
+            const user = usersMap.get(String(sale.user_id));
+
             return {
               key: sale.id,
               id: sale.id,
+              userName: user?.name || "Usuário não encontrado",
               sizes: sale.sizes.split("/")[0],
               gravacoes: sale.sizes.split("/")[1],
               name: produto?.name || "Produto não encontrado",
               price: sale.value || 0,
-              amount: sale.amount, 
-              code:sale.code,
-              user_cep:sale.user_cep,
-              address:`${sale.state},${sale.city},${sale.neighboor},${sale.street}`,
+              amount: sale.amount,
+              code: sale.code,
+              user_cep: sale.user_cep,
+              address: `${sale.state}, ${sale.city}, ${sale.neighboor}, ${sale.street}`,
               complement: sale.complement,
-              status: sale.status
+              status: sale.status,
             };
           });
 
         setProdutos(completos);
-      } catch {
+      } catch (err) {
+        console.error(err);
         setProdutos([]);
       }
     }
 
     carregarDados();
-  }, [url]);
+  }, [url, authData]);
 
-  
+
 
 
 
@@ -108,48 +129,50 @@ const btnEdit = {
         <table style={{ width: "100%", borderCollapse: "collapse" }}>
           <thead>
             <tr style={{ background: "#F9F5EE" }}>
+              <th>Cliente</th>
               <th>Produto</th>
               <th>Preço</th>
               <th>medidas</th>
               <th>Gravações</th>
               <th>Status da venda</th>
-              <th> Código de rastreio </th> 
+              <th> Código de rastreio </th>
               <th>CEP cliente</th>
               <th>Endereço</th>
               <th>Complemento do endereço</th>
               <th>Ações</th>
-          </tr>
+            </tr>
           </thead>
           <tbody>
             {produtos.map((produto) => (
               <tr key={produto.key}>
+                <td>{produto.userName}</td>
                 <td>{produto.name}</td>
-              <td>
-                {Number(produto.price).toLocaleString("pt-BR", {
-                  style: "currency",
-                  currency: "BRL",
-                })}
-              </td>
-              <td>{produto.sizes}</td>
-              <td>{produto.gravacoes}</td>
-              <td> <div  style={{
-    backgroundColor: statusColors[produto.status] || "#E5E7EB",
-    padding: "6px 10px",
-    borderRadius: "6px",
-    fontWeight: "500",
-    textAlign: "center",
-  }}className={"status_venda"}>  {produto.status} </div></td>
-                <td onClick={() => {setInputCode(true); setCode(produto.code); setSaleID(produto.key)}}>
-              {produto.code }  
-              </td>
+                <td>
+                  {Number(produto.price).toLocaleString("pt-BR", {
+                    style: "currency",
+                    currency: "BRL",
+                  })}
+                </td>
+                <td>{produto.sizes}</td>
+                <td>{produto.gravacoes}</td>
+                <td> <div style={{
+                  backgroundColor: statusColors[produto.status] || "#E5E7EB",
+                  padding: "6px 10px",
+                  borderRadius: "6px",
+                  fontWeight: "500",
+                  textAlign: "center",
+                }} className={"status_venda"}>  {produto.status} </div></td>
+                <td onClick={() => { setInputCode(true); setCode(produto.code); setSaleID(produto.key) }}>
+                  {produto.code}
+                </td>
                 <td>{produto.user_cep}</td>
                 <td>{produto.address}</td>
                 <td>{produto.complement}</td>
-              <td>
+                <td>
                   <Link to={`/admin/vendas/editar/${produto.id}`}>
-                    <button  style={btnEdit} >Editar </button>
+                    <button style={btnEdit} >Editar </button>
                   </Link>
-              </td>
+                </td>
               </tr>
             ))}
           </tbody>
