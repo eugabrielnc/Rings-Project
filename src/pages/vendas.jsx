@@ -35,6 +35,8 @@ export default function Vendas() {
             return {
               key: sale.id,
               id: sale.id,
+              sizes: sale.sizes.split("/")[0],
+              gravacoes: sale.sizes.split("/")[1],
               name: produto?.name || "Produto não encontrado",
               price: produto?.price || 0,
               code:sale.code,
@@ -136,9 +138,10 @@ export default function Vendas() {
         <table style={{ width: "100%", borderCollapse: "collapse" }}>
           <thead>
             <tr style={{ background: "#F9F5EE" }}>
-              <th style={thStyle}>ID</th>
               <th style={thStyle}>Produto</th>
               <th style={thStyle}>Preço</th>
+              <th style={thStyle}>medidas</th>
+              <th style={thStyle}>Gravações</th>
               <th style={thStyle}>Status da venda</th>
               <th style={thStyle}> Código de rastreio </th> 
               <th style={thStyle}>CEP cliente</th>
@@ -150,7 +153,6 @@ export default function Vendas() {
           <tbody>
             {produtos.map((produto) => (
               <tr key={produto.key}>
-                <td style={tdStyle}>{produto.id}</td>
                 <td style={tdStyle}>{produto.name}</td>
               <td style={tdStyle}>
                 {Number(produto.price).toLocaleString("pt-BR", {
@@ -158,41 +160,24 @@ export default function Vendas() {
                   currency: "BRL",
                 })}
               </td>
-              <td style={tdStyle}>
-              {isLoading ? 
-                <div className="spinner-border text-warning" role="status" style={{ width: '1rem', height: '1rem', borderLeft:"1px"}}>
-                   <span className="sr-only">Carregando...</span>
-                 </div>
-              :
-              <select onChange={(e) => {atualizarStatus(e.target.value); setSaleID(produto.key) }}>
-             
-              <option> {produto.status}</option>
-              <option>aguardando pagamento </option>
-              <option>pagamento aprovado</option>
-              <option>em produção</option>
-              <option>a caminho</option>
-              <option>entregue</option>
-
-              </select> 
-              }
-                </td>
+              <td>{produto.sizes}</td>
+              <td>{produto.gravacoes}</td>
+              <td style={tdStyle}> {produto.status} </td>
                 <td style={tdStyle} onClick={() => {setInputCode(true); setCode(produto.code); setSaleID(produto.key)}}>
               {produto.code }  
               </td>
                 <td style={tdStyle}>{produto.user_cep}</td>
                 <td style={tdStyle}>{produto.address}</td>
                 <td style={tdStyle}>{produto.complement}</td>
-                <td style={tdStyle}>
+              <td style={tdStyle}>
                   <Link to={`/admin/vendas/editar/${produto.id}`}>
                     <button >Editar </button>
-
                   </Link>
               </td>
               </tr>
             ))}
           </tbody>
         </table>
-
       </div>
     </div>
   );

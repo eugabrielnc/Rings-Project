@@ -33,16 +33,38 @@ export default function EditProductPage() {
       setForm({
         sale_id: product.id, 
         code: product.code ?? "",
-        user_cep: product.user_cep ?? "",
+        user_cep: product.user_cep,
         state: product.state ?? "",
         city: product.city ?? "",
         neighboor: product.neighboor ?? "",
         street: product.street  ?? "",
         complement: product.complement ?? "", 
         status: product.status ?? "",
-      });
+        gravacaoMasc:
+        product.sizes
+        ?.split("/")?.[1]
+        ?.split(",")?.[1]
+        ?.split("masc:")?.[1] ?? "",
 
-      console.log(status, "teste")
+        gravacaoFem:
+        product.sizes
+        ?.split("/")?.[1]
+        ?.split(",")?.[0]
+        ?.split("fem:")?.[1] ?? "",
+
+        sizeFem:
+          product.sizes
+            ?.split("/")?.[0]
+            ?.split(",")?.[0]
+            ?.split("fem:")?.[1] ?? "",
+
+        sizeMasc:
+          product.sizes
+            ?.split("/")?.[0]
+            ?.split(",")?.[1]
+            ?.split("masc:")?.[1] ?? "",
+
+      });
 
       if (product.image) {
         setImages([{ file: null, url: product.image }]);
@@ -91,6 +113,7 @@ export default function EditProductPage() {
         method: "PUT",
         body: JSON.stringify({
           authorization: authData.token,
+          sizes:`fem:${form.sizeFem},masc:${form.sizeMasc}/fem:${form.gravacaoMasc},masc:${form.gravacaoFem}`,
           ...form
         }),
       });
@@ -103,7 +126,7 @@ export default function EditProductPage() {
       setSuccessMessage("Produto atualizado com sucesso!");
 
       setTimeout(() => {
-        navigate("/admin/produto");
+        navigate("/admin/vendas");
       }, 1200);
     } catch (err) {
       console.error(err);
@@ -140,6 +163,7 @@ if (loading) {
       <option value="entregue">entregue</option>
     </select>
 
+
         {/* NOME */}
         <label className="label"> Código de rastreio</label>
         <input
@@ -160,7 +184,45 @@ if (loading) {
           value={form.amount}
          // onChange={handleChange}
         />
+        
+    <label className="label">Gravação Masculina</label>
+        <input
+          name="gravacaoMasc"
+          className="input"
+          value={form.gravacaoMasc}
+          onChange={handleChange}
+        />
 
+
+         <label className="label">Gravação Feminina</label>
+        <input
+          name="gravacaoFem"
+          className="input"
+          value={form.gravacaoFem}
+          onChange={handleChange}
+        />
+
+
+         <label className="label">Tamanho Aliança Feminina</label>
+        <input
+          name="sizeFem"
+          className="input"
+          value={form.sizeFem}
+          onChange={handleChange}
+        />
+
+
+         <label className="label">Tamanho Aliança Masculina</label>
+        <input
+          name="sizeMasc"
+          className="input"
+          value={form.sizeMasc}
+          onChange={handleChange}
+        />
+
+
+
+    
         {/* TIPO */}
         <label className="label">CEP do cliente</label>
         <input
