@@ -35,14 +35,80 @@ export default function MaleFashion() {
       }
     });
 
-    // If you want the preloader or JS-driven components to work exactly like the template,
-    // include the template JS files (jQuery + plugins) in public/index.html or convert them to React.
   }, []);
 
   const currentYear = new Date().getFullYear();
   const [selectedColor, setSelectedColor] = useState("gold");
   const url = import.meta.env.VITE_API_URL;
   const [products, setProducts] = useState([]);
+  
+  // Cache de imagens
+  const [imageCache, setImageCache] = useState({});
+  const [loadingImages, setLoadingImages] = useState(new Set());
+
+  const loadProductImage = async (productId, delay = 0, retryCount = 0) => {
+    const MAX_RETRIES = 10; // tentativas
+    const RETRY_DELAY = 100; // delay de tentativas
+
+    if (imageCache[productId] || loadingImages.has(productId)) {
+      return;
+    }
+
+
+    setLoadingImages(prev => new Set([...prev, productId]));
+
+
+    await new Promise(resolve => setTimeout(resolve, delay));
+
+    try {
+      const response = await fetch(`${url}/products/${productId}/image`, {
+        headers: {
+          'Cache-Control': 'no-cache'
+        }
+      });
+      
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+
+      const blob = await response.blob();
+      const imageUrl = URL.createObjectURL(blob);
+
+      setImageCache(prev => ({
+        ...prev,
+        [productId]: imageUrl
+      }));
+      
+    } catch (error) {
+      
+  
+      if (retryCount < MAX_RETRIES) {
+        setLoadingImages(prev => {
+          const newSet = new Set(prev);
+          newSet.delete(productId);
+          return newSet;
+        });
+        
+      
+        await new Promise(resolve => setTimeout(resolve, RETRY_DELAY));
+        
+        
+        return loadProductImage(productId, 0, retryCount + 1);
+      } else {
+        setImageCache(prev => ({
+          ...prev,
+          [productId]: 'https://via.placeholder.com/400x400.png?text=Sem+Imagem'
+        }));
+      }
+    } finally {
+      setLoadingImages(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(productId);
+        return newSet;
+      });
+    }
+  };
+
   useEffect(() => {
     fetch(`${url}/products/`, {
       method: "GET",
@@ -53,13 +119,33 @@ export default function MaleFashion() {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log("Products:", data);
         setProducts(data);
       })
       .catch((error) => {
-        console.error("Error fetching products:", error);
       });
   }, [url]);
+
+
+  useEffect(() => {
+    if (products.length > 0) {
+      const bestSellers = [...products]
+        .sort((a, b) => b.sales - a.sales)
+        .slice(0, 15);
+      
+      const newProducts = [...products]
+        .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+        .slice(0, 15);
+      
+      // remove duplicados 
+      const allProductsToLoad = [...new Map([...bestSellers, ...newProducts].map(p => [p.id, p])).values()];
+      
+      allProductsToLoad.forEach((product, index) => {
+        // Delay 
+        loadProductImage(product.id, index * 200);
+      });
+    }
+  }, [products]);
+
   const navigate = useNavigate();
 
   const addToCart = async (product) => {
@@ -169,7 +255,12 @@ export default function MaleFashion() {
 
   return (
     <div>
-
+      <style>{`
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+      `}</style>
 
       {/* Offcanvas Menu Begin */}
       <div className="offcanvas-menu-overlay"></div>
@@ -400,12 +491,50 @@ export default function MaleFashion() {
                   .map((product) => (
                     <SwiperSlide key={product.id}>
                       <div className="product__item">
-                        <div
-                          className="product__item__pic"
-                          style={{
-                            backgroundImage: `url(${url}/products/${product.id}/image)`,
-                          }}
-                        >
+                        <div className="product__item__pic" style={{ position: 'relative', paddingBottom: '100%', background: '#f5f5f5' }}>
+                          {imageCache[product.id] ? (
+                            <img
+                              src={imageCache[product.id]}
+                              alt={product.name}
+                              style={{
+                                width: '100%',
+                                height: '100%',
+                                objectFit: 'cover',
+                                position: 'absolute',
+                                top: 0,
+                                left: 0
+                              }}
+                            />
+                          ) : (
+                            <div style={{
+                              position: 'absolute',
+                              top: 0,
+                              left: 0,
+                              width: '100%',
+                              height: '100%',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              background: '#f5f5f5'
+                            }}>
+                              <div style={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                alignItems: 'center',
+                                gap: '10px'
+                              }}>
+                                <div style={{
+                                  width: '40px',
+                                  height: '40px',
+                                  border: '4px solid #d4af37',
+                                  borderTopColor: 'transparent',
+                                  borderRadius: '50%',
+                                  animation: 'spin 1s linear infinite'
+                                }}></div>
+                                <span style={{ color: '#999', fontSize: '13px' }}>Carregando...</span>
+                              </div>
+                            </div>
+                          )}
                           <span className="label">Top</span>
                           <ul className="product__hover">
                             <li>
@@ -440,16 +569,6 @@ export default function MaleFashion() {
                           <h5>R$ {product.price.toFixed(2)}</h5>
                           <a onClick={() => navigate(`/shopdetails/${product.id}`)} className="add-cart">
                             Comprar
-                          </a>
-                          <a
-                            href="#"
-                            className="add-cart"
-                            onClick={(e) => {
-                              e.preventDefault();
-                              addToCart(product);
-                            }}
-                          >
-                            + Adicionar ao carrinho
                           </a>
                         </div>
                       </div>
@@ -521,12 +640,50 @@ export default function MaleFashion() {
                   .map((product) => (
                     <SwiperSlide key={product.id}>
                       <div className="product__item">
-                        <div
-                          className="product__item__pic"
-                          style={{
-                            backgroundImage: `url(${url}/products/${product.id}/image)`,
-                          }}
-                        >
+                        <div className="product__item__pic" style={{ position: 'relative', paddingBottom: '100%', background: '#f5f5f5' }}>
+                          {imageCache[product.id] ? (
+                            <img
+                              src={imageCache[product.id]}
+                              alt={product.name}
+                              style={{
+                                width: '100%',
+                                height: '100%',
+                                objectFit: 'cover',
+                                position: 'absolute',
+                                top: 0,
+                                left: 0
+                              }}
+                            />
+                          ) : (
+                            <div style={{
+                              position: 'absolute',
+                              top: 0,
+                              left: 0,
+                              width: '100%',
+                              height: '100%',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              background: '#f5f5f5'
+                            }}>
+                              <div style={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                alignItems: 'center',
+                                gap: '10px'
+                              }}>
+                                <div style={{
+                                  width: '40px',
+                                  height: '40px',
+                                  border: '4px solid #d4af37',
+                                  borderTopColor: 'transparent',
+                                  borderRadius: '50%',
+                                  animation: 'spin 1s linear infinite'
+                                }}></div>
+                                <span style={{ color: '#999', fontSize: '13px' }}>Carregando...</span>
+                              </div>
+                            </div>
+                          )}
                           <span className="label">Novo</span>
                           <ul className="product__hover">
                             <li>
@@ -550,19 +707,7 @@ export default function MaleFashion() {
 
                         <div className="product__item__text">
                           <h6>{product.name}</h6>
-                          <a onClick={() => navigate(`/shopdetails/${product.id}`)} className="add-cart">
-                            Comprar
-                          </a>
-                          <a
-                            href="#"
-                            className="add-cart"
-                            onClick={(e) => {
-                              e.preventDefault();
-                              addToCart(product);
-                            }}
-                          >
-                            + Adicionar ao carrinho
-                          </a>
+                         
                           <div className="rating">
                             <i className="fa fa-star"></i>
                             <i className="fa fa-star"></i>
@@ -572,6 +717,9 @@ export default function MaleFashion() {
                           </div>
                           <h5 className="old-price">R$ {(Math.floor(product.price * 2) + 0.90).toFixed(2)}</h5>
                           <h5>R$ {product.price.toFixed(2)}</h5>
+                           <a onClick={() => navigate(`/shopdetails/${product.id}`)} className="add-cart">
+                            Comprar
+                          </a>
                         </div>
                       </div>
                     </SwiperSlide>

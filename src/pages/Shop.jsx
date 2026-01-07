@@ -18,9 +18,7 @@ export default function Shop() {
   const url = import.meta.env.VITE_API_URL;
   const [searchParams] = useSearchParams();
   const filter = searchParams.get("filter");
-  console.log("Filtro da URL:", filter);
   const title = searchParams.get("title");
-  console.log("Título da URL:", title);
 
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
@@ -28,25 +26,27 @@ export default function Shop() {
   const [sort, setSort] = useState("");
   const [renderKey, setRenderKey] = useState(0);
 
+  // Cache de imagens
+  const [imageCache, setImageCache] = useState({});
+  const [loadingImages, setLoadingImages] = useState(new Set());
+
   const [currentPage, setCurrentPage] = useState(1);
-  const productsPerPage = 9; // Quantidade de itens por página
+  const productsPerPage = 9;
 
   const indexOfLastProduct = currentPage * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
   const currentProducts = displayProducts.slice(indexOfFirstProduct, indexOfLastProduct);
   const totalPages = Math.ceil(displayProducts.length / productsPerPage);
 
-  // Função para mudar de página e rolar para o topo
   const paginate = (pageNumber) => {
     setCurrentPage(pageNumber);
     window.scrollTo(0, 0);
   };
-  // Filtros múltiplos
+
   const [categoryFilters, setCategoryFilters] = useState([]);
   const [brandFilters, setBrandFilters] = useState([]);
   const [priceFilters, setPriceFilters] = useState([]);
 
-  // Estados para controlar os acordeões
   const [openAccordions, setOpenAccordions] = useState({
     categories: true,
     brand: true,
@@ -55,49 +55,123 @@ export default function Shop() {
     colors: false,
     tags: false
   });
-  const addToCart = async (product) => {
-      try {
-        const authData = getAuthData(); // supondo que aqui vem token, cep etc
+
+  // FUNÇÃO PARA CARREGAR UMA IMAGEM COM RETRY AUTOMÁTICO
+  const loadProductImage = async (productId, delay = 0, retryCount = 0) => {
+    const MAX_RETRIES = 10; // tentativas 
+    const RETRY_DELAY = 100; // delay da tentativa 
+    
   
-        const body = {
-          value: product.price,
-          product_id: product.id,
-          amount: 1,
-          user_cep: "",
-          authorization: authData?.token || "",
-          sizes: "M", // ajuste se tiver tamanho dinâmico
-          status: "cart",
-          code: "",
-          state: "",
-          city: "",
-          neighboor: "",
-          street: "",
-          complement: ""
-        };
-  
-        const response = await fetch(`${url}/sales/`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "accept": "application/json",
-            "Authorization": `Bearer ${authData?.token}`
-          },
-          body: JSON.stringify(body)
-        });
-  
-        if (!response.ok) {
-          throw new Error("Erro ao adicionar ao carrinho");
+    if (imageCache[productId] || loadingImages.has(productId)) {
+      return;
+    }
+
+    setLoadingImages(prev => new Set([...prev, productId]));
+
+ 
+    await new Promise(resolve => setTimeout(resolve, delay));
+
+    try {
+      const response = await fetch(`${url}/products/${productId}/image`, {
+        headers: {
+          'Cache-Control': 'no-cache'
         }
-  
-        const data = await response.json();
-        console.log("Adicionado ao carrinho:", data);
-        alert("Produto adicionado ao carrinho 🛒");
-  
-      } catch (error) {
-        console.error(error);
-        alert("Erro ao adicionar ao carrinho");
+      });
+      
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
       }
-    };
+
+      const blob = await response.blob();
+      const imageUrl = URL.createObjectURL(blob);
+
+      setImageCache(prev => ({
+        ...prev,
+        [productId]: imageUrl
+      }));
+    } catch (error) {
+      
+     
+      if (retryCount < MAX_RETRIES) {
+        
+        setLoadingImages(prev => {
+          const newSet = new Set(prev);
+          newSet.delete(productId);
+          return newSet;
+        });
+        
+        
+        await new Promise(resolve => setTimeout(resolve, RETRY_DELAY));
+        
+        
+        return loadProductImage(productId, 0, retryCount + 1);
+      } else {
+        setImageCache(prev => ({
+          ...prev,
+          [productId]: 'https://via.placeholder.com/400x400.png?text=Sem+Imagem'
+        }));
+      }
+    } finally {
+      // tira o carregando
+      setLoadingImages(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(productId);
+        return newSet;
+      });
+    }
+  };
+
+  useEffect(() => {
+    currentProducts.forEach((product, index) => {
+      //delay
+      loadProductImage(product.id, index * 200);
+    });
+  }, [currentProducts, currentPage]);
+
+  const addToCart = async (product) => {
+    try {
+      const authData = getAuthData();
+
+      const body = {
+        value: product.price,
+        product_id: product.id,
+        amount: 1,
+        user_cep: "",
+        authorization: authData?.token || "",
+        sizes: "M",
+        status: "cart",
+        code: "",
+        state: "",
+        city: "",
+        neighboor: "",
+        street: "",
+        complement: ""
+      };
+
+      const response = await fetch(`${url}/sales/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "accept": "application/json",
+          "Authorization": `Bearer ${authData?.token}`
+        },
+        body: JSON.stringify(body)
+      });
+
+      if (!response.ok) {
+        throw new Error("Erro ao adicionar ao carrinho");
+      }
+
+      const data = await response.json();
+      console.log("Adicionado ao carrinho:", data);
+      alert("Produto adicionado ao carrinho 🛒");
+
+    } catch (error) {
+      console.error(error);
+      alert("Erro ao adicionar ao carrinho");
+    }
+  };
+
   const toggleAccordion = (section) => {
     setOpenAccordions(prev => ({
       ...prev,
@@ -120,19 +194,16 @@ export default function Shop() {
     carregarProdutos();
   }, [url]);
 
-  // Marcar automaticamente o filtro quando vier da URL
   useEffect(() => {
     if (filter && !categoryFilters.includes(filter)) {
       setCategoryFilters([filter]);
     }
   }, [filter]);
 
-  // Limpar filtros quando trocar de categoria (title)
   useEffect(() => {
     if (title) {
       setCategoryFilters([]);
 
-      // Se ainda tiver filter na URL, adicionar novamente
       if (filter) {
         setCategoryFilters([filter]);
       }
@@ -142,21 +213,19 @@ export default function Shop() {
   function applyFiltersAndSort() {
     let lista = [...products];
 
-    // 1. Filtrar por tipo (title) - Ex: "Alianças", "Anéis"
     if (title) {
       lista = lista.filter(product =>
         product.type && product.type.toLowerCase() === title.toLowerCase()
       );
     }
 
-    // 2. Filtrar por material (apenas checkboxes manuais, ignorar filter da URL se houver mudanças)
     if (categoryFilters.length > 0) {
       lista = lista.filter(product => {
         if (!product.material) return false;
         return categoryFilters.includes(product.material);
       });
     }
-    // Aplicar filtros de preço
+
     if (priceFilters.length > 0) {
       lista = lista.filter(product => {
         const price = Number(product.price);
@@ -166,7 +235,6 @@ export default function Shop() {
       });
     }
 
-    // Aplicar ordenação
     switch (sort) {
       case "price_low":
         lista.sort((a, b) => Number(a.price) - Number(b.price));
@@ -195,7 +263,6 @@ export default function Shop() {
     setSort(value);
   }
 
-  // Opções para o React Select
   const sortOptions = [
     { value: "", label: "Padrão" },
     { value: "az", label: "A-Z" },
@@ -204,7 +271,6 @@ export default function Shop() {
     { value: "sales", label: "Mais Vendidos" }
   ];
 
-  // Estilo customizado para o React Select
   const customSelectStyles = {
     control: (base, state) => ({
       ...base,
@@ -221,15 +287,14 @@ export default function Shop() {
     }),
     container: (base) => ({
       ...base,
-  
     }),
     option: (base, state) => ({
       ...base,
-      backgroundColor: state.isSelected 
-        ? '#d4af37' 
-        : state.isFocused 
-        ? 'rgba(212, 175, 55, 0.1)' 
-        : 'white',
+      backgroundColor: state.isSelected
+        ? '#d4af37'
+        : state.isFocused
+          ? 'rgba(212, 175, 55, 0.1)'
+          : 'white',
       color: state.isSelected ? 'white' : '#333',
       cursor: 'pointer',
       padding: '10px 15px',
@@ -246,7 +311,6 @@ export default function Shop() {
     placeholder: (base) => ({
       ...base,
       color: '#999',
-
     }),
     dropdownIndicator: (base, state) => ({
       ...base,
@@ -261,7 +325,6 @@ export default function Shop() {
     })
   };
 
-  // Toggle de categoria
   function toggleCategoryFilter(category) {
     setCategoryFilters(prev => {
       if (prev.includes(category)) {
@@ -272,7 +335,6 @@ export default function Shop() {
     });
   }
 
-  // Toggle de marca
   function toggleBrandFilter(brand) {
     setBrandFilters(prev => {
       if (prev.includes(brand)) {
@@ -283,7 +345,6 @@ export default function Shop() {
     });
   }
 
-  // Toggle de preço
   function togglePriceFilter(min, max) {
     setPriceFilters(prev => {
       const exists = prev.find(f => f.min === min && f.max === max);
@@ -390,64 +451,9 @@ export default function Shop() {
         .clear-filters-btn:hover {
           background: #c59563;
         }
-
-        .pagination__option {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 8px;
-          margin-top: 30px;
-        }
-
-        .pagination__option a {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          min-width: 40px;
-          height: 40px;
-          padding: 0 12px;
-          border: 2px solid #e5e5e5;
-          border-radius: 8px;
-          color: #666;
-          font-weight: 500;
-          font-size: 14px;
-          text-decoration: none;
-          transition: all 0.3s ease;
-          background: #fff;
-        }
-
-        .pagination__option a:hover {
-          border-color: #d4af37;
-          color: #d4af37;
-          transform: translateY(-2px);
-          box-shadow: 0 4px 8px rgba(212, 175, 55, 0.2);
-        }
-
-        .pagination__option a.active {
-          background: linear-gradient(135deg, #d4af37 0%, #f4d03f 100%);
-          border-color: #d4af37;
-          color: #fff;
-          font-weight: 700;
-          box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
-        }
-
-        .pagination__option a.arrow {
-          background: #f8f8f8;
-          border-color: #ddd;
-        }
-
-        .pagination__option a.arrow:hover {
-          background: #d4af37;
-          border-color: #d4af37;
-          color: #fff;
-        }
-
-        .pagination__option a.arrow i {
-          font-size: 16px;
-        }
-
-        .pagination__option a:active {
-          transform: translateY(0);
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
         }
       `}</style>
 
@@ -626,44 +632,69 @@ export default function Shop() {
 
                 {/* PRODUCTS GRID */}
                 <div className="row product-grid">
-                {currentProducts.map((product, index) => (
-                  <div key={`${product.id}-${renderKey}-${index}`} className="col-lg-4 col-md-6 col-sm-6">
-                    <div className="product__item">
-                      <div
-                        className="product__item__pic set-bg"
-                        style={{
-                          backgroundImage: `url(${url}/products/${product.id}/image)`,
-                        }}
-                      >
-                        <ul className="product__hover">
-                          <li><a href="#"><span className="arrow_expand" /></a></li>
-                          <li><a href="#"><span className="icon_heart_alt" /></a></li>
-                          <li><a href="#"><span className="icon_bag_alt" /></a></li>
-                        </ul>
-                      </div>
-                      <div className="product__item__text">
-                        <h6><a href="#" style={{ color: '#d4af37' }}>{product.name}</a></h6>
-                        <h5 className="old-price">R$ {(Math.floor(product.price * 2) + 0.90).toFixed(2)}</h5>
-                        <div className="product__price">
-                          R$ {product.price.toFixed(2)} 
+                  {currentProducts.map((product, index) => (
+                    <div key={`${product.id}-${renderKey}-${index}`} className="col-lg-4 col-md-6 col-sm-6">
+                      <div className="product__item">
+                        <div className="product__item__pic set-bg" style={{ position: 'relative', paddingBottom: '100%', background: '#f5f5f5' }}>
+                          {imageCache[product.id] ? (
+                            <img
+                              src={imageCache[product.id]}
+                              alt={product.name}
+                              
+                            />
+                          ) : (
+                            <div style={{
+                              position: 'absolute',
+                              top: '50%',
+                              left: '50%',
+                              transform: 'translate(-50%, -50%)',
+                              display: 'flex',
+                              flexDirection: 'column',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                            }}>
+                              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                                <div style={{
+                                  width: '40px',
+                                  height: '40px',
+                                  border: '4px solid #d4af37',
+                                  borderTopColor: 'transparent',
+                                  borderRadius: '50%',
+                                  animation: 'spin 1s linear infinite'
+                                }}></div>
+                                <span style={{ color: '#999', fontSize: '13px' }}>Carregando...</span>
+                              </div>
+                            </div>
+                          )}
+                          <ul className="product__hover">
+                            <li><a href="#"><span className="arrow_expand" /></a></li>
+                            <li><a href="#"><span className="icon_heart_alt" /></a></li>
+                            <li><a href="#"><span className="icon_bag_alt" /></a></li>
+                          </ul>
                         </div>
-                        <a onClick={() => navigate(`/shopdetails/${product.id}`)} className="add-cart">
-                        Comprar
-                      </a>
-                       <a
-                        href="#"
-                        className="add-cart"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          addToCart(product);
-                        }}
-                      >
-                        + Adicionar ao carrinho
-                      </a>
+                        <div className="product__item__text">
+                          <h6><a href="#" style={{ color: '#d4af37' }}>{product.name}</a></h6>
+                          <h5 className="old-price">R$ {(Math.floor(product.price * 2) + 0.90).toFixed(2)}</h5>
+                          <div className="product__price">
+                            R$ {product.price.toFixed(2)}
+                          </div>
+                          <a onClick={() => navigate(`/shopdetails/${product.id}`)} className="add-cart">
+                            Comprar
+                          </a>
+                          <a
+                            href="#"
+                            className="add-cart"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              addToCart(product);
+                            }}
+                          >
+                            + Adicionar ao carrinho
+                          </a>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
                 </div>
 
                 {/* Pagination */}

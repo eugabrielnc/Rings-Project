@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 function Login() {
 
   const navigate = useNavigate();
+  const [errorMessage, setErrorMessage] = useState('');
   const [dados, setDados] = useState({
     email: '',
     password: ''
@@ -39,6 +40,8 @@ function Login() {
 
   if (!data.access_token?.token) {
     console.error("BACKEND NÃO RETORNOU TOKEN");
+    setErrorMessage("E-mail ou senha inválidos");
+
     return;
   }
 
@@ -52,8 +55,12 @@ function Login() {
   console.log("SALVO:", localStorage.getItem("user_data"));
 
   navigate('/');
-});
-  };
+})
+  .catch((error) => {
+    console.error("Erro ao fazer login:", error);
+    setErrorMessage("E-mail ou senha inválidos");
+  });
+};
 
   return (
     <div className="login-page">
@@ -86,11 +93,11 @@ function Login() {
               required
             />
           </div>
+          <p style={{ color: 'red' }}>{errorMessage}</p>
 
           <button type="submit" className="login-button">
             ENTRAR
           </button>
-
         </form>
         <p className="forgot-password">
           <a href="/forgot-password">Esqueceu sua senha?</a>
