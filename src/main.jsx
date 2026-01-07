@@ -28,7 +28,8 @@ import DadosPessoais from "./pages/dados";
 import MeusPedidos from "./pages/rastreio";
 import SocialButtons from "./componentes/socialbutton";
 import PoliticaGarantiaMain from "./pages/garantia";
-
+import InformacoesPagamentoMain from "./pages/informaçoespagamento";
+import TermosUsoMain from "./pages/termosdeuso";
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <BrowserRouter>
@@ -48,6 +49,8 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/garantia" element={<PoliticaGarantiaMain />} />
+        <Route path="/infopag" element={<InformacoesPagamentoMain/>} />
+        <Route path="/termouser" element={<TermosUsoMain/>} />
         <Route path="/perfil" element={<Layout2 />}>
           <Route path="dados" element={<DadosPessoais />} />
           <Route path="rastreio" element={<MeusPedidos />} />

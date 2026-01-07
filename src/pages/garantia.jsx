@@ -8,7 +8,7 @@ export default function PoliticaGarantiaMain() {
         <h2 className="pg-garantia-titulo">1. Produção e Envio</h2>
         <p>
           O prazo de fabricação das alianças varia conforme o modelo escolhido,
-          podendo levar até <strong>15 dias úteis</strong> após a confirmação do pagamento.
+          podendo levar até <strong>20 dias úteis</strong> após a confirmação do pagamento.
         </p>
         <p>
           O prazo de entrega passa a contar a partir da data de postagem,
@@ -105,7 +105,7 @@ export default function PoliticaGarantiaMain() {
       <section className="pg-garantia-bloco">
         <h2 className="pg-garantia-titulo">9. Contato para suporte</h2>
         <p>
-          <strong>WhatsApp:</strong> (81) 99139-4107<br />
+          <strong>WhatsApp:</strong> (82) 99139-4107<br />
           <strong>WhatsApp:</strong> (81) 93500-0006<br /><br />
           <strong>E-mail:</strong> aliancaseternasofc@gmail.com
         </p>

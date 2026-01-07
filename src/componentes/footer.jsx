@@ -1,11 +1,11 @@
 import '../assets/Css/bootstrap.min.css';
 import '../assets/Css/font-awesome.min.css';
-import  '../assets/Css/elegant-icons.css';
-import  '../assets/Css/magnific-popup.css';
+import '../assets/Css/elegant-icons.css';
+import '../assets/Css/magnific-popup.css';
 import '../assets/Css/nice-select.css';
 import '../assets/Css/owl.carousel.min.css';
 import '../assets/Css/slicknav.min.css';
-import '../assets/Css/style.css';  
+import '../assets/Css/style.css';
 
 export default function Footer() {
     return (
@@ -23,7 +23,7 @@ export default function Footer() {
                                 O casal é o centro do nosso modelo de negócio, que combina design exclusivo, artesania de alto padrão e uma experiência pensada para celebrar histórias de amor únicas
                             </p>
                             <a href="#">
-                                <img src="/img/payment.png" alt="" />
+                                <img src="/img/cards.png" alt="" />
                             </a>
                         </div>
                     </div>
@@ -45,10 +45,13 @@ export default function Footer() {
                             <h6>Compra</h6>
                             <ul>
                                 <li>
-                                    <a href="#">Métodos de Pagamento</a>
+                                    <a href="/infopag">Detalhes de Pagamento</a>
                                 </li>
                                 <li>
                                     <a href="/garantia">Garantias</a>
+                                </li>
+                                <li>
+                                    <a href="/termouser">Termos de Uso</a>
                                 </li>
                             </ul>
                         </div>

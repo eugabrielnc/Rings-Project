@@ -825,8 +825,97 @@ ol {
 }
 
 /* MOBILE */
-.offcanvas-menu-wrapper { display: none; }
-.canvas__open { display: none; }
+.offcanvas-menu-wrapper {
+	display: none;
+}
+
+.canvas__open {
+	display: none;
+}
+
+
+/* ======================================================
+   RESPONSIVO — TABLET E MOBILE
+   (SEM ALTERAR O CSS ORIGINAL)
+====================================================== */
+
+/* TABLET */
+@media (max-width: 991px) {
+
+	/* Header quebra corretamente */
+	.header__inner .container .row:first-child {
+		flex-wrap: wrap !important;
+		gap: 15px;
+	}
+
+	/* Logo */
+	.header__inner .col-lg-3 {
+		width: 100% !important;
+		justify-content: center;
+	}
+
+	/* Search central */
+	.header__inner .col-lg-6 {
+		width: 100% !important;
+		justify-content: center;
+	}
+
+	/* Ícones */
+	.header__nav__option {
+		width: 100% !important;
+		justify-content: center !important;
+	}
+
+	/* Menu com scroll horizontal se necessário */
+	.header__menu ul {
+		overflow-x: auto;
+		white-space: nowrap;
+		padding-bottom: 5px;
+	}
+
+	.header__menu ul::-webkit-scrollbar {
+		height: 4px;
+	}
+
+	.header__menu ul::-webkit-scrollbar-thumb {
+		background: rgba(0,0,0,0.3);
+		border-radius: 4px;
+	}
+}
+
+/* MOBILE */
+@media (max-width: 767px) {
+
+	/* Esconde menu desktop */
+	.header__menu {
+		display: none;
+	}
+
+	/* Ativa menu mobile */
+	.offcanvas-menu-wrapper {
+		display: block;
+	}
+
+	.canvas__open {
+		display: block;
+		cursor: pointer;
+	}
+
+	/* Header em coluna */
+	.header__inner .container .row:first-child {
+		flex-direction: column;
+	}
+
+	/* Logo menor */
+	.header__logo img {
+		max-height: 42px;
+	}
+
+	/* Ícones mais compactos */
+	.header__nav__option {
+		gap: 14px;
+	}
+}
 
 
 /*---------------------
