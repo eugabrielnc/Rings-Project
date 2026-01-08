@@ -558,12 +558,82 @@ ol {
 
 /* LOGO AJUSTADA */
 .header__logo {
-	padding: 0;
+	max-height: 80px; 
+	overflow: visible; 
+	display: flex;
+	align-items: center;
 }
 
 .header__logo img {
-	max-height: 50px;
+	max-height: 300px; 
+	object-fit: contain; 
+	transform-origin: left center;
+	/* Sombras múltiplas para destacar a logo e o texto branco */
+	filter: 
+		drop-shadow(0 0 3px rgba(0, 0, 0, 0.5))
+		drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4))
+		drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+	opacity: 1 !important;
+	image-rendering: crisp-edges;
+	image-rendering: -webkit-optimize-contrast;
 }
+
+/* LOGO BOX - Destaque Premium */
+.logo-box {
+	background: rgba(0, 0, 0, 0.22); /* contraste sutil */
+	padding: 6px 14px;
+	border-radius: 10px;
+	display: inline-flex;
+	align-items: center;
+	transition: all 0.3s ease;
+}
+
+/* PLANO B: Se preferir sem fundo, descomente as linhas abaixo e comente o bloco acima */
+/*
+.logo-box {
+	background: transparent;
+	padding: 6px 14px;
+	border-radius: 10px;
+	display: inline-flex;
+	align-items: center;
+	transition: all 0.3s ease;
+}
+*/
+
+.logo-box:hover {
+	background: rgba(0, 0, 0, 0.28);
+	transform: translateY(-1px);
+}
+
+/* PLANO B: Hover sem fundo (descomente se usar plano B acima) */
+/*
+.logo-box:hover {
+	transform: translateY(-1px);
+}
+*/
+
+.logo-box img {
+	height: 120px;
+	width: auto;
+	filter: drop-shadow(0px 2px 3px rgba(0, 0, 0, 0.35));
+	opacity: 1 !important;
+	image-rendering: crisp-edges;
+	image-rendering: -webkit-optimize-contrast;
+}
+
+/* PLANO B: Sombra reforçada sem fundo (descomente se usar plano B acima) */
+/*
+.logo-box img {
+	height: 120px;
+	width: auto;
+	filter: 
+		drop-shadow(0 0 2px rgba(0, 0, 0, 0.45))
+		drop-shadow(0 2px 4px rgba(0, 0, 0, 0.35));
+	opacity: 1 !important;
+	image-rendering: crisp-edges;
+	image-rendering: -webkit-optimize-contrast;
+}
+*/
 
 /* ÍCONES DIREITA */
 .header__nav__option {
@@ -691,15 +761,6 @@ ol {
 .header__inner .col-lg-6 {
 	display: flex;
 	align-items: center;
-}
-
-/* LOGO AJUSTADA */
-.header__logo {
-	padding: 0;
-}
-
-.header__logo img {
-	max-height: 50px;
 }
 
 /* SEARCH BAR CENTRAL */
@@ -906,14 +967,63 @@ ol {
 		flex-direction: column;
 	}
 
-	/* Logo menor */
+	/* Logo maior para mobile */
+	.header__logo {
+		max-height: 50px;
+		overflow: visible;
+	}
+	
 	.header__logo img {
-		max-height: 42px;
+		max-height: 200px;
+		transform-origin: left center;
+		/* Sombras múltiplas para destacar a logo e o texto branco no mobile */
+		filter: 
+			drop-shadow(0 0 3px rgba(0, 0, 0, 0.5))
+			drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4))
+			drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+		opacity: 1 !important;
+		image-rendering: crisp-edges;
+		image-rendering: -webkit-optimize-contrast;
+	}
+
+	/* Logo Box Mobile - Ajuste Fino */
+	.logo-box {
+		padding: 5px 12px;
+		border-radius: 8px;
+	}
+
+	.logo-box img {
+		height: 90px;
+		filter: drop-shadow(0px 2px 3px rgba(0, 0, 0, 0.35));
 	}
 
 	/* Ícones mais compactos */
 	.header__nav__option {
 		gap: 14px;
+	}
+
+	/* Fix Swiper Hero no mobile - força isolamento dos slides */
+	.hero__slider .swiper-slide {
+		opacity: 0;
+		visibility: hidden;
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+	}
+
+	.hero__slider .swiper-slide-active {
+		opacity: 1;
+		visibility: visible;
+		position: relative;
+		z-index: 10;
+	}
+
+	.hero__slider .swiper-slide-prev,
+	.hero__slider .swiper-slide-next {
+		opacity: 0;
+		visibility: hidden;
+		z-index: 1;
 	}
 }
 
@@ -921,6 +1031,25 @@ ol {
 /*---------------------
   Hero
 -----------------------*/
+/* Fix para Swiper Fade - evita sobreposição */
+.hero__slider {
+	position: relative;
+	overflow: hidden;
+}
+
+.hero__slider .swiper-slide {
+	position: relative;
+	z-index: 1;
+}
+
+.hero__slider .swiper-slide-active {
+	z-index: 2;
+}
+
+.hero__slider .swiper-slide-duplicate {
+	z-index: 0;
+}
+
 .hero__slider .swiper-slide-active .hero__text h6,
 .hero__slider .swiper-slide-active .hero__text h2,
 .hero__slider .swiper-slide-active .hero__text p,

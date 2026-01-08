@@ -338,12 +338,6 @@ export default function MaleFashion() {
                       <Link to={`/shop?title=Alianças&filter=Moeda Antiga com Banho a Ouro 18k`} className="primary-btn">
                         Compre agora
                       </Link>
-                      <div className="hero__social">
-                        <a href="#"><i className="fab fa-facebook"></i></a>
-                        <a href="#"><i className="fab fa-twitter"></i></a>
-                        <a href="#"><i className="fab fa-pinterest"></i></a>
-                        <a href="#"><i className="fab fa-instagram"></i></a>
-                      </div>
                     </div>
                   </div>
                 </div>
@@ -372,12 +366,7 @@ export default function MaleFashion() {
                       <a href="#" className="primary-btn">
                         Compre agora
                       </a>
-                      <div className="hero__social">
-                        <a href="#"><i className="fab fa-facebook"></i></a>
-                        <a href="#"><i className="fab fa-twitter"></i></a>
-                        <a href="#"><i className="fab fa-pinterest"></i></a>
-                        <a href="#"><i className="fab fa-instagram"></i></a>
-                      </div>
+                  
                     </div>
                   </div>
                 </div>
