@@ -106,7 +106,7 @@ export default function Header() {
             <div className="col-lg-3 col-md-3">
               <div className="header__logo">
                 <a href="/">
-                  <img src="/img/logo.png" alt="logo" />
+                  <img src="/img/aliancas.png" alt="logo" />
                 </a>
               </div>
             </div>
@@ -401,10 +401,6 @@ export default function Header() {
             </div>
           </div>
           */}
-
-          <div className="canvas__open">
-            <i className="fa fa-bars"></i>
-          </div>
         </div>
       </div>
     </header>

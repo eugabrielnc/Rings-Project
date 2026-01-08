@@ -3,7 +3,7 @@
 .announcement-bar {
   background: black;
   color: white;
-  padding: 5px 0;
+  padding: 2px 0;
   overflow: hidden;
   position: relative;
   width: 100%;
@@ -36,4 +36,16 @@ font-family: 'Playfair Display', serif;
 
 .announcement-bar__text:hover {
   animation-play-state: paused;
+}
+
+/* Mobile - Barra mais fina */
+@media (max-width: 767px) {
+  .announcement-bar {
+    padding: 1px 0;
+  }
+
+  .announcement-bar__text {
+    font-size: 13px;
+    font-weight: 400;
+  }
 }

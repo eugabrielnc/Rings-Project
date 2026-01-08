@@ -50,10 +50,10 @@ export default function Medida() {
       <section 
         className="breadcrumb-option"
         style={{
-          backgroundImage: "url(/img/breadcrumb-bg.jpg)",
+          backgroundImage: "url(/img/medidor.jpg)",
           backgroundSize: "cover",
           backgroundPosition: "center",
-          padding: "60px 0"
+          padding: "100px 0"
         }}
       >
         <div className="container">

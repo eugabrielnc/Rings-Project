@@ -104,22 +104,24 @@
 
 	.container-header {
 		width: 100%;
+		padding: 2px 5px;
 	}
 
 	.subheader__menu ul {
 		justify-content: flex-start;
 		gap: 18px;
 		overflow-x: auto;
-		padding: 5px 10px;
+		padding: 3px 10px;
 	}
 
 	.subheader__menu ul li a {
-		padding: 10px 14px;
-		font-size: 14px;
+		padding: 6px 12px;
+		font-size: 13px;
+		font-weight: 400;
 	}
 
 	/* Setinha menor no mobile */
 	.subheader__menu ul li a .arrow {
-		font-size: 9px;
+		font-size: 8px;
 	}
 }
