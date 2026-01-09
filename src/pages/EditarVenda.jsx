@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import "../assets/Css/formsproduto.css";
 import { getAuthData } from "../utils/dadosuser";
 
-export default function EditProductPage() {
+export default function EditSalePage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const authData = getAuthData();
@@ -336,3 +336,4 @@ if (loading) {
     </div>
   );
 }
+

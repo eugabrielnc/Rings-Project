@@ -30,6 +30,9 @@ import SocialButtons from "./componentes/socialbutton";
 import PoliticaGarantiaMain from "./pages/garantia";
 import InformacoesPagamentoMain from "./pages/informaçoespagamento";
 import TermosUsoMain from "./pages/termosdeuso";
+import EditSalePage from "./pages/EditarVenda";
+
+
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <BrowserRouter>
@@ -61,8 +64,10 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         <Route path="/admin/produto" element={<Produtos/>}></Route>
         <Route path="/admin/produtoforms" element={<CreateProductPage/>}></Route>
         <Route path="/admin/vendas" element={<Vendas/>}></Route>
+        <Route path="/admin/vendas/editar/:id" element={<EditSalePage/>}></Route>
         <Route path="/admin/carrinho" element={<Carrinho/>}></Route>
         <Route path="/admin/produtos/editar/:id" element={<EditProductPage/>}></Route>
+
         </Route>
       </Routes>
 
