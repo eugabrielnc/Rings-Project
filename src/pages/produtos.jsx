@@ -89,7 +89,7 @@ export default function Produtos() {
                 <th style={th}>ID</th>
                 <th style={th}>Produto</th>
                 <th style={th}>Preço</th>
-                <th style={th}>Estoque</th>
+                <th style={th}>Vendas</th>
                 <th style={th}>Ações</th>
               </tr>
             </thead>
