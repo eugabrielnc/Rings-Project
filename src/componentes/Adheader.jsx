@@ -5,12 +5,12 @@ export default function Adheader() {
     <div className="announcement-bar">
       <div className="announcement-bar__content">
         <span className="announcement-bar__text">
-          ✨ Frete Grátis para todo o Brasil  ✨ 
-          🎁 Caixinha de Veludo Grátis  ✨ 
-          💍 Gravação Interna Gratuita  ✨
-          ✨ Frete Grátis para todo o Brasil  ✨ 
-          🎁 Caixinha de Veludo Grátis  ✨ 
-          💍 Gravação Interna Gratuita  ✨
+          ✨ Frete Grátis para todo o Brasil  |
+          🎁 Caixinha de Veludo Grátis  |
+          💍 Gravação Interna Gratuita  |
+          ✨ Frete Grátis para todo o Brasil  |
+          🎁 Caixinha de Veludo Grátis  |
+          💍 Gravação Interna Gratuita  |
         </span>
       </div>
     </div>
