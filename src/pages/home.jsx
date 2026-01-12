@@ -455,8 +455,8 @@ export default function MaleFashion() {
                 }}
                 breakpoints={{
                   320: {
-                    slidesPerView: 1,
-                    spaceBetween: 20
+                    slidesPerView: 2,
+                    spaceBetween: 15
                   },
                   576: {
                     slidesPerView: 2,
@@ -601,8 +601,8 @@ export default function MaleFashion() {
                 }}
                 breakpoints={{
                   320: {
-                    slidesPerView: 1,
-                    spaceBetween: 20
+                    slidesPerView: 2,
+                    spaceBetween: 15
                   },
                   576: {
                     slidesPerView: 2,
