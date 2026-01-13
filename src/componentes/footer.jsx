@@ -53,6 +53,9 @@ export default function Footer() {
                                 <li>
                                     <a href="/termouser">Termos de Uso</a>
                                 </li>
+                                <li>
+                                    <a href="/pag">Politicas de Privacidade</a>
+                                </li>
                             </ul>
                         </div>
                     </div>

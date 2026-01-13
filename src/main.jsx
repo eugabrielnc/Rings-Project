@@ -7,7 +7,7 @@ import Header from "../src/componentes/header";
 import Footer from "./componentes/footer";
 import Home from "../src/pages/home";
 import ShoppingCart from "../src/pages/ShoppingCart";
-import Layout2 from "./pages/painel";
+import Layout2 from "./pages/painel2";
 import Shop from "../src/pages/Shop";
 import ShopDetails from "./pages/ShopDetails";
 import Checkout from "./pages/Checkout";
@@ -31,7 +31,7 @@ import PoliticaGarantiaMain from "./pages/garantia";
 import InformacoesPagamentoMain from "./pages/informaçoespagamento";
 import TermosUsoMain from "./pages/termosdeuso";
 import EditSalePage from "./pages/EditarVenda";
-
+import PoliticaPrivacidadeMain from "./pages/politicap";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
@@ -54,7 +54,8 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         <Route path="/garantia" element={<PoliticaGarantiaMain />} />
         <Route path="/infopag" element={<InformacoesPagamentoMain/>} />
         <Route path="/termouser" element={<TermosUsoMain/>} />
-        <Route path="/perfil" element={<Layout2 />}>
+        <Route path="/pag" element={<PoliticaPrivacidadeMain/>} />
+        <Route path="/perfil" element={<Layout2/>}>
           <Route path="dados" element={<DadosPessoais />} />
           <Route path="rastreio" element={<MeusPedidos />} />
         </Route>

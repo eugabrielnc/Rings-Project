@@ -13,7 +13,7 @@ export default function Header() {
     const authData = getAuthData();
 
 
-    
+
     if (!authData || !authData.token) {
       navigate("/login");
     } else {
@@ -42,7 +42,7 @@ export default function Header() {
       }
     }
 
-   
+
 
     loadProducts();
   }, [url]);
@@ -94,7 +94,7 @@ export default function Header() {
     };
   }, [openProfile]);
 
-//console.log(authData)
+  //console.log(authData)
 
   return (
     <header className="header">
@@ -306,8 +306,10 @@ export default function Header() {
                           style={{
                             position: "absolute",
                             top: "140%",
-                            right: 0,
+                            right: "50%",
+                            transform: "translateX(50%)",
                             width: "220px",
+                            maxWidth: "90vw",
                             background: "#ffffff",
                             borderRadius: "14px",
                             boxShadow: "0 12px 30px rgba(0,0,0,0.15)",
@@ -366,7 +368,25 @@ export default function Header() {
                       </svg>
                     </a>
 
-                    <div className="price">$0.00</div>
+                    <a
+                      href="/perfil/rastreio"
+                      style={{
+                        fontSize: "14px",
+                        fontWeight: "500",
+                        color: "#000",
+                        textDecoration: "none",
+                        padding: "6px 10px",
+                        borderRadius: "8px",
+                        transition: "all 0.2s ease"
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.background = "transparent";
+                      }}
+                    >
+                      Meus pedidos
+                    </a>
+
+                    
                   </>
                 )}
 

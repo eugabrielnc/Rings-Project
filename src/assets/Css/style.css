@@ -2533,6 +2533,7 @@ ol {
 	color: #e53637;
 }
 
+
 /*---------------------
   Breadcrumb
 -----------------------*/
@@ -4439,4 +4440,69 @@ ol {
 	.categories__text:before {
 		height: 250px;
 	}
+}
+
+
+@media (max-width: 575px) {
+
+  .footer {
+    padding-top: 40px;
+  }
+
+  .footer__about {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+
+  .footer__about .footer__logo img {
+    max-width: 190px;
+    margin-bottom: 15px;
+  }
+
+  .footer__about p {
+    font-size: 14px;
+    line-height: 1.7;
+    max-width: 90%;
+    margin: 0 auto 20px;
+    color: #b7b7b7;
+  }
+
+  .footer__about a img {
+    max-width: 180px;
+    margin: 0 auto;
+    display: block;
+  }
+
+  .footer__widget {
+    margin-bottom: 25px;
+    text-align: center;
+  }
+
+  .footer__widget h6 {
+    font-size: 14px;
+    margin-bottom: 10px;
+  }
+
+  .footer__widget ul li {
+    line-height: 32px;
+  }
+
+  .footer__widget ul li a {
+    font-size: 14px;
+  }
+
+  .footer__newslatter p {
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .footer__newslatter form {
+    max-width: 90%;
+    margin: 10px auto 0;
+  }
+
+  .footer__copyright__text {
+    text-align: center;
+    font-size: 13px;
+  }
 }

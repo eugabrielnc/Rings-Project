@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import Sidebar2 from "../componentes/sidebar2";
+import Sidebar2 from "../componentes/sidebar2"
 import { Outlet } from "react-router-dom";
 
 export default function Layout2() {
