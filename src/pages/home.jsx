@@ -319,59 +319,45 @@ export default function MaleFashion() {
         >
 
           {/* SLIDE 1 */}
+        
           <SwiperSlide>
+          <Link to={`/shop?title=Alianças&filter=Prata`}>
             <div
-              className="hero__items set-bg"
+              className="hero__items"
               style={{
-                backgroundImage: "url('/img/hero/aliancaof.png')",
+                backgroundImage: "url('/img/aliprata.png')",
               }}
             >
-              <div className="container">
-                <div className="row">
-                  <div className="col-xl-5 col-lg-7 col-md-8">
-                    <div className="hero__text">
-                      <h6>Alianças</h6>
-                      <h2>Aliança com banho a ouro 18k</h2>
-                      <p>
-                        Par de alianças de moedas com banho a ouro 18k, anatômicas abauladas com anel solitário de pedra central
-                      </p>
-                      <Link to={`/shop?title=Alianças&filter=Moeda Antiga com Banho a Ouro 18k`} className="primary-btn">
-                        Compre agora
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              
             </div>
+            </Link>
           </SwiperSlide>
 
           {/* SLIDE 2 */}
+         
           <SwiperSlide>
+              <Link to={`/shop?title=Anéis`}>
             <div
-              className="hero__items set-bg"
+              className="hero__items"
               style={{
-                backgroundImage: "url('/img/hero/alianca4.png')",
+                backgroundImage: "url('/img/aneis.png')",
               }}
             >
-              <div className="container">
-                <div className="row">
-                  <div className="col-xl-5 col-lg-7 col-md-8">
-                    <div className="hero__text">
-                      <h6>Winter</h6>
-                      <h2>New Arrivals 2030</h2>
-                      <p>
-                        Comfortable, durable luxury pieces crafted with style and
-                        minimalism in mind.
-                      </p>
-                      <a href="#" className="primary-btn">
-                        Compre agora
-                      </a>
-                  
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
+             </Link>
+          </SwiperSlide>
+          {/* SLIDE 3 */}
+          <SwiperSlide>
+            <Link to={`/shop?title=Anéis&filter=Formatura`}>
+            <div
+              className="hero__items"
+              style={{
+                backgroundImage: "url('/img/formatura.png')",
+              }}
+            >
+
+            </div>
+            </Link>
           </SwiperSlide>
 
         </Swiper>
