@@ -1031,10 +1031,28 @@ ol {
 /*---------------------
   Hero
 -----------------------*/
+/* Remove espaços e faz banner ocupar tela toda */
+.hero {
+	margin: 0 !important;
+	padding: 0 !important;
+	width: 100vw;
+	position: relative;
+	left: 50%;
+	right: 50%;
+	margin-left: -50vw !important;
+	margin-right: -50vw !important;
+	line-height: 0 !important;
+}
+
 /* Fix para Swiper Fade - evita sobreposição */
 .hero__slider {
 	position: relative;
 	overflow: hidden;
+	line-height: 0 !important;
+}
+
+.hero__slider .swiper-wrapper {
+	line-height: 0 !important;
 }
 
 .hero__slider .swiper-slide {
@@ -1060,7 +1078,7 @@ ol {
 
 .hero__slider .swiper-button-next,
 .hero__slider .swiper-button-prev {
-	color: white;
+	color:  #d4af37 ;
 }
 
 .hero__slider.owl-carousel .owl-item.active .hero__text h6 {
@@ -1099,8 +1117,14 @@ ol {
 }
 
 .hero__items {
-	height: 800px;
-	padding-top: 230px;
+	height: 650px;
+	width: 100%;
+	padding: 0 !important;
+	margin: 0 !important;
+	background-size: cover !important;
+	background-position: center !important;
+	background-repeat: no-repeat !important;
+	display: block;
 }
 
 .hero__text h6 {
@@ -4379,9 +4403,33 @@ ol {
 	}
 
 	.hero__items {
-		height: auto;
-		padding-top: 130px;
-		padding-bottom: 40px;
+		height: 250px !important;
+		padding: 0 !important;
+		margin: 0 !important;
+		background-size: 100% auto !important;
+		background-position: center top !important;
+		background-repeat: no-repeat !important;
+		display: block !important;
+		line-height: 0 !important;
+	}
+
+	/* Pontos de paginação DENTRO da foto no mobile */
+	.hero__slider .swiper-pagination,
+	.hero .swiper-pagination,
+	.swiper-pagination {
+		bottom: 15px !important;
+		position: absolute !important;
+		z-index: 10 !important;
+	}
+	
+	.hero__slider .swiper-pagination-bullet {
+		margin: 0 4px !important;
+		background: rgba(255, 255, 255, 0.8) !important;
+		opacity: 1 !important;
+	}
+	
+	.hero__slider .swiper-pagination-bullet-active {
+		background: #d4af37 !important;
 	}
 
 	.hero__text h2 {
