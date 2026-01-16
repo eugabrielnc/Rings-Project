@@ -188,7 +188,7 @@ export default function ShopDetails() {
                       />
                     </div>
                   </div>
-                  
+
                 </div>
 
                 {/* Conteúdo do produto logo abaixo da foto */}
@@ -207,197 +207,197 @@ export default function ShopDetails() {
                   </h3>
                   <div className="product__details__option">
                     <div className="products_details">
-                    <div className="product__details__option__size">
-                      <span style={{ display: 'block', marginBottom: '10px', fontWeight: '600'  }}>
-                        Selecione o Tamanho  (Masculino):
-                      </span>
-                      <Select
-                        options={sizeOptions}
-                        value={selectedMascleSize}
-                        onChange={setSelectedMascleSize}
-                        styles={customStyles}
-                        placeholder="Escolha o tamanho..."
-                        isSearchable={false}
-                      />
-                      {selectedMascleSize && (
-                        <p style={{ marginTop: '10px', fontSize: '13px', color: '#666' }}>
-                          <i className="fa fa-info-circle" style={{ marginRight: '5px' }}></i>
-                          Não sabe seu tamanho? <a href="/medida" style={{ color: '#d4a574', fontWeight: '600' }}>Meça aqui!</a>
-                        </p>
-                      )}
-
-                      {/* Campo de Gravação Masculino */}
-                      <div style={{ marginTop: '20px' }}>
-                        <p style={{ display: 'block', marginBottom: '10px', fontWeight: '600', color: '#333' }}>
-                          Gravação (Masculino):
-                        </p>
-                        <input
-                          type="text"
-                          value={gravacaoMasculino}
-                          onChange={(e) => setGravacaoMasculino(e.target.value)}
-                          placeholder="Digite o texto para gravação..."
-                          maxLength={15}
-                          style={{
-                            width: '100%',
-                            padding: '12px 15px',
-                            border: '1px solid #e1e1e1',
-                            borderRadius: '4px',
-                            fontSize: '14px',
-                            outline: 'none',
-                            boxShadow: 'none'
-                          }}
+                      <div className="product__details__option__size">
+                        <span style={{ display: 'block', marginBottom: '10px', fontWeight: '600' }}>
+                          Selecione o Tamanho  (Masculino):
+                        </span>
+                        <Select
+                          options={sizeOptions}
+                          value={selectedMascleSize}
+                          onChange={setSelectedMascleSize}
+                          styles={customStyles}
+                          placeholder="Escolha o tamanho..."
+                          isSearchable={false}
                         />
-                        <p style={{ marginTop: '5px', fontSize: '12px', color: '#999' }}>
-                          Máximo 15 caracteres ({gravacaoMasculino.length}/15)
-                        </p>
+                        {selectedMascleSize && (
+                          <p style={{ marginTop: '10px', fontSize: '13px', color: '#666' }}>
+                            <i className="fa fa-info-circle" style={{ marginRight: '5px' }}></i>
+                            Não sabe seu tamanho? <a href="/medida" style={{ color: '#d4a574', fontWeight: '600' }}>Meça aqui!</a>
+                          </p>
+                        )}
+
+                        {/* Campo de Gravação Masculino */}
+                        <div style={{ marginTop: '20px' }}>
+                          <p style={{ display: 'block', marginBottom: '10px', fontWeight: '600', color: '#333' }}>
+                            Gravação (Masculino):
+                          </p>
+                          <input
+                            type="text"
+                            value={gravacaoMasculino}
+                            onChange={(e) => setGravacaoMasculino(e.target.value)}
+                            placeholder="Digite o texto para gravação..."
+                            maxLength={15}
+                            style={{
+                              width: '100%',
+                              padding: '12px 15px',
+                              border: '1px solid #e1e1e1',
+                              borderRadius: '4px',
+                              fontSize: '14px',
+                              outline: 'none',
+                              boxShadow: 'none'
+                            }}
+                          />
+                          <p style={{ marginTop: '5px', fontSize: '12px', color: '#999' }}>
+                            Máximo 15 caracteres ({gravacaoMasculino.length}/15)
+                          </p>
+                        </div>
                       </div>
-                    </div>
 
-                    <div className="product__details__option__size">
-                      <span style={{ display: 'block', marginBottom: '10px', fontWeight: '600' }}>
-                        Selecione o Tamanho  (Feminino):
-                      </span>
-                      <Select
-                        options={sizeOptions}
-                        value={selectedFemaleSize}
-                        onChange={setSelectedFemaleSize}
-                        styles={customStyles}
-                        placeholder="Escolha o tamanho..."
-                        isSearchable={false}
-                      />
-                      {selectedFemaleSize && (
-                        <p style={{ marginTop: '10px', fontSize: '13px', color: '#666' }}>
-                          <i className="fa fa-info-circle" style={{ marginRight: '5px' }}></i>
-                          Não sabe seu tamanho? <a href="/medida" style={{ color: '#d4a574', fontWeight: '600' }}>Meça aqui!</a>
-                        </p>
-                      )}
-
-                      {/* Campo de Gravação Feminino */}
-                      <div style={{ marginTop: '20px' }}>
-                        <p style={{ display: 'block', marginBottom: '10px', fontWeight: '600', color: '#333' }}>
-                          Gravação (Feminino):
-                        </p>
-                        <input
-                          type="text"
-                          value={gravacaoFeminino}
-                          onChange={(e) => setGravacaoFeminino(e.target.value)}
-                          placeholder="Digite o texto para gravação..."
-                          maxLength={15}
-                          style={{
-                            width: '100%',
-                            padding: '12px 15px',
-                            border: '1px solid #e1e1e1',
-                            borderRadius: '4px',
-                            fontSize: '14px',
-                            outline: 'none',
-                            boxShadow: 'none'
-                          }}
+                      <div className="product__details__option__size">
+                        <span style={{ display: 'block', marginBottom: '10px', fontWeight: '600' }}>
+                          Selecione o Tamanho  (Feminino):
+                        </span>
+                        <Select
+                          options={sizeOptions}
+                          value={selectedFemaleSize}
+                          onChange={setSelectedFemaleSize}
+                          styles={customStyles}
+                          placeholder="Escolha o tamanho..."
+                          isSearchable={false}
                         />
-                        <p style={{ marginTop: '5px', fontSize: '12px', color: '#999' }}>
-                          Máximo 15 caracteres ({gravacaoFeminino.length}/15)
-                        </p>
-                      </div>
-                      </div>
-                    </div>
+                        {selectedFemaleSize && (
+                          <p style={{ marginTop: '10px', fontSize: '13px', color: '#666' }}>
+                            <i className="fa fa-info-circle" style={{ marginRight: '5px' }}></i>
+                            Não sabe seu tamanho? <a href="/medida" style={{ color: '#d4a574', fontWeight: '600' }}>Meça aqui!</a>
+                          </p>
+                        )}
 
-
-                    <div style={{ marginTop: '30px' }}>
-                      <h4 style={{
-                        fontSize: '16px',
-                        fontWeight: '600',
-                        color: '#333',
-                        marginBottom: '15px',
-                        alignItems: 'center'
-                      }}>
-                        Escolha a cor de pedras
-                      </h4>
-                      <div className="pedras">
-                        <div
-  className={`pedra-item ${selectedStone === 'CRISTAL' ? 'selected' : ''}`}
-  onClick={() => setSelectedStone('CRISTAL')}
->
-  <div
-    className="pedra-option"
-    style={{ backgroundImage: 'url("/img/pedras/cristal.png")' }}
-  ></div>
-
-  <span className="pedras-texto">Cristal</span>
-</div>
-
-                        <div
-                          className={`pedra-item ${selectedStone === 'CITRINO' ? 'selected' : ''}`}
-                          onClick={() => setSelectedStone('CITRINO')}
-                        >
-                          <div
-                            className="pedra-option"
-                            style={{ backgroundImage: 'url("/img/pedras/citrino.png")' }}
-                          ></div>
-                          <span className="pedras-texto">Citrino</span>
-                        </div>
-
-                        <div
-                          className={`pedra-item ${selectedStone === 'AQUAMARINE' ? 'selected' : ''}`}
-                          onClick={() => setSelectedStone('AQUAMARINE')}
-                        >
-                          <div
-                            className="pedra-option"
-                            style={{ backgroundImage: 'url("/img/pedras/aquamarine.png")' }}
-                          ></div>
-                          <span className="pedras-texto">Aquamarine</span>
-                        </div>
-                        <div
-                          className={`pedra-item ${selectedStone === 'AMETISTA' ? 'selected' : ''}`}
-                          onClick={() => setSelectedStone('AMETISTA')}
-                        >
-                          <div
-                            className="pedra-option"
-                            style={{ backgroundImage: 'url("/img/pedras/ametista.png")' }}
-                          ></div>
-                          <span className="pedras-texto">Ametista</span>
-                        </div>
-                        <div
-                          className={`pedra-item ${selectedStone === 'PRETO' ? 'selected' : ''}`}
-                          onClick={() => setSelectedStone('PRETO')}
-                        >
-                          <div
-                            className="pedra-option"
-                            style={{ backgroundImage: 'url("/img/pedras/preto.png")' }}
-                          ></div>
-                          <span className="pedras-texto">Preto</span>
-                        </div>
-                        <div
-                          className={`pedra-item ${selectedStone === 'ROSA' ? 'selected' : ''}`}
-                          onClick={() => setSelectedStone('ROSA')}
-                        >
-                          <div
-                            className="pedra-option"
-                            style={{ backgroundImage: 'url("/img/pedras/rosa.png")' }}
-                          ></div>
-                          <span className="pedras-texto">Rosa</span>
-                        </div>
-                        <div
-                          className={`pedra-item ${selectedStone === 'VERDE' ? 'selected' : ''}`}
-                          onClick={() => setSelectedStone('VERDE')}
-                        >
-                          <div
-                            className="pedra-option"
-                            style={{ backgroundImage: 'url("/img/pedras/verde.png")' }}
-                          ></div>
-                          <span className="pedras-texto">Verde</span>
-                        </div>
-                        <div
-                          className={`pedra-item ${selectedStone === 'VERMELHO' ? 'selected' : ''}`}
-                          onClick={() => setSelectedStone('VERMELHO')}
-                        >
-                          <div
-                            className="pedra-option"
-                            style={{ backgroundImage: 'url("/img/pedras/vermelho.png")' }}
-                          ></div>
-                          <span className="pedras-texto">Vermelho</span>
+                        {/* Campo de Gravação Feminino */}
+                        <div style={{ marginTop: '20px' }}>
+                          <p style={{ display: 'block', marginBottom: '10px', fontWeight: '600', color: '#333' }}>
+                            Gravação (Feminino):
+                          </p>
+                          <input
+                            type="text"
+                            value={gravacaoFeminino}
+                            onChange={(e) => setGravacaoFeminino(e.target.value)}
+                            placeholder="Digite o texto para gravação..."
+                            maxLength={15}
+                            style={{
+                              width: '100%',
+                              padding: '12px 15px',
+                              border: '1px solid #e1e1e1',
+                              borderRadius: '4px',
+                              fontSize: '14px',
+                              outline: 'none',
+                              boxShadow: 'none'
+                            }}
+                          />
+                          <p style={{ marginTop: '5px', fontSize: '12px', color: '#999' }}>
+                            Máximo 15 caracteres ({gravacaoFeminino.length}/15)
+                          </p>
                         </div>
                       </div>
                     </div>
-                      
+                    {product.stone === 1 && (
+
+                      <div style={{ marginTop: '30px' }}>
+                        <h4 style={{
+                          fontSize: '16px',
+                          fontWeight: '600',
+                          color: '#333',
+                          marginBottom: '15px',
+                          alignItems: 'center'
+                        }}>
+                          Escolha a cor de pedras
+                        </h4>
+                        <div className="pedras">
+                          <div
+                            className={`pedra-item ${selectedStone === 'CRISTAL' ? 'selected' : ''}`}
+                            onClick={() => setSelectedStone('CRISTAL')}
+                          >
+                            <div
+                              className="pedra-option"
+                              style={{ backgroundImage: 'url("/img/pedras/cristal.png")' }}
+                            ></div>
+
+                            <span className="pedras-texto">Cristal</span>
+                          </div>
+
+                          <div
+                            className={`pedra-item ${selectedStone === 'CITRINO' ? 'selected' : ''}`}
+                            onClick={() => setSelectedStone('CITRINO')}
+                          >
+                            <div
+                              className="pedra-option"
+                              style={{ backgroundImage: 'url("/img/pedras/citrino.png")' }}
+                            ></div>
+                            <span className="pedras-texto">Citrino</span>
+                          </div>
+
+                          <div
+                            className={`pedra-item ${selectedStone === 'AQUAMARINE' ? 'selected' : ''}`}
+                            onClick={() => setSelectedStone('AQUAMARINE')}
+                          >
+                            <div
+                              className="pedra-option"
+                              style={{ backgroundImage: 'url("/img/pedras/aquamarine.png")' }}
+                            ></div>
+                            <span className="pedras-texto">Aquamarine</span>
+                          </div>
+                          <div
+                            className={`pedra-item ${selectedStone === 'AMETISTA' ? 'selected' : ''}`}
+                            onClick={() => setSelectedStone('AMETISTA')}
+                          >
+                            <div
+                              className="pedra-option"
+                              style={{ backgroundImage: 'url("/img/pedras/ametista.png")' }}
+                            ></div>
+                            <span className="pedras-texto">Ametista</span>
+                          </div>
+                          <div
+                            className={`pedra-item ${selectedStone === 'PRETO' ? 'selected' : ''}`}
+                            onClick={() => setSelectedStone('PRETO')}
+                          >
+                            <div
+                              className="pedra-option"
+                              style={{ backgroundImage: 'url("/img/pedras/preto.png")' }}
+                            ></div>
+                            <span className="pedras-texto">Preto</span>
+                          </div>
+                          <div
+                            className={`pedra-item ${selectedStone === 'ROSA' ? 'selected' : ''}`}
+                            onClick={() => setSelectedStone('ROSA')}
+                          >
+                            <div
+                              className="pedra-option"
+                              style={{ backgroundImage: 'url("/img/pedras/rosa.png")' }}
+                            ></div>
+                            <span className="pedras-texto">Rosa</span>
+                          </div>
+                          <div
+                            className={`pedra-item ${selectedStone === 'VERDE' ? 'selected' : ''}`}
+                            onClick={() => setSelectedStone('VERDE')}
+                          >
+                            <div
+                              className="pedra-option"
+                              style={{ backgroundImage: 'url("/img/pedras/verde.png")' }}
+                            ></div>
+                            <span className="pedras-texto">Verde</span>
+                          </div>
+                          <div
+                            className={`pedra-item ${selectedStone === 'VERMELHO' ? 'selected' : ''}`}
+                            onClick={() => setSelectedStone('VERMELHO')}
+                          >
+                            <div
+                              className="pedra-option"
+                              style={{ backgroundImage: 'url("/img/pedras/vermelho.png")' }}
+                            ></div>
+                            <span className="pedras-texto">Vermelho</span>
+                          </div>
+                        </div>
+                      </div>
+                    )}
                   </div>
                   <div className="product__details__cart__option">
                     <div className="quantity">
@@ -408,7 +408,7 @@ export default function ShopDetails() {
                     <button
                       type="button"
                       className="primary-btn"
-                      style={{borderRadius: '10px'}}
+                      style={{ borderRadius: '10px' }}
                       onClick={handleBuy}
                     >
                       Comprar
