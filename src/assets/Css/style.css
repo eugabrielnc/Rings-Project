@@ -25,6 +25,44 @@
 9.  Contact
 10.  Footer Style
 -------------------------------------------------------------------*/
+/* pedras */
+.pedras {
+	display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    align-items: center;
+	justify-content: center;
+}
+.pedra-item {
+  display: flex;
+  flex-direction: column; /* empilha */
+  align-items: center;    /* centraliza */
+  cursor: pointer;
+}
+
+.pedra-option {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-size: cover;
+  background-position: center;
+  border: 3px solid #e1e1e1;
+  transition: all 0.3s ease;
+}
+
+.pedra-item.selected .pedra-option {
+  border-color: #d4af37;
+  box-shadow: 0 0 0 2px rgba(212,175,55,0.2);
+  transform: scale(1.1);
+}
+
+.pedras-texto {
+  margin-top: 6px;
+  font-size: 12px;
+}
+
+
+/* Estilos base para os círculos de pedras */
 
 /*----------------------------------------*/
 /* Template default CSS
@@ -2152,6 +2190,11 @@ ol {
 	font-weight: 400;
 	margin-left: 10px;
 	text-decoration: line-through;
+}
+.products_details{
+	display: flex;
+  gap: 30px;
+  align-items: flex-start;
 }
 
 .product__details__text p {

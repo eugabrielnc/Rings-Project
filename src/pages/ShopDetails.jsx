@@ -22,13 +22,14 @@ export default function ShopDetails() {
   const [product, setProduct] = useState({});
   const [selectedMascleSize, setSelectedMascleSize] = useState(null);
   const [selectedFemaleSize, setSelectedFemaleSize] = useState(null);
-  
+
   const [selectedAmount, setSelectedAmount] = useState(1);
-  
+
   const [produtos, setProdutos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [gravacaoMasculino, setGravacaoMasculino] = useState('');
   const [gravacaoFeminino, setGravacaoFeminino] = useState('');
+  const [selectedStone, setSelectedStone] = useState('');
   const url = import.meta.env.VITE_API_URL;
   const { id } = useParams();
 
@@ -70,7 +71,7 @@ export default function ShopDetails() {
   // Buscar produto atual e produtos relacionados em paralelo
   useEffect(() => {
     setLoading(true);
-      
+
     // Fazer ambas requisições ao mesmo tempo
     Promise.all([
       fetch(`${url}/products/${id}`).then(res => res.json()),
@@ -91,54 +92,52 @@ export default function ShopDetails() {
   }, [id, url]);
   const navigate = useNavigate();
   const imageUrl = `${url}/products/${id}/image`;
- const handleBuy = async () => {
-   
-   {
-     const authData = getAuthData();
+  const handleBuy = async () => {
 
+    {
+      const authData = getAuthData();
 
-    if (!authData || !authData?.token ) {
-    alert("Você precisa estar logado para comprar.");
-    navigate("/login");
-    return;
-    }
+      if (!authData || !authData?.token) {
+        alert("Você precisa estar logado para comprar.");
+        navigate("/login");
+        return;
+      }
 
-     const responseNewSale = await fetch(`${url}/sales`, {
-      method:"POST",
-      headers:{"Content-Type": "application/json"},
-      body: JSON.stringify({
+      const responseNewSale = await fetch(`${url}/sales`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
           value: product.price * selectedAmount,
           product_id: product.id,
           amount: selectedAmount,
-  user_cep: "",
-  authorization: authData.token,
-  sizes: `fem:${selectedFemaleSize.value},masc:${selectedMascleSize.value}/fem:${gravacaoFeminino},masc:${gravacaoMasculino}`,
-  status: "aguardando pagamento",
-  code: "",
-  state: "",
-  city: "",
-  neighboor: "",
-  street: "",
-  complement: ""
+          user_cep: "",
+          authorization: authData.token,
+          sizes: `fem:${selectedFemaleSize.value},masc:${selectedMascleSize.value}/fem:${gravacaoFeminino},masc:${gravacaoMasculino}, pedra:${selectedStone}`,
+          status: "aguardando pagamento",
+          code: "",
+          state: "",
+          city: "",
+          neighboor: "",
+          street: "",
+          complement: ""
 
-      })
+        })
 
 
-    });
-     console.log(responseNewSale);
+      });
 
-     if(responseNewSale.status == 200){
-     const checkoutUrl = product.checkout_link || id;
+      if (responseNewSale.status == 200) {
+        const checkoutUrl = product.checkout_link || id;
 
-  if (!checkoutUrl) {
-    alert("Checkout indisponível.");
-    return;
-  }
+        if (!checkoutUrl) {
+          alert("Checkout indisponível.");
+          return;
+        }
 
-  window.location.href = checkoutUrl;
-}
-};
-};
+        window.location.href = checkoutUrl;
+      }
+    };
+  };
   // Mostrar loading enquanto carrega
   if (loading) {
     return (
@@ -175,23 +174,6 @@ export default function ShopDetails() {
             </div>
             <div className="row">
               <div className="col-lg-3 col-md-3">
-                <ul className="nav nav-tabs" role="tablist">
-                  <li className="nav-item">
-                    <a className="nav-link active" data-toggle="tab" href="#tabs-1" role="tab">
-                      <div className="product__thumb__pic set-bg" data-setbg="img/shop-details/thumb-1.png"></div>
-                    </a>
-                  </li>
-                  <li className="nav-item">
-                    <a className="nav-link" data-toggle="tab" href="#tabs-2" role="tab">
-                      <div className="product__thumb__pic set-bg" data-setbg="img/shop-details/thumb-2.png"></div>
-                    </a>
-                  </li>
-                  <li className="nav-item">
-                    <a className="nav-link" data-toggle="tab" href="#tabs-3" role="tab">
-                      <div className="product__thumb__pic set-bg" data-setbg="img/shop-details/thumb-3.png"></div>
-                    </a>
-                  </li>
-                </ul>
               </div>
               <div className="col-lg-6 col-md-9">
                 <div className="tab-content">
@@ -206,38 +188,11 @@ export default function ShopDetails() {
                       />
                     </div>
                   </div>
-                  <div className="tab-pane" id="tabs-2" role="tabpanel">
-                    <div className="product__details__pic__item">
-                      <img src="img/shop-details/product-big-3.png" alt="" />
-                    </div>
-                  </div>
-                  <div className="tab-pane" id="tabs-3" role="tabpanel">
-                    <div className="product__details__pic__item">
-                      <img src="img/shop-details/product-big.png" alt="" />
-                    </div>
-                  </div>
-                  <div className="tab-pane" id="tabs-4" role="tabpanel">
-                    <div className="product__details__pic__item">
-                      <img src="img/shop-details/product-big-4.png" alt="" />
-                      <a
-                        href="https://www.youtube.com/watch?v=8PJ3_p7VqHw&list=RD8PJ3_p7VqHw&start_radio=1"
-                        className="video-popup"
-                      >
-                        <i className="fa fa-play" />
-                      </a>
-                    </div>
-                  </div>
+                  
                 </div>
-              </div>
-            </div>
-          </div>
-        </div>
 
-        <div className="product__details__content">
-          <div className="container">
-            <div className="row d-flex justify-content-center">
-              <div className="col-lg-8">
-                <div className="product__details__text">
+                {/* Conteúdo do produto logo abaixo da foto */}
+                <div className="product__details__text" style={{ marginTop: '20px' }}>
                   <h4>{product.name || ""}</h4>
                   <div className="rating">
                     <i className="fa fa-star" />
@@ -251,8 +206,9 @@ export default function ShopDetails() {
                     R$ {product.price ? Number(product.price).toFixed(2) : '0.00'}
                   </h3>
                   <div className="product__details__option">
+                    <div className="products_details">
                     <div className="product__details__option__size">
-                      <span style={{ display: 'block', marginBottom: '10px', fontWeight: '600' }}>
+                      <span style={{ display: 'block', marginBottom: '10px', fontWeight: '600'  }}>
                         Selecione o Tamanho  (Masculino):
                       </span>
                       <Select
@@ -269,7 +225,7 @@ export default function ShopDetails() {
                           Não sabe seu tamanho? <a href="/medida" style={{ color: '#d4a574', fontWeight: '600' }}>Meça aqui!</a>
                         </p>
                       )}
-                      
+
                       {/* Campo de Gravação Masculino */}
                       <div style={{ marginTop: '20px' }}>
                         <p style={{ display: 'block', marginBottom: '10px', fontWeight: '600', color: '#333' }}>
@@ -296,7 +252,7 @@ export default function ShopDetails() {
                         </p>
                       </div>
                     </div>
-                    
+
                     <div className="product__details__option__size">
                       <span style={{ display: 'block', marginBottom: '10px', fontWeight: '600' }}>
                         Selecione o Tamanho  (Feminino):
@@ -315,7 +271,7 @@ export default function ShopDetails() {
                           Não sabe seu tamanho? <a href="/medida" style={{ color: '#d4a574', fontWeight: '600' }}>Meça aqui!</a>
                         </p>
                       )}
-                      
+
                       {/* Campo de Gravação Feminino */}
                       <div style={{ marginTop: '20px' }}>
                         <p style={{ display: 'block', marginBottom: '10px', fontWeight: '600', color: '#333' }}>
@@ -341,7 +297,107 @@ export default function ShopDetails() {
                           Máximo 15 caracteres ({gravacaoFeminino.length}/15)
                         </p>
                       </div>
+                      </div>
                     </div>
+
+
+                    <div style={{ marginTop: '30px' }}>
+                      <h4 style={{
+                        fontSize: '16px',
+                        fontWeight: '600',
+                        color: '#333',
+                        marginBottom: '15px',
+                        alignItems: 'center'
+                      }}>
+                        Escolha a cor de pedras
+                      </h4>
+                      <div className="pedras">
+                        <div
+  className={`pedra-item ${selectedStone === 'CRISTAL' ? 'selected' : ''}`}
+  onClick={() => setSelectedStone('CRISTAL')}
+>
+  <div
+    className="pedra-option"
+    style={{ backgroundImage: 'url("/img/pedras/cristal.png")' }}
+  ></div>
+
+  <span className="pedras-texto">Cristal</span>
+</div>
+
+                        <div
+                          className={`pedra-item ${selectedStone === 'CITRINO' ? 'selected' : ''}`}
+                          onClick={() => setSelectedStone('CITRINO')}
+                        >
+                          <div
+                            className="pedra-option"
+                            style={{ backgroundImage: 'url("/img/pedras/citrino.png")' }}
+                          ></div>
+                          <span className="pedras-texto">Citrino</span>
+                        </div>
+
+                        <div
+                          className={`pedra-item ${selectedStone === 'AQUAMARINE' ? 'selected' : ''}`}
+                          onClick={() => setSelectedStone('AQUAMARINE')}
+                        >
+                          <div
+                            className="pedra-option"
+                            style={{ backgroundImage: 'url("/img/pedras/aquamarine.png")' }}
+                          ></div>
+                          <span className="pedras-texto">Aquamarine</span>
+                        </div>
+                        <div
+                          className={`pedra-item ${selectedStone === 'AMETISTA' ? 'selected' : ''}`}
+                          onClick={() => setSelectedStone('AMETISTA')}
+                        >
+                          <div
+                            className="pedra-option"
+                            style={{ backgroundImage: 'url("/img/pedras/ametista.png")' }}
+                          ></div>
+                          <span className="pedras-texto">Ametista</span>
+                        </div>
+                        <div
+                          className={`pedra-item ${selectedStone === 'PRETO' ? 'selected' : ''}`}
+                          onClick={() => setSelectedStone('PRETO')}
+                        >
+                          <div
+                            className="pedra-option"
+                            style={{ backgroundImage: 'url("/img/pedras/preto.png")' }}
+                          ></div>
+                          <span className="pedras-texto">Preto</span>
+                        </div>
+                        <div
+                          className={`pedra-item ${selectedStone === 'ROSA' ? 'selected' : ''}`}
+                          onClick={() => setSelectedStone('ROSA')}
+                        >
+                          <div
+                            className="pedra-option"
+                            style={{ backgroundImage: 'url("/img/pedras/rosa.png")' }}
+                          ></div>
+                          <span className="pedras-texto">Rosa</span>
+                        </div>
+                        <div
+                          className={`pedra-item ${selectedStone === 'VERDE' ? 'selected' : ''}`}
+                          onClick={() => setSelectedStone('VERDE')}
+                        >
+                          <div
+                            className="pedra-option"
+                            style={{ backgroundImage: 'url("/img/pedras/verde.png")' }}
+                          ></div>
+                          <span className="pedras-texto">Verde</span>
+                        </div>
+                        <div
+                          className={`pedra-item ${selectedStone === 'VERMELHO' ? 'selected' : ''}`}
+                          onClick={() => setSelectedStone('VERMELHO')}
+                        >
+                          <div
+                            className="pedra-option"
+                            style={{ backgroundImage: 'url("/img/pedras/vermelho.png")' }}
+                          ></div>
+                          <span className="pedras-texto">Vermelho</span>
+                        </div>
+                      </div>
+                    </div>
+                      
                   </div>
                   <div className="product__details__cart__option">
                     <div className="quantity">
@@ -352,6 +408,7 @@ export default function ShopDetails() {
                     <button
                       type="button"
                       className="primary-btn"
+                      style={{borderRadius: '10px'}}
                       onClick={handleBuy}
                     >
                       Comprar
