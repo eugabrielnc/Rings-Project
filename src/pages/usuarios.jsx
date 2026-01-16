@@ -33,6 +33,7 @@ export default function Usuarios() {
             nome: u.name,
             email: u.email,
             cargo: u.role,
+            phone: u.phone,
           }))
         )
       )
@@ -97,6 +98,7 @@ export default function Usuarios() {
                 <th style={th}>ID</th>
                 <th style={th}>Nome</th>
                 <th style={th}>Email</th>
+                <th style={th}>Telefone</th>
                 <th style={th}>Cargo</th>
                 <th style={th}>Ações</th>
               </tr>
@@ -107,6 +109,7 @@ export default function Usuarios() {
                   <td style={td}>{u.id}</td>
                   <td style={td}>{u.nome}</td>
                   <td style={td}>{u.email}</td>
+                  <td style={td}>{u.phone}</td>
                   <td style={td}>{u.cargo}</td>
                   <td style={td}>
                     <button style={btnEdit}>Editar</button>
@@ -126,6 +129,7 @@ export default function Usuarios() {
             <strong>{u.nome}</strong>
             <span>ID: {u.id}</span>
             <span>{u.email}</span>
+            <span>Telefone: {u.phone}</span>
             <span>Cargo: {u.cargo}</span>
 
             <div style={{ display: "flex", gap: "10px", marginTop: "10px" }}>

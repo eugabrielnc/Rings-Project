@@ -47,7 +47,7 @@ function Login() {
 
   saveAuthData({
     id: data.user_id,
-    email: data.email,
+    email: dados.email,
     role: data.role,
     token: data.access_token.token
   });
@@ -100,7 +100,7 @@ function Login() {
           </button>
         </form>
         <p className="forgot-password">
-          <a href="/forgot-password">Esqueceu sua senha?</a>
+          <a href="/novasenha">Esqueceu sua senha?</a>
         </p>
         <p className="forgot-password">
           <a href="/cadastro">Cadastre-se</a>

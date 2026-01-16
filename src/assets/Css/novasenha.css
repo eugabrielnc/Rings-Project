@@ -1,0 +1,124 @@
+/* Container principal */
+.nova-senha-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  font-family: "Inter", sans-serif;
+}
+
+/* Card */
+.nova-senha-card {
+  background: #ffffff;
+  padding: 36px;
+  width: 100%;
+  max-width: 380px;
+  border-radius: 14px;
+  border: 1px solid #f3e8c5;
+  box-shadow: 0 15px 35px rgba(201, 164, 72, 0.25);
+}
+
+/* Título */
+.nova-senha-card h2 {
+  text-align: center;
+  margin-bottom: 28px;
+  color: #b08d2d; /* dourado */
+  font-size: 26px;
+  font-weight: 600;
+}
+
+/* Form */
+.nova-senha-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* Label */
+.nova-senha-form label {
+  font-size: 14px;
+  color: #7a6a3a;
+  margin-bottom: 6px;
+}
+
+/* Input */
+.nova-senha-form input {
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid #e7d7a3;
+  font-size: 14px;
+  color: #3a3a3a;
+  background: #ffffff;
+  outline: none;
+  transition: border 0.2s, box-shadow 0.2s;
+}
+
+.nova-senha-form input:focus {
+  border-color: #c9a448;
+  box-shadow: 0 0 0 3px rgba(201, 164, 72, 0.25);
+}
+
+/* Botão */
+.nova-senha-form button {
+  margin-top: 12px;
+  padding: 13px;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #d4af37, #b08d2d);
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.1s, box-shadow 0.2s;
+  box-shadow: 0 8px 20px rgba(176, 141, 45, 0.35);
+}
+
+.nova-senha-form button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 24px rgba(176, 141, 45, 0.45);
+}
+
+.nova-senha-form button:active {
+  transform: scale(0.98);
+}
+
+.nova-senha-form button:disabled {
+  background: #e5e7eb;
+  color: #9ca3af;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+/* Mensagens */
+.nova-senha-message {
+  margin-top: 18px;
+  text-align: center;
+  font-size: 14px;
+}
+
+.nova-senha-message.success {
+  color: #9c7c1e;
+}
+
+.nova-senha-message.error {
+  color: #b91c1c;
+}
+
+/* Detalhe decorativo */
+.nova-senha-card::before {
+  content: "";
+  display: block;
+  height: 4px;
+  width: 60px;
+  background: linear-gradient(90deg, #d4af37, #b08d2d);
+  margin: 0 auto 24px auto;
+  border-radius: 2px;
+}
+
+/* Responsivo */
+@media (max-width: 480px) {
+  .nova-senha-card {
+    padding: 26px;
+  }
+}

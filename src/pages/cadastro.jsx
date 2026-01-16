@@ -7,6 +7,7 @@ function Signup() {
   const [userdados, setUserdados] = useState({
     email: '',
     password: '',
+    phone: '',
     name: '',
     confirmPassword: ''
   });
@@ -44,6 +45,7 @@ function Signup() {
       body: JSON.stringify({
         name: userdados.name,
         email: userdados.email,
+        phone: userdados.phone,
         password: userdados.password
       })
     });
@@ -77,6 +79,18 @@ function Signup() {
               className="input-field"
               value={userdados.email}
               onChange={handleChange}
+              required
+            />
+          </div>
+          <div className="input-group">
+            <label className="input-label">Telefone</label>
+            <input
+              type="tel"
+              name="phone"
+              className="input-field"
+              value={userdados.phone}
+              onChange={handleChange}
+              placeholder="(99) 99999-9999"
               required
             />
           </div>

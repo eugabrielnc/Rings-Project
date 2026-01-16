@@ -32,7 +32,7 @@ import InformacoesPagamentoMain from "./pages/informaçoespagamento";
 import TermosUsoMain from "./pages/termosdeuso";
 import EditSalePage from "./pages/EditarVenda";
 import PoliticaPrivacidadeMain from "./pages/politicap";
-
+import NovaSenha from "./pages/novasenha";
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <BrowserRouter>
@@ -54,6 +54,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         <Route path="/garantia" element={<PoliticaGarantiaMain />} />
         <Route path="/infopag" element={<InformacoesPagamentoMain/>} />
         <Route path="/termouser" element={<TermosUsoMain/>} />
+        <Route path="/novasenha" element={<NovaSenha/>} />
         <Route path="/pag" element={<PoliticaPrivacidadeMain/>} />
         <Route path="/perfil" element={<Layout2/>}>
           <Route path="dados" element={<DadosPessoais />} />

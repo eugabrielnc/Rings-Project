@@ -1,28 +1,28 @@
 import React from 'react';
-const ScaleCalibration = ({ 
-  cardHeightPx, 
-  onCardHeightChange, 
+const ScaleCalibration = ({
+  cardHeightPx,
+  onCardHeightChange,
   onCalibrate,
-  onBack 
+  onBack
 }) => {
   // Calculate card width maintaining credit card aspect ratio (85.6 / 53.98)
   const cardWidthPx = cardHeightPx * (85.6 / 53.98);
-  
+
   return (
     <section className="contact spad">
       <div className="container">
         <div className="row mb-4">
           <div className="col-12 text-center">
-            <h2 style={{ 
-              fontSize: "32px", 
-              color: "#111", 
+            <h2 style={{
+              fontSize: "32px",
+              color: "#111",
               marginBottom: "15px",
               fontWeight: "700"
             }}>
               Calibrar a Tela
             </h2>
             <p style={{ fontSize: "16px", color: "#666", maxWidth: "600px", margin: "0 auto 30px" }}>
-              Coloque um <strong>cartão de crédito</strong> sobre o retângulo abaixo e ajuste 
+              Coloque um <strong>cartão de crédito</strong> sobre o retângulo abaixo e ajuste
               até que fiquem exatamente do mesmo tamanho.
             </p>
           </div>
@@ -69,7 +69,7 @@ const ScaleCalibration = ({
                   marginBottom: `${cardHeightPx}px`,
                   boxShadow: "0 2px 8px rgba(212, 165, 116, 0.3)"
                 }} />
-                
+
                 {/* Bottom Line */}
                 <div style={{
                   width: "100%",
@@ -81,16 +81,18 @@ const ScaleCalibration = ({
                 {/* Size indicator - just showing pixels during calibration */}
                 <div style={{
                   position: "absolute",
-                  right: "-70px",
+                  right: "10px",      // nunca negativo
                   top: "50%",
                   transform: "translateY(-50%)",
-                  fontSize: "14px",
+                  fontSize: "12px",
                   color: "#999",
+                  maxWidth: "90%",
+                  textAlign: "right",
                   whiteSpace: "nowrap"
                 }}>
                   {cardHeightPx}px
                 </div>
-                
+
                 {/* Target size reminder */}
                 <div style={{
                   position: "absolute",
@@ -153,12 +155,12 @@ const ScaleCalibration = ({
               borderRadius: "5px",
               marginBottom: "20px"
             }}>
-              <p style={{ 
-                fontSize: "14px", 
+              <p style={{
+                fontSize: "14px",
                 color: "#666",
                 marginBottom: 0
               }}>
-                <strong>💡 Dica:</strong> Coloque seu cartão de crédito sobre a tela e ajuste o slider 
+                <strong>💡 Dica:</strong> Coloque seu cartão de crédito sobre a tela e ajuste o slider
                 até que a distância entre as duas linhas seja exatamente a altura do cartão (53.98mm).
               </p>
             </div>
