@@ -123,15 +123,6 @@ function formatDate(dateString) {
     minute: "2-digit",
   });
 }
-/*
-useEffect(() => {
-  
-  
-
-  console.log(filters)
-
-}, [filters])
-*/
 
 
 useEffect(() => {
@@ -175,7 +166,7 @@ useEffect(() => {
 
   return (
     <div style={{ padding: isMobile ? "10px" : "20px" }}>
-      
+
   <div className="filters-container">
       <h2 className="filters-title">Filtros de Vendas</h2>
 
