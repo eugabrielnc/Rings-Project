@@ -13,6 +13,7 @@ export default function CreateProductPage() {
     type: "",
     material: "",
     checkout_link: "",
+    stone: 0,
   });
 
   const [images, setImages] = useState([]);
@@ -55,6 +56,7 @@ export default function CreateProductPage() {
       formData.append("type", form.type);
       formData.append("material", form.material);
       formData.append("checkout_link", form.checkout_link);
+      formData.append("stone", form.stone);
       formData.append("image", images[0].file);
 
       const res = await fetch(`${url}/products/`, {
@@ -134,7 +136,8 @@ export default function CreateProductPage() {
           onChange={handleChange}
         />
         {errors.material && <p className="error-text">{errors.material}</p>}
-
+  
+      
         {/* CHECKOUT LINK */}
         <label className="label">Checkout Link</label>
         <input
@@ -146,6 +149,21 @@ export default function CreateProductPage() {
         {errors.checkout_link && (
           <p className="error-text">{errors.checkout_link}</p>
         )}
+        {/* PEDRA */}
+        <label className="label" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <input
+            type="checkbox"
+            checked={form.stone === 1}
+            onChange={(e) =>
+              setForm({
+                ...form,
+                stone: e.target.checked ? 1 : 0,
+              })
+            }
+            style={{ width: 'auto', margin: 0 }}
+          />
+          Produto aceita pedras personalizadas
+        </label>
 
         {/* IMAGEM */}
         <label className="label">Imagem</label>
