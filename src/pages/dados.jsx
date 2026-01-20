@@ -1,6 +1,10 @@
 import "../assets/Css/dadosp.css"
+import { getAuthData } from '../utils/dadosuser'
 
 export default function DadosPessoais() {
+const authData = getAuthData();
+const email = authData?.email;
+
   return (
     <section className="perfil-wrapper">
       <header className="perfil-header">
@@ -14,12 +18,12 @@ export default function DadosPessoais() {
         <div className="perfil-grid">
           <div className="perfil-item">
             <span className="perfil-label">Nome completo</span>
-            <p className="perfil-value">João Pereira</p>
+            <p className="perfil-value"></p>
           </div>
 
           <div className="perfil-item">
             <span className="perfil-label">E-mail</span>
-            <p className="perfil-value">joao@email.com</p>
+            <p className="perfil-value">{email}</p>
           </div>
 
           <div className="perfil-item">

@@ -20,27 +20,16 @@ export default function Footer() {
                                 </a>
                             </div>
                             <p>
-                                O casal é o centro do nosso modelo de negócio, que combina design exclusivo, artesania de alto padrão e uma experiência pensada para celebrar histórias de amor únicas
+                                Nosso trabalho começa no amor e termina na eternidade. Criamos alianças com design refinado e qualidade excepcional para celebrar histórias únicas.
                             </p>
                             <a href="#">
-                                <img src="/img/cards.png" alt="" />
+                                <img src="/img/cards2.png" alt="" />
                             </a>
-                        </div>
-                    </div>
-                    <div className="col-lg-2 offset-lg-1 col-md-3 col-sm-6">
-                        <div className="footer__widget">
-                            <h6>Sobre nós</h6>
-                            <ul>
-                                
-                                <li>
-                                    <a href="/contact">Nosso contato</a>
-                                </li>
-                            </ul>
                         </div>
                     </div>
                     <div className="col-lg-2 col-md-3 col-sm-6">
                         <div className="footer__widget">
-                            <h6>Compra</h6>
+                            <h6>Institucional</h6>
                             <ul>
                                 <li>
                                     <a href="/infopag">Detalhes de Pagamento</a>
@@ -57,23 +46,23 @@ export default function Footer() {
                             </ul>
                         </div>
                     </div>
-
-                    <div className="col-lg-3 offset-lg-1 col-md-6 col-sm-6">
-                        <div className="footer__widget">
-                            <h6>Fique por dentro</h6>
-                            <div className="footer__newslatter">
-                                <p>
-                                    Seja o primeiro a saber sobre as novidades, catálogos, ofertas e promoções!
-                                </p>
-                                <form>
-                                    <input type="text" placeholder="Seu e-mail" />
-                                    <button type="submit">
-                                        <span className="fa fa-envelope"></span>
-                                    </button>
-                                </form>
-                            </div>
+                    <div className="col-lg-2 col-md-3 col-sm-6">
+                        <div className="footer__widget footer__atendimento">
+                            <h6>Atendimento</h6>
+                            <ul>
+                                <li><a href="tel:82991394107">82 99139-4107</a></li>
+                                <li><a href="tel:81935000006">81 93500-0006</a></li>
+                                <li>
+                                    <a href="mailto:aliancaseternasofc@gmail.com">
+                                        aliancaseternasofc@gmail.com
+                                    </a>
+                                </li>
+                            </ul>
                         </div>
                     </div>
+
+
+                   
                 </div>
             </div>
         </footer>
