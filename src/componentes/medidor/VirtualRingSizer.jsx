@@ -48,13 +48,31 @@ const VirtualRingSizer = ({
             }}>
               Agora é fácil!
             </h2>
-            <p style={{ fontSize: "16px", color: "#666", maxWidth: "650px", margin: "0 auto 30px" }}>
+            <p style={{ fontSize: "20px", color: "#666", maxWidth: "650px", margin: "0 auto 30px" }}>
               Coloque seu anel físico sobre o círculo virtual e ajuste até que{" "}
               <strong>o círculo interno fique exatamente do mesmo tamanho</strong> que o 
               diâmetro interno do seu anel (onde o dedo passa).
             </p>
           </div>
         </div>
+
+            {/* Helper Text */}
+            <div style={{
+              background: "linear-gradient(90deg, #ffffff 0%, #f7e9b3 10%, #d4af37 95%)",
+              borderLeft: "4px solid #f7e9b3",
+              padding: "15px 20px",
+              borderRadius: "5px",
+              marginBottom: "20px"
+            }}>
+              <p style={{ 
+                fontSize: "18px", 
+                color: "#666",
+                marginBottom: 0
+              }}>
+                <strong>💡 Dica:</strong> O círculo interno tracejado representa o diâmetro interno do anel. 
+                Ajuste até que ele tenha exatamente o mesmo tamanho que a abertura do seu anel físico.
+              </p>
+            </div>
 
         <div className="row">
           <div className="col-lg-8 offset-lg-2">
@@ -81,47 +99,28 @@ const VirtualRingSizer = ({
                     maxHeight: "70vh"
                   }}
                 >
+                  <defs>
+    <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="95%" style={{ stopColor: "#d4af37", stopOpacity: 1 }} />
+    </linearGradient>
+  </defs>
+  <defs>
+    <linearGradient id="Gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style={{ stopColor: "#ffffff", stopOpacity: 1 }} />
+      <stop offset="10%" style={{ stopColor: "#f7e9b3", stopOpacity: 1 }} />
+      <stop offset="95%" style={{ stopColor: "#d4af37", stopOpacity: 1 }} />
+    </linearGradient>
+  </defs>
+
                   {/* Ring circle - single border */}
                   <circle
                     cx={(ringDiameterPx + 100) / 2}
                     cy={(ringDiameterPx + 100) / 2}
                     r={ringDiameterPx / 2}
                     fill="none"
-                    stroke="#d4a574"
+                    stroke="url(#goldGradient)"
                     strokeWidth="3"
                   />
-                  
-                  {/* Center crosshair for alignment */}
-                  <line
-                    x1={(ringDiameterPx + 100) / 2 - 15}
-                    y1={(ringDiameterPx + 100) / 2}
-                    x2={(ringDiameterPx + 100) / 2 + 15}
-                    y2={(ringDiameterPx + 100) / 2}
-                    stroke="#999"
-                    strokeWidth="1"
-                    opacity="0.5"
-                  />
-                  <line
-                    x1={(ringDiameterPx + 100) / 2}
-                    y1={(ringDiameterPx + 100) / 2 - 15}
-                    x2={(ringDiameterPx + 100) / 2}
-                    y2={(ringDiameterPx + 100) / 2 + 15}
-                    stroke="#999"
-                    strokeWidth="1"
-                    opacity="0.5"
-                  />
-                  
-                  {/* Measurement label */}
-                  <text
-                    x={(ringDiameterPx + 100) / 2}
-                    y={(ringDiameterPx + 100) / 2 + 5}
-                    textAnchor="middle"
-                    fill="#999"
-                    fontSize="11"
-                    fontWeight="600"
-                  >
-                    {ringDiameterPx}px = {pixelsToMm(ringDiameterPx).toFixed(1)}mm
-                  </text>
                 </svg>
               </div>
 
@@ -129,7 +128,7 @@ const VirtualRingSizer = ({
               {ringSize && (
                 <div style={{
                   background: "linear-gradient(135deg, #fff9f0 0%, #fff5e6 100%)",
-                  border: "2px solid #d4a574",
+                  border: "5px solid #f7e9b3",
                   borderRadius: "15px",
                   padding: "20px",
                   marginBottom: "30px",
@@ -139,7 +138,7 @@ const VirtualRingSizer = ({
                   <div style={{ fontSize: "14px", color: "#666", marginBottom: "10px" }}>
                     Seu tamanho é:
                   </div>
-                  <div style={{ fontSize: "48px", color: "#d4a574", fontWeight: "bold", marginBottom: "10px" }}>
+                  <div style={{ fontSize: "48px", color: "#d4af37", fontWeight: "bold", marginBottom: "10px" }}>
                     {ringSize.aro}
                   </div>
                   <div style={{ fontSize: "14px", color: "#666" }}>
@@ -182,7 +181,7 @@ const VirtualRingSizer = ({
                 
                 <input
                   type="range"
-                  min="80"
+                  min="50"
                   max="400"
                   value={ringDiameterPx}
                   onChange={(e) => setRingDiameterPx(Number(e.target.value))}
@@ -202,7 +201,7 @@ const VirtualRingSizer = ({
                   onClick={() => onComplete(ringSize)}
                   className="site-btn"
                   style={{
-                    background: "linear-gradient(135deg, #d4a574 0%, #c8935e 100%)",
+                    background: "linear-gradient(90deg, #ffffff 0%, #f7e9b3 10%, #d4af37 95%)",
                     border: "none",
                     padding: "14px 40px",
                     fontSize: "14px",
@@ -217,25 +216,6 @@ const VirtualRingSizer = ({
                 </button>
               </div>
             </div>
-
-            {/* Helper Text */}
-            <div style={{
-              background: "#fff9e6",
-              borderLeft: "4px solid #d4a574",
-              padding: "15px 20px",
-              borderRadius: "5px",
-              marginBottom: "20px"
-            }}>
-              <p style={{ 
-                fontSize: "14px", 
-                color: "#666",
-                marginBottom: 0
-              }}>
-                <strong>💡 Dica:</strong> O círculo interno tracejado representa o diâmetro interno do anel. 
-                Ajuste até que ele tenha exatamente o mesmo tamanho que a abertura do seu anel físico.
-              </p>
-            </div>
-
             {/* Back Button */}
             <div style={{ textAlign: "center" }}>
               <button

@@ -60,6 +60,44 @@
   margin-top: 6px;
   font-size: 12px;
 }
+/* medidor */
+
+.button-action {
+	background: #d4af37;
+	border-radius: 18px;
+	padding: 35px 50px;
+	font-size: 26px;
+	width: 900px;
+	font-weight: 600;
+	color: #fff;
+	cursor: pointer;
+	text-align: center;
+	box-shadow: 0 8px 20px rgba(212, 165, 116, 0.3);
+	transition: all 0.3s ease;
+}
+
+.button-action:hover {
+	transform: translateY(-3px);
+	box-shadow: 0 12px 25px rgba(212, 165, 116, 0.4);
+}
+
+/* Responsive buttons for mobile */
+@media (max-width: 991px) {
+	.button-action {
+		width: 100%;
+		padding: 20px 30px;
+		font-size: 18px;
+		border-radius: 12px;
+	}
+}
+
+@media (max-width: 480px) {
+	.button-action {
+		padding: 18px 25px;
+		font-size: 16px;
+	}
+}
+
 
 
 /* Estilos base para os círculos de pedras */

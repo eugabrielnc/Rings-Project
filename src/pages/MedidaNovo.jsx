@@ -46,34 +46,6 @@ export default function Medida() {
 
   return (
     <>
-    
-      <section 
-        className="breadcrumb-option"
-        style={{
-          backgroundImage: "url(/img/medidor.jpg)",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          padding: "100px 0"
-        }}
-      >
-        <div className="container">
-          <div className="row">
-            <div className="col-lg-12">
-              <div className="breadcrumb__text">
-                <h4 style={{ color: "#fff", fontSize: "36px", marginBottom: "10px" }}>
-                  {step === 1 ? "Como Medir" : step === 2 ? "Calibragem" : step === 3 ? "Medição" : "Seu Tamanho"}
-                </h4>
-                <div className="breadcrumb__links">
-                  <a href="/" style={{ color: "#fff" }}>Home</a>
-                  <span style={{ color: "#fff", margin: "0 10px" }}>»</span>
-                  <span style={{ color: "#ddd" }}>Medidor Virtual</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Step 1: Instructions */}
       {step === 1 && (
         <InstructionsPage onStart={handleStart} />
@@ -106,7 +78,7 @@ export default function Medida() {
               <div className="col-lg-8 offset-lg-2">
                 <div style={{
                   background: "linear-gradient(135deg, #fff9f0 0%, #fff5e6 100%)",
-                  border: "3px solid #d4a574",
+                  border: "3px solid #d4af37",
                   borderRadius: "20px",
                   padding: "50px 30px",
                   textAlign: "center",
@@ -130,7 +102,7 @@ export default function Medida() {
                   <div style={{
                     fontSize: "72px",
                     fontWeight: "bold",
-                    color: "#d4a574",
+                    color: "#d4af37",
                     marginBottom: "10px"
                   }}>
                     {finalRingSize.aro}
@@ -163,12 +135,12 @@ export default function Medida() {
                       fontSize: "14px"
                     }}>
                       <div style={{ textAlign: "center" }}>
-                        <strong style={{ color: "#d4a574" }}>US Size:</strong>
+                        <strong style={{ color: "#d4af37" }}>US Size:</strong>
                         <br />
                         {finalRingSize.us}
                       </div>
                       <div style={{ textAlign: "center" }}>
-                        <strong style={{ color: "#d4a574" }}>EU Size:</strong>
+                        <strong style={{ color: "#d4af37" }}>EU Size:</strong>
                         <br />
                         {finalRingSize.eu}
                       </div>
@@ -198,12 +170,12 @@ export default function Medida() {
                       fontSize: "14px"
                     }}>
                       <div style={{ textAlign: "center" }}>
-                        <strong style={{ color: "#d4a574" }}>Diâmetro:</strong>
+                        <strong style={{ color: "#d4af37" }}>Diâmetro:</strong>
                         <br />
                         {finalRingSize.diameter} mm
                       </div>
                       <div style={{ textAlign: "center" }}>
-                        <strong style={{ color: "#d4a574" }}>Circunferência:</strong>
+                        <strong style={{ color: "#d4af37" }}>Circunferência:</strong>
                         <br />
                         {finalRingSize.circumference} mm
                       </div>
@@ -211,8 +183,8 @@ export default function Medida() {
                   </div>
 
                   <div style={{
-                    background: "#fff9e6",
-                    borderLeft: "4px solid #d4a574",
+                    background:"linear-gradient(90deg, #ffffff 0%, #f7e9b3 10%, #d4af37 95%)",
+                    borderLeft: "4px solid #d4af37",
                     padding: "15px",
                     marginBottom: "30px",
                     textAlign: "left",
@@ -233,7 +205,7 @@ export default function Medida() {
                       onClick={() => window.location.href = '/shop'}
                       className="site-btn"
                       style={{
-                        background: "linear-gradient(135deg, #d4a574 0%, #c8935e 100%)",
+                        background: "#d4af37",
                         border: "none",
                         padding: "14px 30px",
                         fontSize: "14px",
@@ -267,7 +239,7 @@ export default function Medida() {
                     style={{
                       background: "none",
                       border: "none",
-                      color: "#d4a574",
+                      color: "#d4af37",
                       fontSize: "14px",
                       cursor: "pointer",
                       textDecoration: "underline"
@@ -291,7 +263,7 @@ export default function Medida() {
               <a 
                 href="/medida-virtual" 
                 style={{
-                  color: "#d4a574",
+                  color: "#d4af37",
                   fontSize: "16px",
                   textDecoration: "none",
                   display: "inline-flex",
