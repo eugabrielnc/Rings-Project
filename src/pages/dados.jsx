@@ -38,7 +38,7 @@ export default function DadosPessoais() {
 
         <div className="perfil-actions">
           <a className="perfil-btn" href="/novasenha">
-            Editar senha
+            Editar dados
           </a>
         </div>
       </div>

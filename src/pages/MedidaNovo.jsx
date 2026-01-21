@@ -5,12 +5,34 @@ import ScaleCalibration from "../componentes/medidor/ScaleCalibration";
 import VirtualRingSizer from "../componentes/medidor/VirtualRingSizer";
 
 export default function Medida() {
+
+  const pageStyle = {
+    minHeight: "100vh",
+    backgroundImage: "url('/img/fundo2.jpeg')",
+    backgroundSize: "cover",
+    backgroundPosition: "center top",
+    backgroundRepeat: "no-repeat",
+    position: "relative",
+  };
+
+
+  const overlayStyle = {
+    position: "absolute",
+    inset: 0,
+    backgroundColor: "rgba(255,255,255,0.25)",
+    zIndex: 0,
+  };
+
+  const contentStyle = {
+    position: "relative",
+    zIndex: 1,
+  };
   const [step, setStep] = useState(1);
-  
+
 
   const [finalRingSize, setFinalRingSize] = useState(null);
-  
- 
+
+
   const {
     isCalibrated,
     cardHeightPx,
@@ -20,7 +42,7 @@ export default function Medida() {
     pixelsToMm
   } = useScaleCalibration();
   const handleStart = () => {
-    setStep(2); 
+    setStep(2);
   };
   const handleCalibrate = () => {
     calibrateScale();
@@ -28,256 +50,263 @@ export default function Medida() {
   };
   const handleComplete = (ringSize) => {
     setFinalRingSize(ringSize);
-    setStep(4); 
+    setStep(4);
   };
 
- 
+
   const handleRecalibrate = () => {
     resetCalibration();
-    setStep(2); 
+    setStep(2);
   };
 
-  
+
   const handleMeasureAgain = () => {
     resetCalibration();
     setFinalRingSize(null);
-    setStep(1); 
+    setStep(1);
   };
 
   return (
-    <>
-      {/* Step 1: Instructions */}
-      {step === 1 && (
-        <InstructionsPage onStart={handleStart} />
-      )}
 
-      {/* Step 2: Scale Calibration */}
-      {step === 2 && (
-        <ScaleCalibration
-          cardHeightPx={cardHeightPx}
-          onCardHeightChange={setCardHeightPx}
-          onCalibrate={handleCalibrate}
-          onBack={() => setStep(1)}
-        />
-      )}
+    <div style={pageStyle}>
+      {/* Overlay */}
+      <div style={overlayStyle}></div>
+      <div style={contentStyle}>
+        <>
+          {/* Step 1: Instructions */}
+          {step === 1 && (
+            <InstructionsPage onStart={handleStart} />
+          )}
 
-      {/* Step 3: Ring Measurement */}
-      {step === 3 && isCalibrated && (
-        <VirtualRingSizer
-          pixelsToMm={pixelsToMm}
-          onComplete={handleComplete}
-          onRecalibrate={handleRecalibrate}
-        />
-      )}
+          {/* Step 2: Scale Calibration */}
+          {step === 2 && (
+            <ScaleCalibration
+              cardHeightPx={cardHeightPx}
+              onCardHeightChange={setCardHeightPx}
+              onCalibrate={handleCalibrate}
+              onBack={() => setStep(1)}
+            />
+          )}
 
-      {/* Step 4: Result Display */}
-      {step === 4 && finalRingSize && (
-        <section className="contact spad">
-          <div className="container">
-            <div className="row">
-              <div className="col-lg-8 offset-lg-2">
-                <div style={{
-                  background: "linear-gradient(135deg, #fff9f0 0%, #fff5e6 100%)",
-                  border: "3px solid #d4af37",
-                  borderRadius: "20px",
-                  padding: "50px 30px",
-                  textAlign: "center",
-                  boxShadow: "0 10px 40px rgba(0,0,0,0.1)"
-                }}>
-                  <i className="fa fa-check-circle" style={{
-                    fontSize: "60px",
-                    color: "#4CAF50",
-                    marginBottom: "20px"
-                  }}></i>
-                  
-                  <h2 style={{ 
-                    fontSize: "32px", 
-                    color: "#111", 
-                    marginBottom: "30px",
-                    fontWeight: "700"
-                  }}>
-                    Seu tamanho é:
-                  </h2>
+          {/* Step 3: Ring Measurement */}
+          {step === 3 && isCalibrated && (
+            <VirtualRingSizer
+              pixelsToMm={pixelsToMm}
+              onComplete={handleComplete}
+              onRecalibrate={handleRecalibrate}
+            />
+          )}
 
-                  <div style={{
-                    fontSize: "72px",
-                    fontWeight: "bold",
-                    color: "#d4af37",
-                    marginBottom: "10px"
-                  }}>
-                    {finalRingSize.aro}
-                  </div>
-                  
-                  <div style={{ fontSize: "18px", color: "#666", marginBottom: "20px" }}>
-                    Aro Brasileiro
-                  </div>
-
-                  <div style={{
-                    background: "#fff",
-                    borderRadius: "15px",
-                    padding: "25px",
-                    marginBottom: "30px",
-                    textAlign: "left"
-                  }}>
-                    <h4 style={{ 
-                      fontSize: "18px", 
-                      color: "#111", 
-                      marginBottom: "15px",
-                      fontWeight: "600",
-                      textAlign: "center"
+          {/* Step 4: Result Display */}
+          {step === 4 && finalRingSize && (
+            <section className="contact spad">
+              <div className="container">
+                <div className="row">
+                  <div className="col-lg-8 offset-lg-2">
+                    <div style={{
+                      background: "linear-gradient(135deg, #fff9f0 0%, #fff5e6 100%)",
+                      border: "3px solid #d4af37",
+                      borderRadius: "20px",
+                      padding: "50px 30px",
+                      textAlign: "center",
+                      boxShadow: "0 10px 40px rgba(0,0,0,0.1)"
                     }}>
-                      Conversões Internacionais:
-                    </h4>
-                    <div style={{ 
-                      display: "grid",
-                      gridTemplateColumns: "1fr 1fr",
-                      gap: "15px",
-                      fontSize: "14px"
-                    }}>
-                      <div style={{ textAlign: "center" }}>
-                        <strong style={{ color: "#d4af37" }}>US Size:</strong>
-                        <br />
-                        {finalRingSize.us}
+                      <i className="fa fa-check-circle" style={{
+                        fontSize: "60px",
+                        color: "#4CAF50",
+                        marginBottom: "20px"
+                      }}></i>
+
+                      <h2 style={{
+                        fontSize: "32px",
+                        color: "#111",
+                        marginBottom: "30px",
+                        fontWeight: "700"
+                      }}>
+                        Seu tamanho é:
+                      </h2>
+
+                      <div style={{
+                        fontSize: "72px",
+                        fontWeight: "bold",
+                        color: "#d4af37",
+                        marginBottom: "10px"
+                      }}>
+                        {finalRingSize.aro}
                       </div>
-                      <div style={{ textAlign: "center" }}>
-                        <strong style={{ color: "#d4af37" }}>EU Size:</strong>
-                        <br />
-                        {finalRingSize.eu}
+
+                      <div style={{ fontSize: "18px", color: "#666", marginBottom: "20px" }}>
+                        Aro Brasileiro
                       </div>
+
+                      <div style={{
+                        background: "#fff",
+                        borderRadius: "15px",
+                        padding: "25px",
+                        marginBottom: "30px",
+                        textAlign: "left"
+                      }}>
+                        <h4 style={{
+                          fontSize: "18px",
+                          color: "#111",
+                          marginBottom: "15px",
+                          fontWeight: "600",
+                          textAlign: "center"
+                        }}>
+                          Conversões Internacionais:
+                        </h4>
+                        <div style={{
+                          display: "grid",
+                          gridTemplateColumns: "1fr 1fr",
+                          gap: "15px",
+                          fontSize: "14px"
+                        }}>
+                          <div style={{ textAlign: "center" }}>
+                            <strong style={{ color: "#d4af37" }}>US Size:</strong>
+                            <br />
+                            {finalRingSize.us}
+                          </div>
+                          <div style={{ textAlign: "center" }}>
+                            <strong style={{ color: "#d4af37" }}>EU Size:</strong>
+                            <br />
+                            {finalRingSize.eu}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div style={{
+                        background: "#fff",
+                        borderRadius: "15px",
+                        padding: "25px",
+                        marginBottom: "30px",
+                        textAlign: "left"
+                      }}>
+                        <h4 style={{
+                          fontSize: "18px",
+                          color: "#111",
+                          marginBottom: "15px",
+                          fontWeight: "600",
+                          textAlign: "center"
+                        }}>
+                          Medidas:
+                        </h4>
+                        <div style={{
+                          display: "grid",
+                          gridTemplateColumns: "1fr 1fr",
+                          gap: "15px",
+                          fontSize: "14px"
+                        }}>
+                          <div style={{ textAlign: "center" }}>
+                            <strong style={{ color: "#d4af37" }}>Diâmetro:</strong>
+                            <br />
+                            {finalRingSize.diameter} mm
+                          </div>
+                          <div style={{ textAlign: "center" }}>
+                            <strong style={{ color: "#d4af37" }}>Circunferência:</strong>
+                            <br />
+                            {finalRingSize.circumference} mm
+                          </div>
+                        </div>
+                      </div>
+
+                      <div style={{
+                        background: "linear-gradient(90deg, #ffffff 0%, #f7e9b3 10%, #d4af37 95%)",
+                        borderLeft: "4px solid #d4af37",
+                        padding: "15px",
+                        marginBottom: "30px",
+                        textAlign: "left",
+                        fontSize: "14px",
+                        color: "#666"
+                      }}>
+                        <strong style={{ color: "#111" }}>💡 Dica:</strong> Se estiver entre dois tamanhos ou em dúvida, recomendamos escolher o tamanho maior para maior conforto.
+                      </div>
+
+                      <div style={{
+                        display: "flex",
+                        gap: "15px",
+                        justifyContent: "center",
+                        flexWrap: "wrap",
+                        marginBottom: "20px"
+                      }}>
+                        <button
+                          onClick={() => window.location.href = '/shop'}
+                          className="site-btn"
+                          style={{
+                            background: "#d4af37",
+                            border: "none",
+                            padding: "14px 30px",
+                            fontSize: "14px",
+                            fontWeight: "600",
+                            cursor: "pointer"
+                          }}
+                        >
+                          <i className="fa fa-shopping-bag" style={{ marginRight: "8px" }}></i>
+                          Ver Alianças
+                        </button>
+
+                        <button
+                          onClick={() => window.open(`https://wa.me/5511999999999?text=Olá! Descobri que meu tamanho de anel é Aro ${finalRingSize.aro}`, '_blank')}
+                          className="site-btn"
+                          style={{
+                            background: "#25D366",
+                            border: "none",
+                            padding: "14px 30px",
+                            fontSize: "14px",
+                            fontWeight: "600",
+                            cursor: "pointer"
+                          }}
+                        >
+                          <i className="fab fa-whatsapp" style={{ marginRight: "8px" }}></i>
+                          Compartilhar
+                        </button>
+                      </div>
+
+                      <button
+                        onClick={handleMeasureAgain}
+                        style={{
+                          background: "none",
+                          border: "none",
+                          color: "#d4af37",
+                          fontSize: "14px",
+                          cursor: "pointer",
+                          textDecoration: "underline"
+                        }}
+                      >
+                        <i className="fa fa-redo" style={{ marginRight: "5px" }}></i>
+                        Medir novamente
+                      </button>
                     </div>
                   </div>
+                </div>
+              </div>
+            </section>
+          )}
 
-                  <div style={{
-                    background: "#fff",
-                    borderRadius: "15px",
-                    padding: "25px",
-                    marginBottom: "30px",
-                    textAlign: "left"
-                  }}>
-                    <h4 style={{ 
-                      fontSize: "18px", 
-                      color: "#111", 
-                      marginBottom: "15px",
-                      fontWeight: "600",
-                      textAlign: "center"
-                    }}>
-                      Medidas:
-                    </h4>
-                    <div style={{ 
-                      display: "grid",
-                      gridTemplateColumns: "1fr 1fr",
-                      gap: "15px",
-                      fontSize: "14px"
-                    }}>
-                      <div style={{ textAlign: "center" }}>
-                        <strong style={{ color: "#d4af37" }}>Diâmetro:</strong>
-                        <br />
-                        {finalRingSize.diameter} mm
-                      </div>
-                      <div style={{ textAlign: "center" }}>
-                        <strong style={{ color: "#d4af37" }}>Circunferência:</strong>
-                        <br />
-                        {finalRingSize.circumference} mm
-                      </div>
-                    </div>
-                  </div>
-
-                  <div style={{
-                    background:"linear-gradient(90deg, #ffffff 0%, #f7e9b3 10%, #d4af37 95%)",
-                    borderLeft: "4px solid #d4af37",
-                    padding: "15px",
-                    marginBottom: "30px",
-                    textAlign: "left",
-                    fontSize: "14px",
-                    color: "#666"
-                  }}>
-                    <strong style={{ color: "#111" }}>💡 Dica:</strong> Se estiver entre dois tamanhos ou em dúvida, recomendamos escolher o tamanho maior para maior conforto.
-                  </div>
-
-                  <div style={{
-                    display: "flex",
-                    gap: "15px",
-                    justifyContent: "center",
-                    flexWrap: "wrap",
-                    marginBottom: "20px"
-                  }}>
-                    <button
-                      onClick={() => window.location.href = '/shop'}
-                      className="site-btn"
-                      style={{
-                        background: "#d4af37",
-                        border: "none",
-                        padding: "14px 30px",
-                        fontSize: "14px",
-                        fontWeight: "600",
-                        cursor: "pointer"
-                      }}
-                    >
-                      <i className="fa fa-shopping-bag" style={{ marginRight: "8px" }}></i>
-                      Ver Alianças
-                    </button>
-                    
-                    <button
-                      onClick={() => window.open(`https://wa.me/5511999999999?text=Olá! Descobri que meu tamanho de anel é Aro ${finalRingSize.aro}`, '_blank')}
-                      className="site-btn"
-                      style={{
-                        background: "#25D366",
-                        border: "none",
-                        padding: "14px 30px",
-                        fontSize: "14px",
-                        fontWeight: "600",
-                        cursor: "pointer"
-                      }}
-                    >
-                      <i className="fab fa-whatsapp" style={{ marginRight: "8px" }}></i>
-                      Compartilhar
-                    </button>
-                  </div>
-
-                  <button
-                    onClick={handleMeasureAgain}
+          {/* Back Button */}
+          <section style={{ paddingTop: 0 }}>
+            <div className="container">
+              <div className="row mt-4">
+                <div className="col-12 text-center">
+                  <a
+                    href="/medida-virtual"
                     style={{
-                      background: "none",
-                      border: "none",
                       color: "#d4af37",
-                      fontSize: "14px",
-                      cursor: "pointer",
-                      textDecoration: "underline"
+                      fontSize: "16px",
+                      textDecoration: "none",
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: "8px"
                     }}
                   >
-                    <i className="fa fa-redo" style={{ marginRight: "5px" }}></i>
-                    Medir novamente
-                  </button>
+                    <i className="fa fa-arrow-left"></i>
+                    Voltar ao Menu
+                  </a>
                 </div>
               </div>
             </div>
-          </div>
-        </section>
-      )}
-
-      {/* Back Button */}
-      <section style={{ paddingTop: 0 }}>
-        <div className="container">
-          <div className="row mt-4">
-            <div className="col-12 text-center">
-              <a 
-                href="/medida-virtual" 
-                style={{
-                  color: "#d4af37",
-                  fontSize: "16px",
-                  textDecoration: "none",
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: "8px"
-                }}
-              >
-                <i className="fa fa-arrow-left"></i>
-                Voltar ao Menu
-              </a>
-            </div>
-          </div>
-        </div>
-      </section>
-    </>
+          </section>
+        </>
+      </div>
+    </div>
   );
 }
