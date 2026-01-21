@@ -15,6 +15,30 @@ import "../assets/Css/style.css";
 
 
 export default function Shop() {
+
+const pageStyle = {
+    minHeight: "100vh",
+    backgroundImage: "url('/img/fundo2.jpeg')",
+    backgroundSize: "cover",
+    backgroundPosition: "center top",
+    backgroundRepeat: "no-repeat",
+    position: "relative",
+  };
+
+
+  const overlayStyle = {
+    position: "absolute",
+    inset: 0,
+    backgroundColor: "rgba(255,255,255,0.25)",
+    zIndex: 0,
+  };
+
+  const contentStyle = {
+    position: "relative",
+    zIndex: 1,
+  };
+
+
   const url = import.meta.env.VITE_API_URL;
   const [searchParams] = useSearchParams();
   const filter = searchParams.get("filter");
@@ -367,6 +391,10 @@ export default function Shop() {
   const totalActiveFilters = categoryFilters.length + brandFilters.length + priceFilters.length;
 
   return (
+    <div style={pageStyle}>
+      {/* Overlay */}
+      <div style={overlayStyle}></div>
+      <div style={contentStyle}>
     <>
       <style>{`
         .collapse {
@@ -744,5 +772,7 @@ export default function Shop() {
         </div>
       </section>
     </>
+    </div>
+    </div>
   );
 }

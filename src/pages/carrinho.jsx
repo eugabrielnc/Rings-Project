@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 import { getAuthData } from "../utils/dadosuser";
 
 export default function Carrinho() {
+
+
+
   const [produtos, setProdutos] = useState([]);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 767);
   const url = import.meta.env.VITE_API_URL;
@@ -78,6 +81,9 @@ export default function Carrinho() {
   }, [url]);
 
   return (
+
+
+
     <div style={{ padding: isMobile ? "10px" : "20px" }}>
       <h2 style={{ fontSize: isMobile ? "20px" : "26px", color: "#C9A86A" }}>
         Carrinho
@@ -131,6 +137,7 @@ export default function Carrinho() {
         ))
       )}
     </div>
+    
   );
 }
 

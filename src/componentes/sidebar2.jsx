@@ -2,6 +2,27 @@ import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
 import "../assets/Css/sidebar.css"
 function Sidebar2() {
+    const pageStyle = {
+        minHeight: "100vh",
+        backgroundImage: "url('/img/fundo2.jpeg')",
+        backgroundSize: "cover",
+        backgroundPosition: "center top",
+        backgroundRepeat: "no-repeat",
+        position: "relative",
+    };
+
+
+    const overlayStyle = {
+        position: "absolute",
+        inset: 0,
+        backgroundColor: "rgba(255,255,255,0.25)",
+        zIndex: 0,
+    };
+
+    const contentStyle = {
+        position: "relative",
+        zIndex: 1,
+    };
     const [isSidebarOpen, setSidebarOpen] = useState(false);
     const location = useLocation();
 
@@ -29,6 +50,10 @@ function Sidebar2() {
     ];
 
     return (
+        <div style={pageStyle}>
+            {/* Overlay */}
+            <div style={overlayStyle}></div>
+            <div style={contentStyle}>
         <div className={mainWrapperClass}>
 
             <div className="sidebar" id="sidebar">
@@ -52,6 +77,8 @@ function Sidebar2() {
                     </div>
                 </div>
             </div>
+        </div>
+        </div>
         </div>
     );
 }

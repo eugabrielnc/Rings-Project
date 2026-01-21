@@ -1,7 +1,37 @@
 import React from "react";
 
 export default function About() {
+
+const pageStyle = {
+  minHeight: "100vh",
+  backgroundImage: "url('/img/fundo2.jpeg')",
+  backgroundSize: "cover",
+  backgroundPosition: "center top",
+  backgroundRepeat: "no-repeat",
+  position: "relative",
+};
+
+
+  const overlayStyle = {
+  position: "absolute",
+  inset: 0,
+  backgroundColor: "rgba(255,255,255,0.25)", 
+  zIndex: 0,
+};
+
+  const contentStyle = {
+  position: "relative",
+  zIndex: 1,
+};
+
+
+
+
   return (
+    <div style={pageStyle}>
+      {/* Overlay */}
+      <div style={overlayStyle}></div>
+      <div style={contentStyle}></div>
     <>
       {/* Page Preloader */}
      
@@ -47,5 +77,6 @@ export default function About() {
       </section>
 
     </>
+    </div>
   );
 }

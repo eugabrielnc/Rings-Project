@@ -2,6 +2,27 @@ import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
 import "../assets/Css/sidebar.css"
 function Sidebar() {
+    const pageStyle = {
+        minHeight: "100vh",
+        backgroundImage: "url('/img/fundo2.jpeg')",
+        backgroundSize: "cover",
+        backgroundPosition: "center top",
+        backgroundRepeat: "no-repeat",
+        position: "relative",
+    };
+
+
+    const overlayStyle = {
+        position: "absolute",
+        inset: 0,
+        backgroundColor: "rgba(255,255,255,0.25)",
+        zIndex: 0,
+    };
+
+    const contentStyle = {
+        position: "relative",
+        zIndex: 1,
+    };
     const [isSidebarOpen, setSidebarOpen] = useState(false);
     const location = useLocation();
 
@@ -31,26 +52,33 @@ function Sidebar() {
     ];
 
     return (
-        <div className={mainWrapperClass}>
+        <div style={pageStyle}>
+            {/* Overlay */}
+            <div style={overlayStyle}></div>
+            <div style={contentStyle}>
 
-            <div className="sidebar" id="sidebar">
-                <div className="sidebar-inner slimscroll">
-                    <div id="sidebar-menu" className="sidebar-menu">
-                        <ul>
-                            <li className="menu-title">Painel do Administrador</li>
+                <div className={mainWrapperClass}>
 
-                            {menuItems.map((item, index) => (
-                                <li
-                                    key={index}
-                                    className={isActive(item.path) ? "active" : ""}
-                                >
-                                    <Link to={item.path}>
-                                        <i className={`fa ${item.icon}`} />{" "}
-                                        <span>{item.label}</span>
-                                    </Link>
-                                </li>
-                            ))}
-                        </ul>
+                    <div className="sidebar" id="sidebar">
+                        <div className="sidebar-inner slimscroll">
+                            <div id="sidebar-menu" className="sidebar-menu">
+                                <ul>
+                                    <li className="menu-title">Painel do Administrador</li>
+
+                                    {menuItems.map((item, index) => (
+                                        <li
+                                            key={index}
+                                            className={isActive(item.path) ? "active" : ""}
+                                        >
+                                            <Link to={item.path}>
+                                                <i className={`fa ${item.icon}`} />{" "}
+                                                <span>{item.label}</span>
+                                            </Link>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
