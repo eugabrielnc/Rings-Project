@@ -2,6 +2,28 @@ import React, { useState } from 'react';
 import '../assets/Css/login.css';
 
 function Signup() {
+
+  const pageStyle = {
+    minHeight: "100vh",
+    backgroundImage: "url('/img/fundo2.jpeg')",
+    backgroundSize: "cover",
+    backgroundPosition: "center top",
+    backgroundRepeat: "no-repeat",
+    position: "relative",
+  };
+
+
+  const overlayStyle = {
+    position: "absolute",
+    inset: 0,
+    backgroundColor: "rgba(255,255,255,0.25)",
+    zIndex: 0,
+  };
+
+  const contentStyle = {
+    position: "relative",
+    zIndex: 1,
+  };
   const url = import.meta.env.VITE_API_URL;
 
   const [userdados, setUserdados] = useState({
@@ -54,6 +76,10 @@ function Signup() {
   };
 
   return (
+<div style={pageStyle}>
+      {/* Overlay */}
+      <div style={overlayStyle}></div>
+      <div style={contentStyle}>
     <div className="login-page">
       <div className="login-container">
         <h2 className="login-title">Criar Nova Conta</h2>
@@ -246,6 +272,8 @@ function Signup() {
           Já tem uma conta? <a href="/login">Faça Login</a>
         </p>
       </div>
+    </div>
+    </div>
     </div>
   );
 }

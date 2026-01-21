@@ -5,11 +5,12 @@
 
 .pg-garantia-wrapper {
   max-width: 1000px;
-  margin: 3rem auto;
-  padding: 0 1.2rem;
+  margin: 0 auto;           /* 👈 remove barras */
+  padding: 3rem 1.2rem;     /* 👈 mantém respiro interno */
   font-family: "Segoe UI", Tahoma, sans-serif;
   color: #333333;
 }
+
 
 /* Blocos */
 .pg-garantia-bloco {

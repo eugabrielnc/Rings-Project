@@ -20,7 +20,7 @@ export default function Layout() {
         display: "flex",
         flexDirection: isMobile ? "column" : "row",
         minHeight: "100vh",
-        background: "#fff",
+        
       }}
     >
       <Sidebar />

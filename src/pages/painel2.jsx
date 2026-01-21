@@ -18,7 +18,7 @@ export default function Layout2() {
         display: "flex",
         flexDirection: isMobile ? "column" : "row",
         minHeight: "100vh",
-        background: "#fff",
+        
         width: "100%",
         overflowX: "hidden",
       }}

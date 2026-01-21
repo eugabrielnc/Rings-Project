@@ -1,7 +1,32 @@
 import "../assets/Css/garantia.css";
+const pageStyle = {
+    minHeight: "100vh",
+    backgroundImage: "url('/img/fundo2.jpeg')",
+    backgroundSize: "cover",
+    backgroundPosition: "center top",
+    backgroundRepeat: "no-repeat",
+    position: "relative",
+  };
 
+
+  const overlayStyle = {
+    position: "absolute",
+    inset: 0,
+    backgroundColor: "rgba(255,255,255,0.25)",
+    zIndex: 0,
+  };
+
+  const contentStyle = {
+    position: "relative",
+    zIndex: 1,
+  };
 export default function PoliticaGarantiaMain() {
   return (
+
+    <div style={pageStyle}>
+      {/* Overlay */}
+      <div style={overlayStyle}></div>
+      <div style={contentStyle}>
     <main className="pg-garantia-wrapper">
 
       <section className="pg-garantia-bloco">
@@ -112,5 +137,7 @@ export default function PoliticaGarantiaMain() {
       </section>
 
     </main>
+    </div>
+    </div>
   );
 }
