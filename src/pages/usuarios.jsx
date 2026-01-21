@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { getAuthData } from "../utils/dadosuser";
+import { Link } from "react-router-dom";
 
 export default function Usuarios() {
   const [usuarios, setUsuarios] = useState([]);
@@ -60,7 +61,7 @@ export default function Usuarios() {
 
   return (
     <div style={{ padding: isMobile ? "10px" : "20px" }}>
-      
+
       {/* HEADER */}
       <div style={{
         display: "flex",
@@ -112,7 +113,9 @@ export default function Usuarios() {
                   <td style={td}>{u.phone}</td>
                   <td style={td}>{u.cargo}</td>
                   <td style={td}>
-                    <button style={btnEdit}>Editar</button>
+                     <Link to={`/admin/usuarios/edituser/${u.id}`}>
+                      <button style={btnEdit}>Editar</button>
+                    </Link>
                     <button style={btnDel} onClick={() => handleDelete(u.id)}>
                       Excluir
                     </button>

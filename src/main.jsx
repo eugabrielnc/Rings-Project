@@ -33,6 +33,7 @@ import TermosUsoMain from "./pages/termosdeuso";
 import EditSalePage from "./pages/EditarVenda";
 import PoliticaPrivacidadeMain from "./pages/politicap";
 import NovaSenha from "./pages/novasenha";
+import EditUserPage from "./pages/edituser";
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <BrowserRouter>
@@ -63,6 +64,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         <Route path="/admin" element={<Layout />}>
         <Route path="/admin/dashboard" element={<Dashboard/>}></Route>
         <Route path="/admin/usuarios" element={<Usuarios/>}></Route>
+        <Route path="/admin/usuarios/edituser/:id" element={<EditUserPage/>}></Route>
         <Route path="/admin/produto" element={<Produtos/>}></Route>
         <Route path="/admin/produtoforms" element={<CreateProductPage/>}></Route>
         <Route path="/admin/vendas" element={<Vendas/>}></Route>
