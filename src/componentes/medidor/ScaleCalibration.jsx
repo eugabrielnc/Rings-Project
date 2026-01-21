@@ -9,7 +9,6 @@ const ScaleCalibration = ({
   const cardWidthPx = cardHeightPx * (85.6 / 53.98);
 
   return (
-    <section className="contact spad">
       <div className="container">
         <div className="row mb-4">
           <div className="col-12 text-center">
@@ -17,16 +16,34 @@ const ScaleCalibration = ({
               fontSize: "32px",
               color: "#111",
               marginBottom: "15px",
-              fontWeight: "700"
+              fontWeight: "700",
+              marginTop: "25px"
             }}>
               Calibrar a Tela
             </h2>
-            <p style={{ fontSize: "16px", color: "#666", maxWidth: "600px", margin: "0 auto 30px" }}>
+            <p style={{ fontSize: "20px", color: "#666", maxWidth: "600px", margin: "0 auto 30px" }}>
               Coloque um <strong>cartão de crédito</strong> sobre o retângulo abaixo e ajuste
               até que fiquem exatamente do mesmo tamanho.
             </p>
           </div>
         </div>
+        {/* Helper Text */}
+            <div style={{
+              background: "linear-gradient(90deg, #ffffff 0%, #f7e9b3 10%, #d4af37 95%)",
+              borderLeft: "4px solid #d4af37",
+              padding: "15px 20px",
+              borderRadius: "5px",
+              marginBottom: "20px"
+            }}>
+              <p style={{
+                fontSize: "14px",
+                color: "#666",
+                marginBottom: 0
+              }}>
+                <strong>💡 Dica:</strong> Coloque seu cartão de crédito sobre a tela e ajuste o slider
+                até que a distância entre as duas linhas seja exatamente a altura do cartão (53.98mm).
+              </p>
+            </div>
 
         <div className="row">
           <div className="col-lg-8 offset-lg-2">
@@ -65,17 +82,17 @@ const ScaleCalibration = ({
                 <div style={{
                   width: "100%",
                   height: "3px",
-                  background: "#d4a574",
+                  background: "#d4af37",
                   marginBottom: `${cardHeightPx}px`,
-                  boxShadow: "0 2px 8px rgba(212, 165, 116, 0.3)"
+                  boxShadow: "0 2px 8px rgba(212, 175, 55, 0.3)"
                 }} />
 
                 {/* Bottom Line */}
                 <div style={{
                   width: "100%",
                   height: "3px",
-                  background: "#d4a574",
-                  boxShadow: "0 2px 8px rgba(212, 165, 116, 0.3)"
+                  background: "#d4af37",
+                  boxShadow: "0 2px 8px rgba(212, 175, 55, 0.3)"
                 }} />
 
                 {/* Size indicator - just showing pixels during calibration */}
@@ -100,7 +117,7 @@ const ScaleCalibration = ({
                   bottom: "-35px",
                   transform: "translateX(-50%)",
                   fontSize: "12px",
-                  color: "#d4a574",
+                  color: "#d4af37",
                   whiteSpace: "nowrap",
                   fontWeight: "600"
                 }}>
@@ -124,7 +141,7 @@ const ScaleCalibration = ({
                     marginBottom: "40px",
                     cursor: "pointer",
                     WebkitAppearance: "none",
-                    background: "linear-gradient(to right, #e0e0e0 0%, #d4a574 50%, #e0e0e0 100%)"
+                    background: "linear-gradient(90deg, #ffffff 0%, #f7e9b3 10%, #d4af37 95%)"
                   }}
                 />
 
@@ -132,7 +149,7 @@ const ScaleCalibration = ({
                   onClick={onCalibrate}
                   className="site-btn"
                   style={{
-                    background: "linear-gradient(135deg, #d4a574 0%, #c8935e 100%)",
+                    background: "#d4af37",
                     border: "none",
                     padding: "14px 40px",
                     fontSize: "14px",
@@ -147,23 +164,7 @@ const ScaleCalibration = ({
               </div>
             </div>
 
-            {/* Helper Text */}
-            <div style={{
-              background: "#fff9e6",
-              borderLeft: "4px solid #d4a574",
-              padding: "15px 20px",
-              borderRadius: "5px",
-              marginBottom: "20px"
-            }}>
-              <p style={{
-                fontSize: "14px",
-                color: "#666",
-                marginBottom: 0
-              }}>
-                <strong>💡 Dica:</strong> Coloque seu cartão de crédito sobre a tela e ajuste o slider
-                até que a distância entre as duas linhas seja exatamente a altura do cartão (53.98mm).
-              </p>
-            </div>
+            
 
             {/* Back Button */}
             <div style={{ textAlign: "center" }}>
@@ -172,8 +173,8 @@ const ScaleCalibration = ({
                 style={{
                   background: "none",
                   border: "none",
-                  color: "#d4a574",
-                  fontSize: "14px",
+                  color: "#d4af37",
+                  fontSize: "16px",
                   cursor: "pointer",
                   textDecoration: "underline"
                 }}
@@ -184,7 +185,6 @@ const ScaleCalibration = ({
           </div>
         </div>
       </div>
-    </section>
   );
 };
 
