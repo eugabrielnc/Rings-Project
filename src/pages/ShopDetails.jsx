@@ -58,6 +58,8 @@ export default function ShopDetails() {
   const [gravacaoMasculino, setGravacaoMasculino] = useState('');
   const [gravacaoFeminino, setGravacaoFeminino] = useState('');
   const [selectedStone, setSelectedStone] = useState('');
+  const [productImages, setProductImages] = useState([]);
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const url = import.meta.env.VITE_API_URL;
   const { id } = useParams();
 
@@ -169,9 +171,32 @@ export default function ShopDetails() {
         console.error("Error fetching data:", error);
         setLoading(false);
       });
-  }, [id, url]);
+
+
+
+    if (!id) return;
+
+    setProductImages([]);
+
+    const urls = [1, 2, 3, 4].map(
+      (i) => `${url}/products/${id}/image/${i}`
+    );
+
+    urls.forEach((src) => {
+      const img = new Image();
+      img.src = src;
+
+      img.onload = () => {
+        setProductImages((prev) =>
+          prev.includes(src) ? prev : [...prev, src]
+        );
+      };
+    });
+  },
+    [id, url]);
   const navigate = useNavigate();
-  const imageUrl = `${url}/products/${id}/image`;
+
+
   const handleBuy = async () => {
 
     {
@@ -267,14 +292,34 @@ export default function ShopDetails() {
                       <div className="tab-pane active" id="tabs-1" role="tabpanel">
                         <div className="product__details__pic__item">
                           <img
-                            src={imageUrl}
+                            src={`${url}/products/${id}/image/1`}
                             alt={product.name}
+                            style={{ width: "100%" }}
                             onError={(e) => {
                               e.target.src = "/img/placeholder.png";
                             }}
                           />
+
+
                         </div>
                       </div>
+                      {productImages.length > 0 && (
+                        <div style={{ display: "flex", gap: "10px", marginTop: "15px" }}>
+                          {productImages.map((img, index) => (
+                            <img
+                              key={img}
+                              src={img}
+                              alt={`Imagem adicional ${index + 1}`}
+                              style={{
+                                width: "70px",
+                                height: "70px",
+                                objectFit: "cover",
+                                borderRadius: "6px",
+                              }}
+                            />
+                          ))}
+                        </div>
+                      )}
 
                     </div>
 
@@ -530,7 +575,7 @@ export default function ShopDetails() {
                       <div className="product__item">
                         <div className="product__item__pic">
                           <img
-                            src={`${url}/products/${produtos.id}/image`}
+                            src={`${url}/products/${produtos.id}/image/1`}
                             alt={produtos.name}
                             style={{ width: "100%", height: "100%", objectFit: "cover" }}
                             onError={(e) => {

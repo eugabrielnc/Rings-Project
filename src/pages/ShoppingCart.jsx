@@ -198,7 +198,7 @@ export default function ShoppingCart() {
                                   }}
                                 >
                                   <img
-                                    src={`${url}/products/${product.id}/image`}
+                                    src={`${url}/products/${product.id}/image/1`}
                                     alt={product.name}
                                     style={{
                                       width: "100%",

@@ -129,7 +129,7 @@ export default function MeusPedidos() {
             <p>{sale.product.name}</p>
 
             <img
-              src={`${url}/products/${sale.product.id}/image`}
+              src={`${url}/products/${sale.product.id}/image/1`}
               alt={sale.product.name}
               style={{
                 width: "100%",

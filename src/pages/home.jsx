@@ -87,7 +87,7 @@ const pageStyle = {
     await new Promise(resolve => setTimeout(resolve, delay));
 
     try {
-      const response = await fetch(`${url}/products/${productId}/image`, {
+      const response = await fetch(`${url}/products/${productId}/image/1`, {
         headers: {
           'Cache-Control': 'no-cache'
         }

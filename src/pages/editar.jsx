@@ -10,7 +10,7 @@ export default function EditProductPage() {
   const authData = getAuthData();
   const url = import.meta.env.VITE_API_URL;
   const inputFileRef = useRef(null);
-  
+
   const [form, setForm] = useState({
     name: "",
     price: "",
@@ -26,38 +26,44 @@ export default function EditProductPage() {
   const [successMessage, setSuccessMessage] = useState("");
 
   // 🔹 BUSCAR PRODUTO
- useEffect(() => {
-  async function carregarProduto() {
-    try {
-      const res = await fetch(`${url}/products/${id}`);
-      const data = await res.json();
+  useEffect(() => {
+    async function carregarProduto() {
+      try {
+        const res = await fetch(`${url}/products/${id}`);
+        const data = await res.json();
 
-      console.log("PRODUTO DA API:", data);
+        console.log("PRODUTO DA API:", data);
 
-      const product = Array.isArray(data) ? data[0] : data;
+        const product = Array.isArray(data) ? data[0] : data;
 
-      setForm({
-        name: product.name ?? "",
-        price: product.price != null ? String(product.price) : "",
-        type: product.type ?? "",
-        material: product.material ?? "",
-        checkout_link: product.checkout_link ?? "",
-        status: product.status ?? "",
-        stone: product.stone ?? 0,
-      });
+        setForm({
+          name: product.name ?? "",
+          price: product.price != null ? String(product.price) : "",
+          type: product.type ?? "",
+          material: product.material ?? "",
+          checkout_link: product.checkout_link ?? "",
+          status: product.status ?? "",
+          stone: product.stone ?? 0,
+        });
 
-      if (product.image) {
-        setImages([{ file: null, url: product.image }]);
+        const imgs = [];
+
+        if (product.image) imgs.push({ file: null, url: product.image });
+        if (product.image2) imgs.push({ file: null, url: product.image2 });
+        if (product.image3) imgs.push({ file: null, url: product.image3 });
+        if (product.image4) imgs.push({ file: null, url: product.image4 });
+
+        setImages(imgs);
+
+      } catch (err) {
+        console.error("Erro ao carregar produto:", err);
+      } finally {
+        setLoading(false);
       }
-    } catch (err) {
-      console.error("Erro ao carregar produto:", err);
-    } finally {
-      setLoading(false);
     }
-  }
 
-  carregarProduto();
-}, [id]);
+    carregarProduto();
+  }, [id]);
 
 
   function handleChange(e) {
@@ -65,12 +71,17 @@ export default function EditProductPage() {
   }
 
   function handleFiles(files) {
-    const arr = Array.from(files).map((file) => ({
+    const newFiles = Array.from(files).map((file) => ({
       file,
       url: URL.createObjectURL(file),
     }));
-    setImages(arr);
+
+    setImages((prev) => {
+      const merged = [...prev, ...newFiles];
+      return merged.slice(0, 4);
+    });
   }
+
 
   // 🔹 SUBMIT (UPDATE)
   async function handleSubmit(e) {
@@ -122,9 +133,9 @@ export default function EditProductPage() {
       setSubmitting(false);
     }
   }
-if (loading) {
-  return <p>Carregando produto...</p>;
-}
+  if (loading) {
+    return <p>Carregando produto...</p>;
+  }
   return (
     <div className="container">
       <h1 style={{ color: "var(--gold)", fontWeight: "700", marginBottom: "20px" }}>
@@ -141,7 +152,7 @@ if (loading) {
           onChange={handleChange}
         />
 
-        
+
 
         {/* PREÇO */}
         <label className="label">Preço</label>
@@ -167,7 +178,7 @@ if (loading) {
         </select>
 
         {/* TIPO */}
-                <label className="label">Tipo</label>
+        <label className="label">Tipo</label>
         <select
           className="input"
           value={form.type}
@@ -188,7 +199,7 @@ if (loading) {
         </select>
 
         {/* MATERIAL */}
-              <label className="label">Material</label>
+        <label className="label">Material</label>
         <select
           className="input"
           value={form.material}
@@ -203,7 +214,7 @@ if (loading) {
           <option value="">
             {form.type ? "Selecione um material" : "Selecione um tipo primeiro"}
           </option>
-        
+
           {form.type &&
             FILTER_CONFIG[form.type]?.map((material) => (
               <option key={material} value={material}>
@@ -242,10 +253,12 @@ if (loading) {
           className="upload-zone"
           onClick={() => inputFileRef.current?.click()}
         >
-          Clique ou solte imagem aqui
+          Clique ou solte até 4 imagens
+
           <input
             type="file"
             accept="image/*"
+            multiple
             ref={inputFileRef}
             style={{ display: "none" }}
             onChange={(e) => handleFiles(e.target.files)}

@@ -28,12 +28,18 @@ export default function CreateProductPage() {
   }
 
   function handleFiles(files) {
-    const arr = Array.from(files).map((file) => ({
+    const newFiles = Array.from(files).map((file) => ({
       file,
       url: URL.createObjectURL(file),
     }));
-    setImages(arr);
+
+    setImages((prev) => {
+      const merged = [...prev, ...newFiles];
+      return merged.slice(0, 4); // limita a 4 imagens
+    });
   }
+
+
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -52,14 +58,31 @@ export default function CreateProductPage() {
 
     try {
       const formData = new FormData();
-      formData.append("name", form.name);
-      formData.append("price", Number(form.price));
+
+
       formData.append("authorization", authData.token);
+      formData.append("name", form.name);
+      formData.append("price", String(form.price));
       formData.append("type", form.type);
       formData.append("material", form.material);
       formData.append("checkout_link", form.checkout_link);
-      formData.append("stone", form.stone);
+      formData.append("stone", String(form.stone));
+
+
+      if (!images[0]) {
+        alert("A imagem principal é obrigatória");
+        setSubmitting(false);
+        return;
+      }
+
+      
       formData.append("image", images[0].file);
+
+      // opcionais
+      if (images[1]) formData.append("image2", images[1].file);
+      if (images[2]) formData.append("image3", images[2].file);
+      if (images[3]) formData.append("image4", images[3].file);
+
 
       const res = await fetch(`${url}/products/`, {
         method: "POST",
@@ -121,54 +144,54 @@ export default function CreateProductPage() {
 
         {/* TIPO */}
         <label className="label">Tipo</label>
-<select
-  className="input"
-  value={form.type}
-  onChange={(e) =>
-    setForm({
-      ...form,
-      type: e.target.value,
-      material: "", // reseta material ao trocar o tipo
-    })
-  }
->
-  <option value="">Selecione um tipo</option>
-  {Object.keys(FILTER_CONFIG).map((type) => (
-    <option key={type} value={type}>
-      {type}
-    </option>
-  ))}
-</select>
+        <select
+          className="input"
+          value={form.type}
+          onChange={(e) =>
+            setForm({
+              ...form,
+              type: e.target.value,
+              material: "", // reseta material ao trocar o tipo
+            })
+          }
+        >
+          <option value="">Selecione um tipo</option>
+          {Object.keys(FILTER_CONFIG).map((type) => (
+            <option key={type} value={type}>
+              {type}
+            </option>
+          ))}
+        </select>
         {errors.type && <p className="error-text">{errors.type}</p>}
 
         {/* MATERIAL */}
         <label className="label">Material</label>
-<select
-  className="input"
-  value={form.material}
-  onChange={(e) =>
-    setForm({
-      ...form,
-      material: e.target.value,
-    })
-  }
-  disabled={!form.type}
->
-  <option value="">
-    {form.type ? "Selecione um material" : "Selecione um tipo primeiro"}
-  </option>
+        <select
+          className="input"
+          value={form.material}
+          onChange={(e) =>
+            setForm({
+              ...form,
+              material: e.target.value,
+            })
+          }
+          disabled={!form.type}
+        >
+          <option value="">
+            {form.type ? "Selecione um material" : "Selecione um tipo primeiro"}
+          </option>
 
-  {form.type &&
-    FILTER_CONFIG[form.type]?.map((material) => (
-      <option key={material} value={material}>
-        {material}
-      </option>
-    ))}
-</select>
+          {form.type &&
+            FILTER_CONFIG[form.type]?.map((material) => (
+              <option key={material} value={material}>
+                {material}
+              </option>
+            ))}
+        </select>
 
         {errors.material && <p className="error-text">{errors.material}</p>}
-  
-      
+
+
         {/* CHECKOUT LINK */}
         <label className="label">Checkout Link</label>
         <input
@@ -207,14 +230,16 @@ export default function CreateProductPage() {
             handleFiles(e.dataTransfer.files);
           }}
         >
-          Clique ou solte imagens aqui
+          Clique ou solte até 4 imagens
           <input
             type="file"
             accept="image/*"
+            multiple
             ref={inputFileRef}
             style={{ display: "none" }}
             onChange={(e) => handleFiles(e.target.files)}
           />
+
         </div>
 
         {/* PREVIEW */}
