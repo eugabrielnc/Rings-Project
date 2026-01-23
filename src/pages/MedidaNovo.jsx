@@ -3,9 +3,10 @@ import { useScaleCalibration } from "../hooks/useScaleCalibration";
 import InstructionsPage from "../componentes/medidor/InstructionsPage";
 import ScaleCalibration from "../componentes/medidor/ScaleCalibration";
 import VirtualRingSizer from "../componentes/medidor/VirtualRingSizer";
+import { useNavigate } from "react-router-dom";
 
 export default function Medida() {
-
+   const navigate = useNavigate();
   const pageStyle = {
     minHeight: "100vh",
     backgroundImage: "url('/img/fundo2.jpeg')",
@@ -229,7 +230,7 @@ export default function Medida() {
                         marginBottom: "20px"
                       }}>
                         <button
-                          onClick={() => window.location.href = '/shop'}
+                          onClick={navigate(`/shop?title=Alianças`)}
                           className="site-btn"
                           style={{
                             background: "#d4af37",
@@ -242,22 +243,6 @@ export default function Medida() {
                         >
                           <i className="fa fa-shopping-bag" style={{ marginRight: "8px" }}></i>
                           Ver Alianças
-                        </button>
-
-                        <button
-                          onClick={() => window.open(`https://wa.me/5511999999999?text=Olá! Descobri que meu tamanho de anel é Aro ${finalRingSize.aro}`, '_blank')}
-                          className="site-btn"
-                          style={{
-                            background: "#25D366",
-                            border: "none",
-                            padding: "14px 30px",
-                            fontSize: "14px",
-                            fontWeight: "600",
-                            cursor: "pointer"
-                          }}
-                        >
-                          <i className="fab fa-whatsapp" style={{ marginRight: "8px" }}></i>
-                          Compartilhar
                         </button>
                       </div>
 
@@ -288,18 +273,19 @@ export default function Medida() {
               <div className="row mt-4">
                 <div className="col-12 text-center">
                   <a
-                    href="/medida-virtual"
+                    onClick={() => navigate('/')}
                     style={{
                       color: "#d4af37",
                       fontSize: "16px",
                       textDecoration: "none",
                       display: "inline-flex",
                       alignItems: "center",
+                      cursor: "pointer",
                       gap: "8px"
                     }}
                   >
                     <i className="fa fa-arrow-left"></i>
-                    Voltar ao Menu
+                    Voltar ao Início
                   </a>
                 </div>
               </div>

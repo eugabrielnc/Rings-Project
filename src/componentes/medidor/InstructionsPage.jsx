@@ -1,6 +1,14 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const InstructionsPage = ({ onStart }) => {
+  const navigate = useNavigate();
+  const atendentes = [
+    "5582991394107", 
+    "5581935000006", 
+  ];
+  const numero =
+      atendentes[Math.floor(Math.random() * atendentes.length)];
   return (
       <div className="container">
           <div className="row align-items-center mb-5 pb-5" style={{ borderBottom: "1px solid #eee" }}>
@@ -147,7 +155,7 @@ const InstructionsPage = ({ onStart }) => {
 
             {/* Botão 3: Falar no WhatsApp */}
             <button
-              onClick={() => window.open('https://wa.me/5511999999999?text=Olá! Preciso de ajuda para medir meu anel', '_blank')}
+              onClick={() => window.open(`https://wa.me/${numero}?text=Olá! Preciso de ajuda para medir meu anel`, '_blank')}
               className='button-action'
               
             >
@@ -155,11 +163,7 @@ const InstructionsPage = ({ onStart }) => {
             </button>
 
             {/* Botão 4: Acessar a loja online */}
-            <button
-              onClick={() => window.location.href = '/shop'}
-              className='button-action'
-              
-            >
+            <button className='button-action' onClick={() => navigate(`/shop?title=Alianças`)}>
               Ver alianças na loja
             </button>
 
