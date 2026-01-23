@@ -60,10 +60,23 @@ export default function ShopDetails() {
   const [selectedStone, setSelectedStone] = useState('');
   const [productImages, setProductImages] = useState([]);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
-  const [loadedImages, setLoadedImages] = useState({});
+  const [thumbRetry, setThumbRetry] = useState({});
+  const [thumbLoaded, setThumbLoaded] = useState({});
 
   const url = import.meta.env.VITE_API_URL;
   const { id } = useParams();
+  function retryThumb(index) {
+    // resetar estado antes de tentar novamente
+    setThumbLoaded(prev => ({
+      ...prev,
+      [index]: false,
+    }));
+
+    setThumbRetry(prev => ({
+      ...prev,
+      [index]: Date.now(),
+    }));
+  }
 
 
 
@@ -254,7 +267,26 @@ export default function ShopDetails() {
         <p style={{ color: '#666', fontSize: '16px' }}>Carregando produto...</p>
       </div>
     );
+
+
+
+
+    function retryImage(index) {
+      setRetryCount((prev) => ({
+        ...prev,
+        [index]: (prev[index] || 0) + 1,
+      }));
+    }
+
+
+
+
+
   }
+
+
+
+
 
   return (
 
@@ -299,68 +331,77 @@ export default function ShopDetails() {
                       </div>
                       {productImages.length > 0 && (
                         <div style={{ display: "flex", gap: "10px", marginTop: "15px" }}>
-                          {productImages.map((img, index) => (
-                            <div
-                              key={index}
-                              style={{
-                                width: 70,
-                                height: 70,
-                                borderRadius: "6px",
-                                overflow: "hidden",
-                                position: "relative",
-                                border:
-                                  selectedImageIndex === index
-                                    ? "2px solid #d4a574"
-                                    : "1px solid #ccc",
-                              }}
-                              onClick={() => setSelectedImageIndex(index)}
-                            >
-                              {/* LOADING */}
-                              {!loadedImages[index] && (
-                                <div
-                                  style={{
-                                    position: "absolute",
-                                    inset: 0,
-                                    background: "#eee",
-                                    display: "flex",
-                                    alignItems: "center",
-                                    justifyContent: "center",
-                                    fontSize: "12px",
-                                    color: "#999",
-                                  }}
-                                >
-                                  Carregando…
-                                </div>
-                              )}
+                          {productImages.map((img, index) => {
+                            const retry = thumbRetry[index] || 0;
+                            const loaded = thumbLoaded[index];
 
-                              {/* IMAGEM */}
-                              <img
-                                src={img}
-                                alt={`Imagem ${index + 1}`}
-                                onLoad={() =>
-                                  setLoadedImages((prev) => ({
-                                    ...prev,
-                                    [index]: true,
-                                  }))
-                                }
-                                onError={() =>
-                                  setLoadedImages((prev) => ({
-                                    ...prev,
-                                    [index]: true,
-                                  }))
-                                }
-                                style={{
-                                  width: "100%",
-                                  height: "100%",
-                                  objectFit: "cover",
-                                  display: loadedImages[index] ? "block" : "none",
-                                  cursor: "pointer",
+                            return (
+                              <div
+                                key={index}
+                                onClick={() => {
+                                  setSelectedImageIndex(index);
+                                  retryThumb(index);
                                 }}
-                              />
-                            </div>
-                          ))}
+                                style={{
+                                  width: 70,
+                                  height: 70,
+                                  borderRadius: 6,
+                                  overflow: "hidden",
+                                  border:
+                                    selectedImageIndex === index
+                                      ? "2px solid #d4a574"
+                                      : "1px solid #ccc",
+                                  position: "relative",
+                                  cursor: "pointer",
+                                  background: "#f2f2f2",
+                                }}
+                              >
+                                {!loaded && (
+                                  <div
+                                    style={{
+                                      position: "absolute",
+                                      inset: 0,
+                                      display: "flex",
+                                      alignItems: "center",
+                                      justifyContent: "center",
+                                      fontSize: 11,
+                                      color: "#999",
+                                      background: "#f2f2f2",
+                                    }}
+                                  >
+                                    carregando…
+                                  </div>
+                                )}
+
+                                <img
+                                  src={`${img}?r=${retry}`}
+                                  alt={`Miniatura ${index + 1}`}
+                                  onLoad={() =>
+                                    setThumbLoaded(prev => ({
+                                      ...prev,
+                                      [index]: true,
+                                    }))
+                                  }
+                                  onError={() => {
+                                    setTimeout(() => retryThumb(index), 700);
+                                  }}
+                                  style={{
+                                    width: "100%",
+                                    height: "100%",
+                                    objectFit: "cover",
+                                    opacity: loaded ? 1 : 0,
+                                    transition: "opacity 0.3s ease",
+                                  }}
+                                />
+                              </div>
+                            );
+                          })}
                         </div>
                       )}
+
+
+
+
 
 
                     </div>
