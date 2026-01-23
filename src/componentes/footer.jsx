@@ -12,21 +12,24 @@ export default function Footer() {
         <footer className="footer">
             <div className="container">
                 <div className="row">
-                    <div className="col-lg-3 col-md-6 col-sm-6">
+                    {/* Logo */}
+                    <div className="col-lg-4 col-md-6 col-sm-6">
                         <div className="footer__about">
                             <div className="footer__logo">
                                 <a href="#">
                                     <img src="/img/1767797462566.png" alt="" />
                                 </a>
                             </div>
-                            <p>
+                            <p className="footer__text">
                                 Nosso trabalho começa no amor e termina na eternidade. Criamos alianças com design refinado e qualidade excepcional para celebrar histórias únicas.
                             </p>
-                            <a href="#">
-                                <img src="/img/cards2.png" alt="" />
-                            </a>
+                            <div className="footer__cards">
+                                <img src="/img/cards2.png" alt="Formas de pagamento" />
+                            </div>
                         </div>
                     </div>
+                    
+                    {/* Institucional */}
                     <div className="col-lg-2 col-md-3 col-sm-6">
                         <div className="footer__widget">
                             <h6>Institucional</h6>
@@ -41,11 +44,13 @@ export default function Footer() {
                                     <a href="/termouser">Termos de Uso</a>
                                 </li>
                                 <li>
-                                    <a href="/pag">Politicas de Privacidade</a>
+                                    <a href="/pag">Políticas de Privacidade</a>
                                 </li>
                             </ul>
                         </div>
                     </div>
+                    
+                    {/* Atendimento */}
                     <div className="col-lg-2 col-md-3 col-sm-6">
                         <div className="footer__widget footer__atendimento">
                             <h6>Atendimento</h6>
@@ -60,11 +65,37 @@ export default function Footer() {
                             </ul>
                         </div>
                     </div>
-
-
-
-
-
+                    
+                    {/* Selos de Segurança - Desktop */}
+                    <div className="col-lg-4 col-md-12 d-none d-lg-flex">
+                        <div className="footer__security">
+                            <div className="footer__security__badges">
+                                <div className="security-badge">
+                                    <i className="fa fa-lock"></i>
+                                    <span>Site Seguro</span>
+                                </div>
+                                <div className="security-badge">
+                                    <i className="fa fa-shield"></i>
+                                    <span>Dados Protegidos</span>
+                                </div>
+                                <div className="security-badge">
+                                    <i className="fa fa-credit-card"></i>
+                                    <span>Pag. Seguro</span>
+                                </div>
+                                <div className="security-badge">
+                                    <i className="fa fa-check-circle"></i>
+                                    <span>Garantido</span>
+                                </div>
+                                <div className="security-badge">
+                                    <i className="fa fa-truck"></i>
+                                    <span>Rastreado</span>
+                                </div>
+                            </div>
+                            <div className="footer__security__cards">
+                                <img src="/img/cards2.png" alt="Formas de pagamento" />
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </footer>

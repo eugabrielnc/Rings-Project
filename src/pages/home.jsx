@@ -413,7 +413,7 @@ const pageStyle = {
 
                       <div className="banner__item__text">
 
-                        <h2>Alianças de ouro</h2>
+                        <h2>Alianças de ouro 10k</h2>
                         <Link to={`/shop?title=Alianças&filter=Ouro 10k`}>
                           Compre agora
                         </Link>
@@ -428,8 +428,8 @@ const pageStyle = {
                         <img src={`/img/hero/inicial-2.webp`} alt="" />
                       </div>
                       <div className="banner__item__text">
-                        <h2>Anel de prata</h2>
-                        <Link to={`/shop?title=Anéis&filter=Prata`} >
+                        <h2>Alianças de prata</h2>
+                        <Link to={`/shop?title=Alianças&filter=Prata`} >
                           Compre agora
                         </Link>
 
@@ -443,8 +443,10 @@ const pageStyle = {
                       <img src={`/img/hero/inicial.png`} alt="" />
                     </div>
                     <div className="banner__item__text">
-                      <h2>Shoes Spring 2030</h2>
-                      <a href="#">Shop now</a>
+                      <h2>Alianças de moeda</h2>
+                      <Link to={`/shop?title=Alianças&filter=Moeda Antiga com Banho a Ouro 18k`} >
+                          Compre agora
+                        </Link>
                     </div>
                   </div>
                 </div>
