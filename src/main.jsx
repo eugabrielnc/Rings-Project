@@ -34,9 +34,12 @@ import EditSalePage from "./pages/EditarVenda";
 import PoliticaPrivacidadeMain from "./pages/politicap";
 import NovaSenha from "./pages/novasenha";
 import EditUserPage from "./pages/edituser";
+
+import ScrollToTop from "./utils/scrollToTop";
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <BrowserRouter>
+      <ScrollToTop />
       <Adheader />
       <Header />
       <Subheader />
