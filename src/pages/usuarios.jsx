@@ -6,6 +6,7 @@ export default function Usuarios() {
   const [usuarios, setUsuarios] = useState([]);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 767);
   const url = import.meta.env.VITE_API_URL;
+  const [filtroNome, setFiltroNome] = useState("");
 
   useEffect(() => {
     const media = window.matchMedia("(max-width: 1024px)");
@@ -40,6 +41,13 @@ export default function Usuarios() {
       )
       .catch(console.error);
   }, []);
+  const produtosFiltrados = usuarios.filter(u => {
+    const nomeMatch = u.nome?.toLowerCase().includes(filtroNome.toLowerCase());
+    const emailMatch = u.email?.toLowerCase().includes(filtroNome.toLowerCase());
+    const numeroMatch = u.phone?.toLowerCase().includes(filtroNome.toLowerCase());
+
+    return nomeMatch || emailMatch || numeroMatch;
+  });
 
   const handleDelete = async (id) => {
     const authData = getAuthData();
@@ -88,6 +96,50 @@ export default function Usuarios() {
           </button>
         </a>
       </div>
+       {/* FILTROS */}
+      <div style={{
+        background: "#fff",
+        padding: isMobile ? "15px" : "20px",
+        borderRadius: "12px",
+        marginBottom: "20px",
+        boxShadow: "0 2px 10px rgba(0,0,0,0.08)",
+        display: "grid",
+        gridTemplateColumns: isMobile ? "1fr" : "repeat(5, 1fr)",
+        gap: "15px"
+      }}>
+        <div>
+          <label style={{ display: "block", marginBottom: "5px", fontSize: "14px", color: "#666" }}>
+            Nome
+          </label>
+          <input
+            type="text"
+            placeholder="Buscar por nome, email e telefone"
+            value={filtroNome}
+            onChange={(e) => setFiltroNome(e.target.value)}
+            style={inputStyle}
+          />
+        </div>
+
+        {(filtroNome) && (
+          <button
+            onClick={() => {
+              setFiltroNome("");
+            }}
+            style={{
+              background: "#FF0000",
+              color: "#fff",
+              border: "none",
+              padding: "10px",
+              borderRadius: "8px",
+              cursor: "pointer",
+              marginTop: isMobile ? "0" : "25px",
+              fontWeight: "600"
+            }}
+          >
+            Limpar Filtros
+          </button>
+        )}
+      </div>
 
       {/* LISTAGEM */}
       {!isMobile ? (
@@ -105,7 +157,7 @@ export default function Usuarios() {
               </tr>
             </thead>
             <tbody>
-              {usuarios.map(u => (
+              {produtosFiltrados.map(u => (
                 <tr key={u.id}>
                   <td style={td}>{u.id}</td>
                   <td style={td}>{u.nome}</td>
@@ -127,7 +179,7 @@ export default function Usuarios() {
         </div>
       ) : (
         /* ===== MOBILE ===== */
-        usuarios.map(u => (
+        produtosFiltrados.map(u => (
           <div key={u.id} style={card}>
             <strong>{u.nome}</strong>
             <span>ID: {u.id}</span>
@@ -149,12 +201,23 @@ export default function Usuarios() {
 }
 
 
+// ...existing code...
 
 const box = {
   background: "#fff",
   borderRadius: "12px",
   padding: "20px",
   boxShadow: "0 2px 10px rgba(0,0,0,0.08)",
+};
+
+const inputStyle = {
+  width: "100%",
+  padding: "10px",
+  borderRadius: "8px",
+  border: "1px solid #ddd",
+  fontSize: "14px",
+  outline: "none",
+  transition: "border-color 0.3s"
 };
 
 const th = {
