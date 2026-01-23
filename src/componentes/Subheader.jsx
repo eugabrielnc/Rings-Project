@@ -55,11 +55,11 @@ export default function Subheader() {
                     Pingentes <span className={`arrow ${activeMenu === 'pingentes' ? 'rotate' : ''}`}>▼</span>
                   </Link>
                 </li>
-                <li className={currentPath === "/contact" ? "active" : ""}>
-                  <Link to="/contact">Contato</Link>
-                </li>
                 <li className={currentPath === "/medida" ? "active" : ""}>
                   <Link to="/medida">Medidor Virtual</Link>
+                </li>
+                <li className={currentPath === "/contact" ? "active" : ""}>
+                  <Link to="/contact">De Onde Somos</Link>
                 </li>
               </ul>
             </nav>
