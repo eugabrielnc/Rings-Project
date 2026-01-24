@@ -92,11 +92,14 @@ function LineChart({data}) {
     series: [
       {
         name:chartsName ,
-        type: "line",
+        type: "bar",
         data: listDataChart,
         smooth: true,
         symbol: "circle",
         symbolSize: 8,
+         itemStyle: {
+           borderRadius: [8, 8, 0, 0], // topo esquerdo, topo direito, baixo direito, baixo esquerdo
+        },
       },
     ],
   };
