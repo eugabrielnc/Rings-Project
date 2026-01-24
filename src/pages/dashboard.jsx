@@ -17,9 +17,28 @@ export default function Dashboard() {
 
 function groupAnalyticsByMonthAndDay(data)  {
   const result = {};
+const monthsOrder = [
+        "janeiro",
+        "fevereiro",
+        "março",
+        "abril",
+        "maio",
+        "junho",
+        "julho",
+        "agosto",
+        "setembro",
+        "outubro",
+        "novembro",
+        "dezembro",
+      ];
+
 
   data.forEach(item => {
     const date = new Date(item.datetime);
+    const month = date.getMonth()
+    const monthItem = monthsOrder[month] 
+    console.log(month)
+
 
     const dayLabel = date.toLocaleDateString("pt-BR", {
       weekday: "short",
@@ -28,14 +47,19 @@ function groupAnalyticsByMonthAndDay(data)  {
     }).replace(".", "").replace(",", "-");
 
     const hour = String(date.getHours()).padStart(2, "0") + ":00";
-
-    if (!result[dayLabel]) {
-      result[dayLabel] = [[], [], []];
+    
+    if (!result[monthItem]){
+      result[monthItem] = {}
     }
 
-    result[dayLabel][0].push(hour);              // horas
-    result[dayLabel][1].push(item.users_online); // usuários online
-    result[dayLabel][2].push(item.sales_mades);  // vendas
+    if (!result[monthItem][dayLabel]) {
+      result[monthItem][dayLabel] = [[], [], [], []];
+    }
+
+    result[monthItem][dayLabel][0].push(hour);              // horas
+    result[monthItem][dayLabel][1].push(item.users_online); // usuários online
+    result[monthItem][dayLabel][2].push(item.sales_mades);  // vendas
+    result[monthItem][dayLabel][3].push(item.new_users);  // vendas
   });
 
   return result;
