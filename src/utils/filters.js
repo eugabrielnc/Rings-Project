@@ -1,14 +1,14 @@
 export const FILTER_CONFIG = {
     Alianças: [
         "Moeda Antiga com Banho a Ouro 18k",
-        "Prata",
+        "Prata 925",
         "Ouro 10k"
     ],
     Anéis: [
         "Formatura",
         "Masculinos Moeda",
         "Solitários e Aparadores Moeda",
-        "Prata"
+        "Prata 925"
     ],
     Brincos: [
         "Moeda Antiga com Banho a Ouro 18k"

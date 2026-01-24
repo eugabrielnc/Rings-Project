@@ -55,7 +55,33 @@ const pageStyle = {
   const [loadingImages, setLoadingImages] = useState(new Set());
 
   const [currentPage, setCurrentPage] = useState(1);
-  const productsPerPage = 9;
+  const [productsPerPage, setProductsPerPage] = useState(9);
+  const [openAccordions, setOpenAccordions] = useState({
+    categories: true,
+    brand: true,
+    price: true,
+    size: false,
+    colors: false,
+    tags: false
+  });
+useEffect(() => {
+  const handleResize = () => {
+    if (window.innerWidth <= 768) {
+      setProductsPerPage(8);
+      setOpenAccordions({
+        categories: false,
+        price: false,
+      }) // mobile
+    } else {
+      setProductsPerPage(9); // desktop
+    }
+  };
+
+  handleResize(); // roda ao carregar
+  window.addEventListener("resize", handleResize);
+
+  return () => window.removeEventListener("resize", handleResize);
+}, []);
 
   const indexOfLastProduct = currentPage * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
@@ -71,14 +97,7 @@ const pageStyle = {
   const [brandFilters, setBrandFilters] = useState([]);
   const [priceFilters, setPriceFilters] = useState([]);
 
-  const [openAccordions, setOpenAccordions] = useState({
-    categories: true,
-    brand: true,
-    price: true,
-    size: false,
-    colors: false,
-    tags: false
-  });
+  
 
   // FUNÇÃO PARA CARREGAR UMA IMAGEM COM RETRY AUTOMÁTICO
   const loadProductImage = async (productId, delay = 0, retryCount = 0) => {
@@ -416,7 +435,7 @@ const pageStyle = {
         }
         
         .card-heading a:hover {
-          color: #d4a574 !important;
+          color: #d4af37 !important;
         }
         
         .card-heading a::after {
@@ -440,7 +459,7 @@ const pageStyle = {
         }
 
         .filter-checkbox:hover {
-          color: #d4a574;
+          color: #d4af37;
         }
 
         .filter-checkbox input[type="checkbox"] {
@@ -448,7 +467,7 @@ const pageStyle = {
           height: 16px;
           margin-right: 10px;
           cursor: pointer;
-          accent-color: #d4a574;
+          accent-color:  #d4af37 ;
         }
 
         .shop__sidebar__categories ul,
@@ -467,7 +486,7 @@ const pageStyle = {
         .clear-filters-btn {
           margin-top: 15px;
           padding: 8px 20px;
-          background: #d4a574;
+          background:  linear-gradient(90deg, #ffffff 0%, #f7e9b3 10%, #d4af37 95%);
           color: #fff;
           border: none;
           border-radius: 5px;
@@ -487,7 +506,6 @@ const pageStyle = {
       `}</style>
 
       {/* Shop Section Begin */}
-      <section className="shop spad">
         <div className="container">
           <div className="row">
 
@@ -608,6 +626,7 @@ const pageStyle = {
                                   />
                                   <span>R$ 2000,00+</span>
                                 </label>
+                                <hr />
                               </li>
                             </ul>
                           </div>
@@ -703,6 +722,13 @@ const pageStyle = {
                         </div>
                         <div className="product__item__text">
                           <h6><a href="#" style={{ color: '#d4af37' }}>{product.name}</a></h6>
+                          <div className="rating">
+                                <i className="fa fa-star"></i>
+                                <i className="fa fa-star"></i>
+                                <i className="fa fa-star"></i>
+                                <i className="fa fa-star"></i>
+                                <i className="fa fa-star"></i>
+                              </div>
                           <h5 className="old-price">R$ {(Math.floor(product.price * 2) + 0.90).toFixed(2)}</h5>
                           <div className="product__price">
                             R$ {product.price.toFixed(2)}
@@ -770,7 +796,6 @@ const pageStyle = {
 
           </div>
         </div>
-      </section>
     </>
     </div>
     </div>

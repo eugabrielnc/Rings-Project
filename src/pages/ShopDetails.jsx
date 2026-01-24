@@ -3,6 +3,10 @@ import { useParams } from "react-router-dom";
 import Select from "react-select";
 import { useNavigate } from "react-router-dom";
 import { getAuthData } from "../utils/dadosuser";
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/navigation';
 
 // NOTE:
 // - This component is a direct JSX conversion of the original HTML template.
@@ -670,75 +674,107 @@ export default function ShopDetails() {
                 </div>
               </div>
               <div className="row">
-                {produtos
-                  .slice()
-                  .sort((a, b) => b.sales - a.sales)
-                  .slice(0, 4)
-                  .map((produtos) => (
-                    <div
-                      key={produtos.id}
-                      className="col-lg-3 col-md-6 col-sm-6 col-sm-6"
-                    >
-                      <div className="product__item">
-                        <div className="product__item__pic">
-                          <img
-                            src={`${url}/products/${produtos.id}/image/1`}
-                            alt={produtos.name}
-                            style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                            onError={(e) => {
-                              e.target.src = "/img/placeholder.png";
-                            }}
-                          />
+                <div className="col-lg-12">
+                  <Swiper
+                    modules={[Navigation]}
+                    spaceBetween={30}
+                    slidesPerView={4}
+                    navigation={{
+                      nextEl: '.swiper-button-next-related',
+                      prevEl: '.swiper-button-prev-related',
+                    }}
+                    breakpoints={{
+                      320: {
+                        slidesPerView: 2,
+                        spaceBetween: 15
+                      },
+                      576: {
+                        slidesPerView: 2,
+                        spaceBetween: 20
+                      },
+                      768: {
+                        slidesPerView: 3,
+                        spaceBetween: 25
+                      },
+                      992: {
+                        slidesPerView: 4,
+                        spaceBetween: 30
+                      }
+                    }}
+                    className="product-swiper"
+                  >
+                    {produtos
+                      .slice()
+                      .sort((a, b) => b.sales - a.sales)
+                      .slice(0, 8)
+                      .map((produtos) => (
+                        <SwiperSlide key={produtos.id}>
+                          <div className="product__item">
+                            <div className="product__item__pic" style={{ position: 'relative', paddingBottom: '100%', background: '#f5f5f5' }}>
+                              <img
+                                src={`${url}/products/${produtos.id}/image/1`}
+                                alt={produtos.name}
+                                style={{
+                                  width: '100%',
+                                  height: '100%',
+                                  objectFit: 'cover',
+                                  position: 'absolute',
+                                  top: 0,
+                                  left: 0
+                                }}
+                                onError={(e) => {
+                                  e.target.src = "/img/placeholder.png";
+                                }}
+                              />
 
-                          <span className="label">New</span>
+                              <span className="label">New</span>
 
-                          <ul className="product__hover">
-                            <li>
-                              <a href="#">
-                                <img src="img/icon/heart.png" alt="" />
+                              <ul className="product__hover">
+                                <li>
+                                  <a href="#">
+                                    <img src="/img/icon/heart.png" alt="" />
+                                  </a>
+                                </li>
+                                <li>
+                                  <a href="#">
+                                    <img src="/img/icon/compare.png" alt="" /> <span>Compare</span>
+                                  </a>
+                                </li>
+                                <li>
+                                  <a href="#">
+                                    <img src="/img/icon/search.png" alt="" />
+                                  </a>
+                                </li>
+                              </ul>
+                            </div>
+                            <div className="product__item__text">
+                              <h6>{produtos.name}</h6>
+                              <div className="rating">
+                                <i className="fa fa-star" />
+                                <i className="fa fa-star" />
+                                <i className="fa fa-star" />
+                                <i className="fa fa-star" />
+                                <i className="fa fa-star" />
+                              </div>
+                              <h5 className="old-price">R$ {(Math.floor(produtos.price * 2) + 0.90).toFixed(2)}</h5>
+                              <h5>R$ {produtos.price ? Number(produtos.price).toFixed(2) : '0.00'}</h5>
+                              <a onClick={() => navigate(`/shopdetails/${produtos.id}`)} className="add-cart">
+                                Ver detalhes
                               </a>
-                            </li>
-                            <li>
-                              <a href="#">
-                                <img src="img/icon/compare.png" alt="" /> <span>Compare</span>
-                              </a>
-                            </li>
-                            <li>
-                              <a href="#">
-                                <img src="img/icon/search.png" alt="" />
-                              </a>
-                            </li>
-                          </ul>
-                        </div>
-                        <div className="product__item__text">
-                          <h6>{produtos.name}</h6>
-                          <div className="rating">
-                            <i className="fa fa-star-o" />
-                            <i className="fa fa-star-o" />
-                            <i className="fa fa-star-o" />
-                            <i className="fa fa-star-o" />
-                            <i className="fa fa-star-o" />
+                            </div>
                           </div>
-                          <h5>${produtos.price ? Number(produtos.price).toFixed(2) : '0.00' || "Carregando"}</h5>
-                          <a
-                            href="#"
-                            className="add-cart"
-                            onClick={(e) => {
-                              e.preventDefault();
-                              handleAddSimilarToCart(produtos);
-                            }}
-                          >
-                            Adicionar ao carrinho
-                          </a>
+                        </SwiperSlide>
+                      ))}
+                  </Swiper>
 
-                          <br />
-                          <a onClick={() => navigate(`/shopdetails/${produtos.id}`)} className="add-cart">
-                            Ver
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
+                  {/* Navigation Arrows */}
+                  <div className="swiper-button-prev-related swiper-nav-arrow">
+                    <i className="fa fa-angle-left"></i>
+                  </div>
+                  <div className="swiper-button-next-related swiper-nav-arrow">
+                    <i className="fa fa-angle-right"></i>
+                  </div>
+                </div>
               </div>
             </div>
           </section>
