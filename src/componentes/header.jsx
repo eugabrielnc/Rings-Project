@@ -86,8 +86,7 @@ export default function Header() {
   sessionStorage.setItem("dashboard_effect_ran", "true");
   console.log("alreadyRan False")
 
-  fetch(`${url}/analitycs/user-loged`, {method:'POST'})
-  .then(console.log("visita ao site confirmada"))
+  fetch(`${url}/analitycs/user-loged`, {method:'POST', body: JSON.stringify({authorization:authData.token})})
   }, []);
 
 

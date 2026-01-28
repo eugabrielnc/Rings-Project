@@ -14,67 +14,42 @@ function LineChart({data}) {
   const [days, setDays] = useState([])     
   const [months, setMonths] = useState([])
   const [selectedMonth, setSelectedMonth] = useState("")
+  const [selectedYear, setSelectedYear] = useState("") 
+ 
+  const [lineX, setLineX] = useState([])
+
   const [listDataChart, setListDataChart] = useState([])
 
 
-  function selectListDataChart(){
-    
-  let dataChart = [];
-  
-  
-
-  if(xAxisData === selectedMonth){
-  
-    let lista = Object.values(data?.[selectedMonth] || {})
-    lista.map(arr =>{ 
-      const soma = arr[dataPicked].reduce((acc, n) => acc + n, 0);      
-      dataChart.push(soma) 
-
-    })
-
-  }
-
-  else{
-   dataChart = data?.[selectedMonth]?.[xAxisData]?.[dataPicked] 
-  }
-
-    setListDataChart(dataChart)
-
-  }
-
   useEffect(() => {
-    selectListDataChart()
-  }, [dataPicked])
-
-
-  useEffect(() => {
-  setAxisData((Object.keys(data || {}))?.[0])
-  setMonths((Object.keys(data || {}))?.[0])
+  const year = (Object.keys(data || {}))?.[0]
+  setSelectedYear(year) 
+  console.log((Object.keys(data[year] || {})), "ai")
+  setMonths((Object.keys(data[year] || {})))
   }, [])
  
   useEffect(() => {
-  const  listIndex = (Object.keys(data || {}))
+  setMonths((Object.keys(data[selectedYear] || {})))
+  }, [selectedYear])
+  useEffect(() => {
+    console.log(xAxisData)
+    
+    console.log(selectedMonth)
 
-  setDays(Object.keys(data[selectedMonth] || {}))
-
-  selectListDataChart()
-
-  }, [xAxisData])
-
-
-  function selectList(AxisData) {
-
-    if(AxisData === selectedMonth){
-
-      return(Object.keys(data[xAxisData] || {}))
+    if(months.includes(selectedMonth)){
+        setAnalitycs(data[selectedYear][selectedMonth]["geral"][dataPicked]) 
+        setLineX(data[selectedYear][selectedMonth]["geral"][0])
+        setDays(Object.keys(data[selectedYear][selectedMonth] || {}))
     }
-    else if(days.includes(AxisData)){
-      return data[selectedMonth][AxisData][0];
-    } 
- 
-    return[AxisData, "aaa"]
+    else if(days.includes(xAxisData)){
+        setAnalitycs(data?.[selectedYear]?.[selectedMonth]?.[xAxisData][dataPicked])
 
-  }
+        setLineX(data?.[selectedYear]?.[selectedMonth]?.[xAxisData]?.[0])
+
+    }
+
+
+  }, [xAxisData, dataPicked])
 
 
   const option = {
@@ -84,7 +59,7 @@ function LineChart({data}) {
     },
     xAxis: {
       type: "category",
-      data: selectList(xAxisData) //data?.[xAxisData]?.[0],
+      data: lineX //data?.[xAxisData]?.[0],
     },
     yAxis: {
       type: "value",
@@ -93,7 +68,7 @@ function LineChart({data}) {
       {
         name:chartsName ,
         type: "bar",
-        data: listDataChart,
+        data: analitycs,
         smooth: true,
         symbol: "circle",
         symbolSize: 8,
@@ -115,24 +90,35 @@ function LineChart({data}) {
   <section className={"container-btns-grafico-config"}> 
     <div className={"container-btn-anos"}>
        <h4>Meses  </h4> 
-      {Object.keys(data || {}).map((month, index) => ( 
+      {Object.keys(data || {}).map((year, index) => ( 
 
-        <button className={selectedMonth == month ? 'btn-actived' : 'btn'} key={index} 
-        onClick={() => {setAxisData(month);setSelectedMonth(month) }} 
-        >{month}</button>
+        <button className={selectedYear == year ? 'btn-actived' : 'btn'} key={index} 
+        onClick={() => {setSelectedYear(year) }} 
+        >{year}</button>
       ) )}
     </div>
     
     <div>
+    {months.map((month, index) => ( 
+
+        <button className={selectedMonth == month ? 'btn-actived' : 'btn'} key={index} 
+        onClick={() => {setSelectedMonth(month) }} 
+        >{month}</button>
+      ) )}
+
+
+    </div>
+    <div>
     {days.map((day, index) => ( 
 
         <button className={xAxisData == day ? 'btn-actived' : 'btn'} key={index} 
-        onClick={() => {setAxisData(day); }} 
+        onClick={() => {setAxisData(day) }} 
         >{day}</button>
       ) )}
 
 
     </div>
+
 
 
     <div className={"container-btn-estatisticas"}>
@@ -151,6 +137,11 @@ function LineChart({data}) {
       <button  onClick={() => {setDataPicked(3); setChartsName("Novos usuários")}} 
     className={chartsName == "Novos usuários" ? 'btn-actived' : 'btn' } >
         Novos Usuários 
+      </button>
+
+      <button  onClick={() => {setDataPicked(3); setChartsName("Faturamento")}} 
+    className={chartsName == "Faturamento" ? 'btn-actived' : 'btn' } >
+        Faturamento 
       </button>
 
 

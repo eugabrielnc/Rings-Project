@@ -15,52 +15,95 @@ export default function Dashboard() {
 
   const [analyticsUserActivity, setAnalyticsUserActivity] = useState([])
 
-function groupAnalyticsByMonthAndDay(data)  {
-  const result = {};
-const monthsOrder = [
-        "janeiro",
-        "fevereiro",
-        "março",
-        "abril",
-        "maio",
-        "junho",
-        "julho",
-        "agosto",
-        "setembro",
-        "outubro",
-        "novembro",
-        "dezembro",
-      ];
+function groupAnalyticsByDayAndHour(data){
+
+  let result = {} 
 
 
   data.forEach(item => {
-    const date = new Date(item.datetime);
-    const month = date.getMonth()
-    const monthItem = monthsOrder[month] 
-    console.log(month)
+    const month = item["month"]
+    const year = String(item["year"])
+    const day = item["day"]
+    const users_online = item["users_online"]
+    const orders_count = item["orders_count"]
+    const revenue = item["revenue"]
+    const new_users = item["new_users"]
+    const hour = item["time"] 
 
+    if(!result[year]){
+       result[year] = {[month]:{"geral":[[day], [users_online],[orders_count], [revenue],[new_users]] ,
+         [day]:[[hour],[users_online],[orders_count], [revenue],[new_users]]  }} 
+      
+    }
+    else if(!result[year][month]){
+        console.log("iii")  
 
-    const dayLabel = date.toLocaleDateString("pt-BR", {
-      weekday: "short",
-      day: "2-digit",
-      month: "2-digit",
-    }).replace(".", "").replace(",", "-");
-
-    const hour = String(date.getHours()).padStart(2, "0") + ":00";
+    }
+    else if(!result[year][month][day]){
+      console.log("teste")
+      result[year][month]["geral"][0].push(day)   
+     result[year][month]["geral"][1].push(users_online)   
+     result[year][month]["geral"][2].push(orders_count)   
+     result[year][month]["geral"][3].push(revenue)   
+     result[year][month]["geral"][4].push(new_users)   
     
-    if (!result[monthItem]){
-      result[monthItem] = {}
-    }
+     result[year][month] = {...result[year][month], [day]:[[hour],[users_online],[orders_count], [revenue],[new_users]]}
 
-    if (!result[monthItem][dayLabel]) {
-      result[monthItem][dayLabel] = [[], [], [], []];
     }
+    else{
+     result[year][month]["geral"][0].push(day)   
+     result[year][month]["geral"][1].push(users_online)   
+     result[year][month]["geral"][2].push(orders_count)   
+     result[year][month]["geral"][3].push(revenue)   
+     result[year][month]["geral"][4].push(new_users)   
 
-    result[monthItem][dayLabel][0].push(hour);              // horas
-    result[monthItem][dayLabel][1].push(item.users_online); // usuários online
-    result[monthItem][dayLabel][2].push(item.sales_mades);  // vendas
-    result[monthItem][dayLabel][3].push(item.new_users);  // vendas
+     result[year][month][day][0].push(hour)
+     result[year][month][day][1].push(users_online)
+    
+    }
+    console.log(result)
   });
+  
+  return result
+
+
+}
+
+
+
+
+function groupAnalyticsByMonthAndDay(data)  {
+  let result = {}    
+
+  data.forEach(item => {
+
+    const month = item["month"]
+    const year = String(item["year"])
+    if(!result[year]){
+      
+      result[year] = {[month]:{"users_online":item["users_online"],
+        "orders_count":item["orders_count"], "revenue":item["revenue"], "new_users":item["new_users"]}}           
+
+    }
+
+    else if(!result[year][month]){
+ 
+      result[year] = {[month]:{"users_online":item["users_online"],
+        "orders_count":item["orders_count"], "revenue":item["revenue"], "new_users":item["new_users"]}}           
+
+    }
+
+    else{
+
+     result[year][month]["users_online"] += item["users_online"]
+     result[year][month]["orders_count"] += item["orders_count"]
+     result[year][month]["revenue"] += item["revenue"]
+     result[year][month]["new_users"] += item["new_users"]
+    }
+
+
+  
+ });
 
   return result;
 }
@@ -73,64 +116,18 @@ const monthsOrder = [
        const resAnalitycs = await fetch(`${url}/analitycs/users-activity`)
         
        const analitycsRaw = await resAnalitycs.json()
-       
        const group = groupAnalyticsByMonthAndDay(analitycsRaw)
-      
-        setAnalyticsUserActivity(group) 
+       const secondGroup = groupAnalyticsByDayAndHour(analitycsRaw)
+        setAnalyticsByYear(group) 
+        
+        setAnalyticsUserActivity(secondGroup)
+
+
       }
       catch (err){console.error(err)}
     }
 
     fetchDataActivity()
-
-
-  fetch(`${url}/analitycs`)
-  .then(response => response.json())
-  .then((data) => {
-      const monthsOrder = [
-        "janeiro",
-        "fevereiro",
-        "março",
-        "abril",
-        "maio",
-        "junho",
-        "julho",
-        "agosto",
-        "setembro",
-        "outubro",
-        "novembro",
-        "dezembro",
-      ];
-
-      const monthIndex = Object.fromEntries(
-        monthsOrder.map((month, index) => [month, index])
-      );
-
-      const result = {};
-
-      data.forEach((item) => {
-        const year = item.year;
-
-        if (!result[year]) {
-          result[year] = {
-            new_users: Array(12).fill(0),
-            revenue: Array(12).fill(0),
-            orders_count: Array(12).fill(0),
-          };
-        }
-
-        const index = monthIndex[item.mounth.toLowerCase()];
-
-        if (index !== undefined) {
-          result[year].new_users[index] = item.new_users;
-          result[year].revenue[index] = item.revenue;
-          result[year].orders_count[index] = item.orders_count;
-        }
-      });
-
-      setAnalyticsByYear(result);
-      console.log(result)  
-  });
 
 
   }, [])
@@ -154,9 +151,7 @@ function formatDate(dateString) {
         Dashboard Administrativa
       </h2>
 
-      <BarChart nome={"TES"} dict={analyticsByYear} />
-
-
+      <BarChart dict={analyticsByYear}/>
 
       {/* CARDS RESUMO */}
       <div style={{ display: "flex", gap: "20px", marginBottom: "30px" }}>
@@ -181,8 +176,9 @@ function formatDate(dateString) {
         marginBottom: "30px"
       }}>
         <h3 style={{ marginBottom: "10px" }}>Gráfico de Atividade (fake)</h3>
+          
+          <LineChart data={analyticsUserActivity}/>
 
-        <LineChart data={analyticsUserActivity}/>
         <div style={{
           height: "200px",
           background: "linear-gradient(to right, #C9A86A33, #ffffff)",

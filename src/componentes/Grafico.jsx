@@ -4,7 +4,7 @@ import React, {useState} from 'react';
 import ReactEcharts from 'echarts-for-react'; 
 import * as echarts from 'echarts';
 
-function BarChart({nome,dict }) {
+function BarChart({dict }) {
   const [ano, setAno] = useState("2026") 
   const [estatistica, setEstatistica] = useState("new_users")
   const [NomeEstatistica, setNomeEstatistica] = useState("new_users")
@@ -29,7 +29,7 @@ function BarChart({nome,dict }) {
       {
         name: NomeEstatistica,
         type: 'bar',
-        data: dict?.[ano]?.[estatistica] || [] ,
+        data: [dict?.[ano]?.["janeiro"]?.[estatistica],dict?.[ano]?.["fevereiro"]?.[estatistica],dict?.[ano]?.["março"]?.[estatistica],dict?.[ano]?.["abril"]?.[estatistica],dict?.[ano]?.["maio"]?.[estatistica],dict?.[ano]?.["junho"]?.[estatistica],dict?.[ano]?.["julho"]?.[estatistica],dict?.[ano]?.["agosto"]?.[estatistica],dict?.[ano]?.["setembro"]?.[estatistica],dict?.[ano]?.["outubro"]?.[estatistica],dict?.[ano]?.["novembro"]?.[estatistica],dict?.[ano]?.["dezembro"]?.[estatistica] ],
         itemStyle: {
            borderRadius: [8, 8, 0, 0], // topo esquerdo, topo direito, baixo direito, baixo esquerdo
         },
@@ -68,9 +68,13 @@ function BarChart({nome,dict }) {
  
           <button onClick={() => {setNomeEstatistica("Novos usuários");  setEstatistica("new_users")}} 
          className={NomeEstatistica === "Novos usuários" ? "btn-actived" : "btn"   } >
- 
           Novos Usuários
          </button>
+      <button onClick={() => {setNomeEstatistica("Visitas");  setEstatistica("users_online")}} 
+         className={NomeEstatistica === "Visitas" ? "btn-actived" : "btn"   } >
+        Visitas
+         </button>
+
        </div>
      </section>
     </div>
