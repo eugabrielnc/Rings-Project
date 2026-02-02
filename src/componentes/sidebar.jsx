@@ -49,6 +49,7 @@ function Sidebar() {
         { label: "Usuários", icon: "fa-users", path: "/admin/usuarios" },
         { label: "Vendas", icon: "fa-cash-register", path: "/admin/vendas" },
         { label: "Carrinho", icon: "fa-cart-shopping", path: "/admin/carrinho" },
+        { label: "Fretes", icon: "fa-shipping-fast", path: "/admin/fretes" },
     ];
 
     return (
