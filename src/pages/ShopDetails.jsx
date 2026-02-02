@@ -144,18 +144,34 @@ export default function ShopDetails() {
     }
   };
 
-  // Opções de tamanhos (Aro 18 até 27)
+  // Opções de tamanhos (Aro 10 até 35)
   const sizeOptions = [
-    { value: 18, label: 'Aro 18' },
-    { value: 19, label: 'Aro 19' },
-    { value: 20, label: 'Aro 20' },
-    { value: 21, label: 'Aro 21' },
-    { value: 22, label: 'Aro 22' },
-    { value: 23, label: 'Aro 23' },
-    { value: 24, label: 'Aro 24' },
-    { value: 25, label: 'Aro 25' },
-    { value: 26, label: 'Aro 26' },
-    { value: 27, label: 'Aro 27' }
+    { value: 10, label: '10' },
+    { value: 11, label: '11' },
+    { value: 12, label: '12' },
+    { value: 13, label: '13' },
+    { value: 14, label: '14' },
+    { value: 15, label: '15' },
+    { value: 16, label: '16' },
+    { value: 17, label: '17' },
+    { value: 18, label: '18' },
+    { value: 19, label: '19' },
+    { value: 20, label: '20' },
+    { value: 21, label: '21' },
+    { value: 22, label: '22' },
+    { value: 23, label: '23' },
+    { value: 24, label: '24' },
+    { value: 25, label: '25' },
+    { value: 26, label: '26' },
+    { value: 27, label: '27' },
+    { value: 28, label: '28' },
+    { value: 29, label: '29' },
+    { value: 30, label: '30' },
+    { value: 31, label: '31' },
+    { value: 32, label: '32' },
+    { value: 33, label: '33' },
+    { value: 34, label: '34' },
+    { value: 35, label: '35' }
   ];
 
   // Estilos customizados para o react-select
@@ -508,12 +524,12 @@ export default function ShopDetails() {
                               placeholder="Escolha o tamanho..."
                               isSearchable={false}
                             />
-                            {selectedFemaleSize && (
+                           
                               <p style={{ marginTop: '10px', fontSize: '13px', color: '#666' }}>
                                 <i className="fa fa-info-circle" style={{ marginRight: '5px' }}></i>
                                 Não sabe seu tamanho? <a href="/medida" style={{ color: '#d4a574', fontWeight: '600' }}>Meça aqui!</a>
                               </p>
-                            )}
+                            
 
                             {/* Campo de Gravação Feminino */}
                             <div style={{ marginTop: '20px' }}>

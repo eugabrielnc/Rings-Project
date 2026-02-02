@@ -85,6 +85,7 @@ function Login() {
         setErrorMessage("E-mail ou senha inválidos");
       });
   };
+  const [showPassword, setShowPassword] = useState(false);
 
   return (
 
@@ -113,7 +114,7 @@ function Login() {
               <div className="input-group">
                 <label htmlFor="password" className="input-label">Senha</label>
                 <input
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   id="password"
                   name='password'
                   className="input-field"
@@ -121,6 +122,23 @@ function Login() {
                   onChange={handleChange}
                   required
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  style={{
+                    position: 'absolute',
+                    right: '10px',
+                    top: '38px',
+                    background: 'none',
+                    border: 'none',
+                    cursor: 'pointer',
+                    color: '#666',
+                    fontSize: '18px',
+                    padding: '5px'
+                  }}
+                >
+                  <i className={showPassword ? "fa fa-eye" : "fa fa-eye-slash"}></i>
+                </button>
               </div>
               <p style={{ color: 'red' }}>{errorMessage}</p>
 
