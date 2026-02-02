@@ -34,6 +34,8 @@ import EditSalePage from "./pages/EditarVenda";
 import PoliticaPrivacidadeMain from "./pages/politicap";
 import NovaSenha from "./pages/novasenha";
 import EditUserPage from "./pages/edituser";
+import Fretes from "./pages/Fretes"; 
+import FretesForm from "./pages/FretesForm"; 
 
 import ScrollToTop from "./utils/scrollToTop";
 ReactDOM.createRoot(document.getElementById("root")).render(
@@ -74,6 +76,8 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         <Route path="/admin/vendas/editar/:id" element={<EditSalePage/>}></Route>
         <Route path="/admin/carrinho" element={<Carrinho/>}></Route>
         <Route path="/admin/produtos/editar/:id" element={<EditProductPage/>}></Route>
+        <Route path="/admin/fretes" element={<Fretes/>}></Route>
+        <Route path="/admin/fretesforms" element={<FretesForm/>}></Route>
 
         </Route>
       </Routes>
