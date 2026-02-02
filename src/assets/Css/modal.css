@@ -1,0 +1,108 @@
+
+/* Container principal do modal */
+.Modal {
+  background: #ffffff;
+  width: 100%;
+  max-width: 520px;
+  max-height: 80vh;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+  overflow-y: auto;
+  animation: modalFadeIn 0.3s ease;
+}
+
+/* Título */
+.Modal h2 {
+  margin-bottom: 20px;
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #222;
+  text-align: center;
+}
+
+/* Item do produto */
+.container-modal-content {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px;
+  border-radius: 10px;
+  background: #f8f8f8;
+  margin-bottom: 12px;
+  transition: background 0.2s ease;
+}
+
+.container-modal-content:hover {
+  background: #eeeeee;
+}
+
+/* Imagem */
+.container-modal-content img {
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+/* Textos */
+.container-modal-content p {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #333;
+}
+
+/* Nome do produto (primeiro p) */
+.container-modal-content p:nth-child(2) {
+  font-weight: 600;
+  flex: 1;
+}
+
+/* Valor */
+.container-modal-content p:nth-child(3) {
+  color: #2e7d32;
+  font-weight: 500;
+}
+
+/* Quantidade */
+.container-modal-content p:nth-child(4) {
+  color: #555;
+}
+
+/* Scroll bonito */
+.Modal::-webkit-scrollbar {
+  width: 6px;
+}
+
+.Modal::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 10px;
+}
+
+/* Animação */
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Responsivo */
+@media (max-width: 480px) {
+  .Modal {
+    padding: 16px;
+  }
+
+  .container-modal-content {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .container-modal-content img {
+    width: 100%;
+    height: auto;
+  }
+}
+

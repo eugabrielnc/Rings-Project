@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "../assets/Css/table-sells.css";    
 import { getAuthData } from "../utils/dadosuser";
+import Modal from "../componentes/Modal.jsx"
+
+
 export default function Vendas() {
   const [produtos, setProdutos] = useState([]);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 767);
@@ -13,6 +16,7 @@ export default function Vendas() {
   const [isLoading, setIsLoading] = useState(false);
   const [filters, setFilters] = useState({client:"", product:"", price:"", status:""})
   const [filteredSales, setFilteredSales] = useState([])
+  const [open, setOpen] = useState(false)
   const statusColors = {
     "aguardando pagamento": "#FACC15",
     "pagamento confirmado": "#86EFAC",
@@ -20,6 +24,7 @@ export default function Vendas() {
     "a caminho": "#C4B5FD",
     "entregue": "#22C55E",
   };
+  const [orderInfos, setOrderInfos] = useState([])
 
   /* RESPONSIVO */
   useEffect(() => {
@@ -83,6 +88,7 @@ export default function Vendas() {
             return {
               key: sale.id,
               id: sale.id,
+              orderInfos: JSON.parse(sale.products_id),
               userName: user?.name || "Usuário não encontrado",
               sizes: sale.sizes.split("/")[0],
               gravacoes: sale.sizes.split("/")[1],
@@ -164,8 +170,70 @@ useEffect(() => {
 }, [filters, produtos]);
 
 
-  return (
+  async function getProductsInfo(ids) {
+  const requests = ids.map(async (id) => {
+    try {
+      const response = await fetch(`${url}/products/${id}`)
+      if (!response.ok) throw new Error("Erro na requisição")
+
+      const data = await response.json()
+      return {
+        name: data[0].name,
+        value: data[0].price
+      }
+    } catch (err) {
+      console.error(`Erro no produto ${id}`, err)
+      return null
+    }
+  })
+
+  const results = (await Promise.all(requests)).filter(Boolean)
+
+  return {
+    names: results.map(item => item.name),
+    value: results.map(item => item.value)
+  }
+}
+
+
+
+  useEffect(() => {
+  async function loadProducts() {
+    if (!orderInfos?.products_id?.length) return
+
+    const productsInfo = await getProductsInfo(orderInfos.products_id)
+
+    setOrderInfos(prev => ({
+      ...prev,
+      names: productsInfo.names,
+      value: productsInfo.value
+    }))
+  }
+
+  loadProducts()
+}, [orderInfos.products_id])
+
+
+   return (
     <div style={{ padding: isMobile ? "10px" : "20px" }}>
+
+  <Modal  className="Modal" isOpen={open} onClose={() => setOpen(false)}>
+
+    <h2>Produtos pedidos</h2>
+    {(orderInfos["products_id"] || []).map( (order, index) =>{ 
+      return(
+      
+      <div className="container-modal-content">
+      <img src={`${url}/products/${order}/image/1`} width="100" height="100"  />
+      <p>{orderInfos?.["names"]?.[index]} </p>  
+      <p>{orderInfos?.["value"]?.[index]} </p>  
+      <p>{orderInfos?.["products_amount"]?.[index]} </p>  
+      </div>
+
+      )} )}
+  </Modal>
+
+
 
   <div className="filters-container">
       <h2 className="filters-title">Filtros de Vendas</h2>
@@ -245,7 +313,6 @@ useEffect(() => {
           <thead>
             <tr style={{ background: "#F9F5EE" }}>
               <th>Cliente</th>
-              <th>Produto</th>
               <th>Preço</th>
               <th>medidas</th>
               <th>Gravações</th>
@@ -262,7 +329,6 @@ useEffect(() => {
   {filteredSales.map((produto) => (
     <tr key={produto.key}>
       <td data-label="Cliente">{produto.userName}</td>
-      <td data-label="Produto">{produto.name}</td>
       <td data-label="Preço">
         {Number(produto.price).toLocaleString("pt-BR", {
           style: "currency",
@@ -299,6 +365,7 @@ useEffect(() => {
         <Link to={`/admin/vendas/editar/${produto.id}`}>
           <button style={btnEdit}>Editar</button>
         </Link>
+        <button style={btnEdit} onClick={() => {setOrderInfos(produto.orderInfos); setOpen(true)}}>Ver Pedido</button>
       </td>
     </tr>
   ))}
