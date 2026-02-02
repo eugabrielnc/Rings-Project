@@ -27,26 +27,31 @@ function LineChart({data}) {
   console.log((Object.keys(data[year] || {})), "ai")
   setMonths((Object.keys(data[year] || {})))
   }, [])
- 
+
+  useEffect(() => {
+    setMonths(Object.keys(data[selectedYear] || {}))
+    setDays(Object.keys(data?.[selectedYear]?.[selectedMonth] || {}))
+  }, [selectedYear, selectedMonth])
+
+
   useEffect(() => {
   setMonths((Object.keys(data[selectedYear] || {})))
   }, [selectedYear])
   useEffect(() => {
-    console.log(xAxisData)
+    console.log(xAxisData, "TESTE")
     
-    console.log(selectedMonth)
 
     if(months.includes(selectedMonth)){
         setAnalitycs(data[selectedYear][selectedMonth]["geral"][dataPicked]) 
         setLineX(data[selectedYear][selectedMonth]["geral"][0])
         setDays(Object.keys(data[selectedYear][selectedMonth] || {}))
     }
-    else if(days.includes(xAxisData)){
+    if(days.includes(xAxisData)){
         setAnalitycs(data?.[selectedYear]?.[selectedMonth]?.[xAxisData][dataPicked])
-
         setLineX(data?.[selectedYear]?.[selectedMonth]?.[xAxisData]?.[0])
 
     }
+
 
 
   }, [xAxisData, dataPicked])
