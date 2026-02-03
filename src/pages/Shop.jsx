@@ -172,48 +172,40 @@ useEffect(() => {
   }, [currentProducts, currentPage]);
 
   const addToCart = async (product) => {
-    try {
-      const authData = getAuthData();
+  try {
+    const authData = getAuthData();
 
-      const body = {
-        value: product.price,
-        product_id: product.id,
-        amount: 1,
-        user_cep: "",
-        authorization: authData?.token || "",
-        sizes: "M",
-        status: "cart",
-        code: "",
-        state: "",
-        city: "",
-        neighboor: "",
-        street: "",
-        complement: ""
-      };
+    const body = {
+      products_id: [product.id],
+      amounts: ["1"],
+      sizes: ["M"], 
+      user_id: authData?.user?.id || authData?.id
+    };
 
-      const response = await fetch(`${url}/sales/`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "accept": "application/json",
-          "Authorization": `Bearer ${authData?.token}`
-        },
-        body: JSON.stringify(body)
-      });
+    const response = await fetch(`${url}/sales/carts`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "accept": "application/json",
+        "Authorization": `Bearer ${authData?.token}`
+      },
+      body: JSON.stringify(body)
+    });
 
-      if (!response.ok) {
-        throw new Error("Erro ao adicionar ao carrinho");
-      }
-
-      const data = await response.json();
-      console.log("Adicionado ao carrinho:", data);
-      alert("Produto adicionado ao carrinho 🛒");
-
-    } catch (error) {
-      console.error(error);
-      alert("Erro ao adicionar ao carrinho");
+    if (!response.ok) {
+      throw new Error("Erro ao adicionar ao carrinho");
     }
-  };
+
+    const data = await response.json();
+    console.log("Adicionado ao carrinho:", data);
+    alert("Produto adicionado ao carrinho 🛒");
+
+  } catch (error) {
+    console.error(error);
+    alert("Erro ao adicionar ao carrinho");
+  }
+};
+
 
   const toggleAccordion = (section) => {
     setOpenAccordions(prev => ({
