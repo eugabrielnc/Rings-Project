@@ -9,6 +9,17 @@ import '../assets/Css/slicknav.min.css';
 import '../assets/Css/style.css';
 import { getAuthData } from '../utils/dadosuser'
 export default function ShoppingCart() {
+
+  const inputStyle = {
+    width: "100%",
+    height: "45px",
+    padding: "0 12px",
+    border: "1px solid #e1e1e1",
+    borderRadius: "4px",
+    marginBottom: "10px",
+    fontSize: "14px"
+  };
+
   const pageStyle = {
     minHeight: "100vh",
     backgroundImage: "url('/img/fundo2.jpeg')",
@@ -34,6 +45,25 @@ export default function ShoppingCart() {
 
   const authData = getAuthData();
   const token = authData?.token;
+  const userId = authData?.id;
+  const [cep, setCep] = useState("");
+  const [address, setAddress] = useState(null);
+  const [loadingCep, setLoadingCep] = useState(false);
+  const [freightError, setFreightError] = useState("");
+  const [freightValue, setFreightValue] = useState(null);
+  const [freightLoading, setFreightLoading] = useState(false);
+  const [showCheckout, setShowCheckout] = useState(false);
+
+  const [checkoutData, setCheckoutData] = useState({
+    street: "",
+    neighboor: "",
+    complement: "",
+    city: "",
+    state: "",
+    sizes: ""
+  });
+
+
   const [cartTotal, setCartTotal] = useState(0);
   const [products, setProducts] = useState([]);
   const [cart, setCart] = useState([]);
@@ -82,25 +112,21 @@ export default function ShoppingCart() {
 
   // 🔹 BUSCAR CARRINHO
   useEffect(() => {
-    if (!token) return;
+    if (!token || !userId) return;
 
-    fetch(`${url}/sales/carts`, {
-      method: "POST",
+    fetch(`${url}/sales/carts/${userId}`, {
+      method: "GET",
       headers: {
-        "Content-Type": "application/json",
-        accept: "application/json",
+
       },
-      body: JSON.stringify({
-        authorization: token,
-      }),
     })
       .then((res) => res.json())
       .then((data) => {
         console.log("Cart:", data);
-        setCart(Array.isArray(data) ? data : [data]);
+        setCart(Array.isArray(data) ? data : []);
       })
       .catch((err) => console.error("Erro carrinho:", err));
-  }, [url, token]);
+  }, [url, token, userId]);
 
   // 🔹 COMPARAR productId
   useEffect(() => {
@@ -109,33 +135,207 @@ export default function ShoppingCart() {
       return;
     }
 
-    const cartIds = cart
-      .filter(item => item.status === "cart")
-      .map(item => item.product_id);
+    // 1️⃣ Agrupa produtos iguais
+    const grouped = {};
 
-    const filtered = products.filter(product =>
-      cartIds.includes(product.id)
-    );
+    cart
+      .filter(item => item.status === "cart" && item.products_id)
+      .forEach(item => {
+        try {
+          const parsed = JSON.parse(item.products_id);
 
-    setCartProducts(filtered);
+          parsed.products_id.forEach((productId, index) => {
+            const amount = Number(parsed.products_amount?.[index]) || 1;
+
+            if (!grouped[productId]) {
+              grouped[productId] = 0;
+            }
+
+            grouped[productId] += amount;
+          });
+        } catch (e) {
+          console.error("Erro ao parsear products_id:", item.products_id);
+        }
+      });
+
+    // 2️⃣ Junta com os dados reais do produto
+    const mergedProducts = Object.entries(grouped)
+      .map(([productId, quantity]) => {
+        const product = products.find(p => p.id === productId);
+        if (!product) return null;
+
+        return {
+          ...product,
+          quantity
+        };
+      })
+      .filter(Boolean);
+
+    setCartProducts(mergedProducts);
   }, [products, cart]);
 
+
+
+
   useEffect(() => {
-    if (!cart.length) {
-      setCartTotal(0);
-      return;
-    }
-
-    const total = cart.reduce((sum, item) => {
-      const product = products.find(p => p.id === item.product_id);
-      if (!product) return sum;
-
-      const quantity = item.amount || 1;
-      return sum + product.price * quantity;
+    const total = cartProducts.reduce((sum, product) => {
+      return sum + product.price * product.quantity;
     }, 0);
 
     setCartTotal(total);
-  }, [cart, products]);
+  }, [cartProducts]);
+
+
+
+
+  const handleCepSearch = async (value) => {
+  const cleanCep = value.replace(/\D/g, "");
+  setCep(cleanCep);
+
+  if (cleanCep.length !== 8) {
+    setAddress(null);
+    return;
+  }
+
+  try {
+    setLoadingCep(true);
+    setFreightError("");
+
+    const res = await fetch(`https://viacep.com.br/ws/${cleanCep}/json/`);
+    const data = await res.json(); // ✅ PRIMEIRO pega o JSON
+
+    if (data.erro) {
+      setFreightError("CEP não encontrado");
+      setAddress(null);
+      return;
+    }
+
+    // 🔥 endereço visual
+    setAddress({
+      city: data.localidade,
+      state: data.uf
+    });
+
+    // 🔥 dados que vão pro checkout / API
+    setCheckoutData(prev => ({
+      ...prev,
+      state: data.uf,
+      city: data.localidade
+    }));
+
+    // 🔥 calcula frete
+    calculateFreight(data.uf, data.localidade);
+
+  } catch (err) {
+    console.error(err);
+    setFreightError("Erro ao buscar CEP");
+  } finally {
+    setLoadingCep(false);
+  }
+};
+
+
+
+
+  const calculateFreight = async (state, city) => {
+    try {
+      setFreightLoading(true);
+
+      const res = await fetch(`${url}/freight/calculate`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token
+        },
+        body: JSON.stringify({
+          state: state.toLowerCase(),
+          city: city.toLowerCase()
+        })
+      });
+
+      const data = await res.json();
+      console.log("Frete calculado:", data);
+
+      // ⚠️ ajuste conforme o retorno real da API
+      setFreightValue(Number(data.freight ?? data.value ?? 0));
+
+    } catch (err) {
+      console.error("Erro ao calcular frete:", err);
+      setFreightValue(null);
+    } finally {
+      setFreightLoading(false);
+    }
+  };
+
+  const handleCheckout = async () => {
+  // 🔴 validações básicas
+  if (
+    !checkoutData.state ||
+    !checkoutData.city ||
+    !checkoutData.street ||
+    !checkoutData.neighboor ||
+    !cep
+  ) {
+    alert("Preencha todos os dados obrigatórios");
+    return;
+  }
+
+  if (cartProducts.length === 0) {
+    alert("Carrinho vazio");
+    return;
+  }
+
+  // 🔹 API espera ARRAY DE STRING
+  const products_id = cartProducts.map(p => String(p.id));
+  const amounts = cartProducts.map(p => String(p.quantity));
+
+  // 🔹 body FINAL exatamente como a API pede
+  const body = {
+    products_id,
+    amounts,
+    user_id: String(userId),
+    user_cep: String(cep),
+    sizes: checkoutData.sizes || "U",
+    status: "finished",
+    state: checkoutData.state,
+    city: checkoutData.city,
+    neighboor: checkoutData.neighboor,
+    street: checkoutData.street,
+    complement: checkoutData.complement || ""
+  };
+
+  console.log("📦 BODY ENVIADO PARA API:", body);
+
+  try {
+    const res = await fetch(`${url}/sales/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(body)
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      console.error("❌ Erro da API:", data);
+      alert(data?.message || "Erro ao finalizar pedido");
+      return;
+    }
+
+    console.log("✅ Pedido criado:", data);
+    alert("✅ Pedido finalizado com sucesso!");
+
+    setShowCheckout(false);
+
+  } catch (err) {
+    console.error("❌ Erro checkout:", err);
+    alert("Erro ao finalizar pedido");
+  }
+};
+
+
+
 
 
   return (
@@ -169,127 +369,85 @@ export default function ShoppingCart() {
                           </tr>
                         )}
 
-                        {cartProducts.map((product) => {
-                          const cartItem = cart.find(
-                            (item) =>
-                              item.product_id === product.id &&
-                              item.status === "cart"
-                          );
-
-                          const quantity = cart.reduce((total, item) => {
-                            if (item.product_id === product.id && item.status === "cart") {
-                              return total + (item.amount || 1);
-                            }
-                            return total;
-                          }, 0);
-
-                          return (
-                            <tr key={product.id} style={{ borderBottom: "1px solid #cfcfcf" }}>
-                              <td className="product__cart__item">
-                                <div
-                                  className="product__cart__item__pic"
+                        {cartProducts.map(product => (
+                          <tr key={product.id} style={{ borderBottom: "1px solid #cfcfcf" }}>
+                            <td className="product__cart__item">
+                              <div
+                                className="product__cart__item__pic"
+                                style={{
+                                  width: "90px",
+                                  height: "90px",
+                                  overflow: "hidden",
+                                  display: "flex",
+                                  alignItems: "center",
+                                  justifyContent: "center"
+                                }}
+                              >
+                                <img
+                                  src={`${url}/products/${product.id}/image/1`}
+                                  alt={product.name}
                                   style={{
-                                    width: "90px",
-                                    height: "90px",
-                                    overflow: "hidden",
-                                    display: "flex",
-                                    alignItems: "center",
-                                    justifyContent: "center"
+                                    width: "100%",
+                                    height: "100%",
+                                    objectFit: "cover"
                                   }}
-                                >
-                                  <img
-                                    src={`${url}/products/${product.id}/image/1`}
-                                    alt={product.name}
-                                    style={{
-                                      width: "100%",
-                                      height: "100%",
-                                      objectFit: "cover"
-                                    }}
-                                  />
-                                </div>
-
-                                <div
-                                  className="product__cart__item__text"
-                                  style={{
-                                    paddingLeft: "20px",
-                                    display: "flex",
-                                    flexDirection: "column",
-                                    justifyContent: "center"
-                                  }}
-                                >
-                                  <h6
-                                    style={{
-                                      color: "#111",
-                                      fontSize: "15px",
-                                      fontWeight: "600",
-                                      marginBottom: "5px",
-                                      lineHeight: "1.4",
-                                      display: "block"
-                                    }}
-                                  >
-                                    {product.name}
-                                  </h6>
-
-                                  <h5
-                                    style={{
-                                      color: "#111",
-                                      fontSize: "16px",
-                                      fontWeight: "700"
-                                    }}
-                                  >
-                                    R$ {product.price}
-                                  </h5>
-                                </div>
-                              </td>
-
-                              <td className="quantity__item">
-                                <div className="quantity">
-                                  <div className="pro-qty-2">
-                                    <input type="text" value={quantity} readOnly />
-                                  </div>
-                                </div>
-                              </td>
-
-                              <td className="cart__price">
-                                R$ {(product.price * quantity).toFixed(2)}
-                              </td>
-
-                              <td className="cart__close" style={{ whiteSpace: "nowrap" }}>
-                                {product.checkout_link && (
-                                  <a
-                                    href={product.checkout_link}
-                                    style={{
-                                      marginRight: "10px",
-                                      padding: "6px 12px",
-                                      backgroundColor: "#111",
-                                      color: "#fff",
-                                      fontSize: "12px",
-                                      borderRadius: "4px",
-                                      textDecoration: "none",
-                                      display: "inline-block"
-                                    }}
-                                  >
-                                    Comprar agora
-                                  </a>
-                                )}
-
-
-                                <i
-                                  className="fa fa-close"
-                                  style={{ cursor: "pointer" }}
-                                  onClick={() => handleDeleteFromCart(cartItem.id)}
                                 />
-                              </td>
-                            </tr>
-                          );
-                        })}
+                              </div>
+
+                              <div
+                                className="product__cart__item__text"
+                                style={{
+                                  paddingLeft: "20px",
+                                  display: "flex",
+                                  flexDirection: "column",
+                                  justifyContent: "center"
+                                }}
+                              >
+                                <h6>{product.name}</h6>
+                                <h5>R$ {product.price}</h5>
+                              </div>
+                            </td>
+
+                            <td className="quantity__item">
+                              <input
+                                type="text"
+                                value={product.quantity}
+                                readOnly
+                                style={{
+                                  border: "none",
+                                  outline: "none",
+                                  background: "transparent",
+                                  width: "40px",
+                                  textAlign: "center",
+                                  fontWeight: "600",
+                                  fontSize: "14px",
+                                  color: "#111",
+                                  pointerEvents: "none" // impede clique
+                                }}
+                              />
+
+                            </td>
+
+                            <td className="cart__price">
+                              R$ {(product.price * product.quantity).toFixed(2)}
+                            </td>
+
+                            <td className="cart__close">
+                              <i
+                                className="fa fa-close"
+                                style={{ cursor: "pointer" }}
+                                onClick={() => handleDeleteFromCart(product.cartId)}
+                              />
+                            </td>
+                          </tr>
+                        ))}
                       </tbody>
 
 
                     </table>
                   </div>
 
-                  
+
                 </div>
 
                 <div className="col-lg-4">
@@ -302,20 +460,8 @@ export default function ShoppingCart() {
                       type="text"
                       placeholder="Digite seu CEP"
                       maxLength={8}
-                      onInput={(e) => {
-                        // aceita somente números
-                        e.target.value = e.target.value.replace(/\D/g, "");
-
-                        const dropdown = e.target.nextElementSibling;
-
-                        if (e.target.value.length === 8) {
-                          dropdown.style.display = "block";
-                          dropdown.open = true;
-                        } else {
-                          dropdown.style.display = "none";
-                          dropdown.open = false;
-                        }
-                      }}
+                      value={cep}
+                      onChange={(e) => handleCepSearch(e.target.value)}
                       style={{
                         width: "100%",
                         height: "45px",
@@ -326,33 +472,54 @@ export default function ShoppingCart() {
                       }}
                     />
 
-                    <details
-                      style={{
-                        display: "none",
-                        border: "1px solid #e1e1e1",
-                        borderRadius: "4px",
-                        padding: "12px"
-                      }}
-                    >
-                      <summary style={{ cursor: "pointer", fontWeight: 600 }}>
-                        Opções de Entrega
-                      </summary>
 
-                      <div style={{ marginTop: "10px" }}>
+                    {loadingCep && (
+                      <p style={{ fontSize: "13px", color: "#555" }}>
+                        Buscando endereço...
+                      </p>
+                    )}
+
+                    {freightError && (
+                      <p style={{ fontSize: "13px", color: "red" }}>
+                        {freightError}
+                      </p>
+                    )}
+
+                    {address && (
+                      <div
+                        style={{
+                          marginTop: "12px",
+                          padding: "10px",
+                          border: "1px solid #e1e1e1",
+                          borderRadius: "6px",
+                          background: "#fff"
+                        }}
+                      >
                         <p style={{ margin: 0, fontWeight: 600 }}>
-                          Frete grátis
+                          🚚 Frete
                         </p>
-                        <p style={{ margin: "4px 0 0", color: "#555" }}>
-                          Correios Pac • Prazo estimado:  de 4 a 8 dias úteis a partir da conclusão da fabricação
-                        </p>
-                        <p style={{ margin: 0, fontWeight: 600 }}>
-                          Frete:R$ 20,00
-                        </p>
-                        <p style={{ margin: "4px 0 0", color: "#555" }}>
-                          Correios Sedex • Prazo estimado: de 4 a 6  dias úteis a partir da conclusão da fabricação
-                        </p>
+
+                        {freightLoading ? (
+                          <p style={{ fontSize: "13px", marginTop: "6px" }}>
+                            Calculando frete...
+                          </p>
+                        ) : (
+                          <p style={{ fontSize: "14px", marginTop: "6px" }}>
+                            Correios —{" "}
+                            {freightValue === 0 ? (
+                              <strong style={{ color: "#2ecc71" }}>
+                                Frete grátis
+                              </strong>
+                            ) : (
+                              <strong>
+                                R$ {freightValue.toFixed(2)}
+                              </strong>
+                            )}
+                          </p>
+                        )}
                       </div>
-                    </details>
+                    )}
+
                   </div>
 
                   <div className="cart__total">
@@ -434,11 +601,30 @@ export default function ShoppingCart() {
                         Total <span>R$ {cartTotal.toFixed(2)}</span>
                       </li>
                     </ul>
+                    <button
+                      className="primary-btn"
+                      style={{
+                        width: "100%",
+                        marginTop: "20px",
+                        padding: "14px",
+                        fontSize: "15px",
+                        fontWeight: "600"
+                      }}
+                      disabled={cartProducts.length === 0}
+                      onClick={() => setShowCheckout(true)}
+
+                    >
+                      Finalizar compra
+                    </button>
+
                   </div>
                 </div>
               </div>
             </div>
           </section>
+
+
+
 
 
           {/* Search */}
@@ -454,8 +640,98 @@ export default function ShoppingCart() {
               </form>
             </div>
           </div>
+
         </>
+
       </div>
+
+
+
+      {/* 🔥 MODAL CHECKOUT */}
+      {showCheckout && (
+        <div
+          style={{
+            position: "fixed",
+            inset: 0,
+            background: "rgba(0,0,0,0.5)",
+            zIndex: 9999,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center"
+          }}
+        >
+          <div
+            style={{
+              width: "420px",
+              background: "#fff",
+              borderRadius: "8px",
+              padding: "20px"
+            }}
+          >
+            <h5 style={{ marginBottom: "15px" }}>
+              📦 Dados de entrega
+            </h5>
+
+            <input
+              placeholder="Estado"
+              value={checkoutData.state}
+              onChange={e =>
+                setCheckoutData({ ...checkoutData, state: e.target.value })
+              }
+              style={inputStyle}
+            />
+
+            <input
+              placeholder="Cidade"
+              value={checkoutData.city}
+              onChange={e =>
+                setCheckoutData({ ...checkoutData, city: e.target.value })
+              }
+              style={inputStyle}
+            />
+
+            <input
+              placeholder="Rua"
+              value={checkoutData.street}
+              onChange={e =>
+                setCheckoutData({ ...checkoutData, street: e.target.value })
+              }
+              style={inputStyle}
+            />
+
+            <input
+              placeholder="Bairro"
+              value={checkoutData.neighboor}
+              onChange={e =>
+                setCheckoutData({ ...checkoutData, neighboor: e.target.value })
+              }
+              style={inputStyle}
+            />
+
+            <input
+              placeholder="Complemento"
+              value={checkoutData.complement}
+              onChange={e =>
+                setCheckoutData({ ...checkoutData, complement: e.target.value })
+              }
+              style={inputStyle}
+            />
+
+            <div style={{ display: "flex", gap: "10px", marginTop: "15px" }}>
+              <button onClick={() => setShowCheckout(false)}>
+                Cancelar
+              </button>
+
+              <button onClick={handleCheckout}>
+                Confirmar pedido
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
+
+
   );
 }
