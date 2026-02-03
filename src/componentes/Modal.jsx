@@ -8,7 +8,7 @@ export default function Modal({ isOpen, onClose, children }) {
     <div style={overlay}>
       <div style={modal}>
         {children}
-    <button onClick={onClose}>Fechar</button>
+    <button className="clear-filters" onClick={onClose}>Fechar</button>
       </div>
     </div>
   )

@@ -99,7 +99,13 @@ export default function Vendas() {
               user_cep: sale.user_cep,
               data: sale.created_at,
               address: `${sale.state}, ${sale.city}, ${sale.neighboor}, ${sale.street}`,
+              state: sale.state,
+              city: sale.city,
+              neighboor: sale.neighboor,
+              street:sale.street,
+              number:sale.number,
               complement: sale.complement,
+              cpf:sale?.cpf,
               status: sale.status,
             };
           });
@@ -199,10 +205,8 @@ useEffect(() => {
 
   useEffect(() => {
   async function loadProducts() {
-    if (!orderInfos?.products_id?.length) return
-
-    const productsInfo = await getProductsInfo(orderInfos.products_id)
-
+    if (!orderInfos?.orderInfos?.products_id?.length) return
+    const productsInfo = await getProductsInfo(orderInfos?.orderInfos?.products_id)
     setOrderInfos(prev => ({
       ...prev,
       names: productsInfo.names,
@@ -211,18 +215,22 @@ useEffect(() => {
   }
 
   loadProducts()
-}, [orderInfos.products_id])
+
+}, [open])
 
 
    return (
     <div style={{ padding: isMobile ? "10px" : "20px" }}>
 
   <Modal  className="Modal" isOpen={open} onClose={() => setOpen(false)}>
-
-    <h2>Produtos pedidos</h2>
-    {(orderInfos["products_id"] || []).map( (order, index) =>{ 
-      return(
       
+     <div className="modal-grid">
+        {/* COLUNA ESQUERDA – PRODUTOS */}
+    <div className="modal-products">
+    <h2>Produtos pedidos</h2>
+    {(orderInfos?.["orderInfos"]?.["products_id"] || []).map( (order, index) =>{ 
+      console.log(orderInfos)
+      return(
       <div className="container-modal-content">
       <img src={`${url}/products/${order}/image/1`} width="100" height="100"  />
       <p>{orderInfos?.["names"]?.[index]} </p>  
@@ -231,6 +239,56 @@ useEffect(() => {
       </div>
 
       )} )}
+      </div>
+    {/* COLUNA DIREITA – CLIENTE */}
+    <div className="modal-client">
+      <div className="client-field">
+        <label>Nome do cliente</label>
+        <p>{orderInfos?.userName}</p>
+      </div>
+
+     <div className="client-field">
+        <label>CPF do cliente</label>
+        <p>{orderInfos?.cpf}</p>
+      </div>
+
+
+      <div className="client-field">
+        <label>Estado</label>
+        <p>{orderInfos?.state}</p>
+      </div>
+
+      <div className="client-field">
+        <label>Cidade</label>
+        <p>{orderInfos?.city}</p>
+      </div>
+
+      <div className="client-field">
+        <label>Rua</label>
+        <p>{orderInfos?.street}</p>
+      </div>
+
+      <div className="client-field">
+        <label>Complemento</label>
+        <p>{orderInfos?.complement}</p>
+      </div>
+
+      <div className="client-field">
+        <label>Número da casa</label>
+        <p>{orderInfos?.number}</p>
+      </div>
+      
+      <div className="client-field">
+        <label>CEP</label>
+        <p>{orderInfos?.user_cep}</p>
+      </div>
+
+
+
+    </div>
+
+     </div>
+
   </Modal>
 
 
@@ -365,7 +423,7 @@ useEffect(() => {
         <Link to={`/admin/vendas/editar/${produto.id}`}>
           <button style={btnEdit}>Editar</button>
         </Link>
-        <button style={btnEdit} onClick={() => {setOrderInfos(produto.orderInfos); setOpen(true)}}>Ver Pedido</button>
+        <button style={btnEdit} onClick={() => {setOrderInfos(produto); setOpen(true)}}>Ver Pedido</button>
       </td>
     </tr>
   ))}
