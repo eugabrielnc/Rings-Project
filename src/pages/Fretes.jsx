@@ -44,9 +44,10 @@ export default function Fretes() {
         try {
             await fetch(`${url}/freight/${freteId}`, {
                 method: "DELETE",
-                headers: { "Content-Type": "application/json" },
+                headers: { "Content-Type": "application/json",
+                    "Authorization": authData.token
+                },
                 body: JSON.stringify({
-                    authorization: authData.token,
                 }),
             });
             setfretes(prev => prev.filter(f => f.id !== freteId));
