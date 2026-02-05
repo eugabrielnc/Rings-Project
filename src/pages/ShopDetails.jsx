@@ -233,53 +233,65 @@ export default function ShopDetails() {
     [id, url]);
   const navigate = useNavigate();
 
-
-  const handleBuy = async () => {
-
-    {
+  const addToCart = async () => {
+    try {
       const authData = getAuthData();
 
       if (!authData || !authData?.token) {
-        alert("Você precisa estar logado para comprar.");
+        alert("Você precisa estar logado para adicionar ao carrinho.");
         navigate("/login");
         return;
       }
 
-      const responseNewSale = await fetch(`${url}/sales`, {
+      // validações básicas
+      if (!selectedMascleSize || !selectedFemaleSize) {
+        alert("Selecione os tamanhos antes de continuar.");
+        return;
+      }
+
+      if (product.stone === 1 && !selectedStone) {
+        alert("Selecione a cor da pedra.");
+        return;
+      }
+
+      const body = {
+        products_id: [product.id],
+        amounts: [String(selectedAmount)],
+        sizes: [
+          `masc:${selectedMascleSize.value}|fem:${selectedFemaleSize.value}|grav_m:${gravacaoMasculino}|grav_f:${gravacaoFeminino}|pedra:${selectedStone}`
+        ],
+        user_id: authData?.user?.id || authData?.id
+      };
+
+      const response = await fetch(`${url}/sales/carts`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          value: product.price * selectedAmount,
-          product_id: product.id,
-          amount: selectedAmount,
-          user_cep: "",
-          authorization: authData.token,
-          sizes: `fem:${selectedFemaleSize.value},masc:${selectedMascleSize.value}/fem:${gravacaoFeminino},masc:${gravacaoMasculino}, pedra:${selectedStone}`,
-          status: "aguardando pagamento",
-          code: "",
-          state: "",
-          city: "",
-          neighboor: "",
-          street: "",
-          complement: ""
-
-        })
-
-
+        headers: {
+          "Content-Type": "application/json",
+          accept: "application/json",
+          Authorization: `Bearer ${authData.token}`
+        },
+        body: JSON.stringify(body)
       });
 
-      if (responseNewSale.status == 200) {
-        const checkoutUrl = product.checkout_link || id;
-
-        if (!checkoutUrl) {
-          alert("Checkout indisponível.");
-          return;
-        }
-
-        window.location.href = checkoutUrl;
+      if (!response.ok) {
+        throw new Error("Erro ao adicionar ao carrinho");
       }
-    };
+
+      const data = await response.json();
+      console.log("Produto adicionado ao carrinho:", data);
+
+      alert("Produto adicionado ao carrinho 🛒");
+
+
+      navigate("/shopcart");
+
+    } catch (error) {
+      console.error(error);
+      alert("Erro ao adicionar ao carrinho");
+    }
   };
+
+
   // Mostrar loading enquanto carrega
   if (loading) {
     return (
@@ -524,12 +536,12 @@ export default function ShopDetails() {
                               placeholder="Escolha o tamanho..."
                               isSearchable={false}
                             />
-                           
-                              <p style={{ marginTop: '10px', fontSize: '13px', color: '#666' }}>
-                                <i className="fa fa-info-circle" style={{ marginRight: '5px' }}></i>
-                                Não sabe seu tamanho? <a href="/medida" style={{ color: '#d4a574', fontWeight: '600' }}>Meça aqui!</a>
-                              </p>
-                            
+
+                            <p style={{ marginTop: '10px', fontSize: '13px', color: '#666' }}>
+                              <i className="fa fa-info-circle" style={{ marginRight: '5px' }}></i>
+                              Não sabe seu tamanho? <a href="/medida" style={{ color: '#d4a574', fontWeight: '600' }}>Meça aqui!</a>
+                            </p>
+
 
                             {/* Campo de Gravação Feminino */}
                             <div style={{ marginTop: '20px' }}>
@@ -668,10 +680,11 @@ export default function ShopDetails() {
                           type="button"
                           className="primary-btn"
                           style={{ borderRadius: '10px' }}
-                          onClick={handleBuy}
+                          onClick={addToCart}
                         >
                           Comprar
                         </button>
+
                       </div>
                     </div>
                   </div>
