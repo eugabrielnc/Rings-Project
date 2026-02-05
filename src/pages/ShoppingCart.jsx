@@ -57,11 +57,14 @@ export default function ShoppingCart() {
   const [checkoutData, setCheckoutData] = useState({
     street: "",
     neighboor: "",
+    number: "",
     complement: "",
     city: "",
     state: "",
-    sizes: ""
+    cpf: "",
+    sizes: "U"
   });
+
 
 
   const [cartTotal, setCartTotal] = useState(0);
@@ -189,50 +192,50 @@ export default function ShoppingCart() {
 
 
   const handleCepSearch = async (value) => {
-  const cleanCep = value.replace(/\D/g, "");
-  setCep(cleanCep);
+    const cleanCep = value.replace(/\D/g, "");
+    setCep(cleanCep);
 
-  if (cleanCep.length !== 8) {
-    setAddress(null);
-    return;
-  }
-
-  try {
-    setLoadingCep(true);
-    setFreightError("");
-
-    const res = await fetch(`https://viacep.com.br/ws/${cleanCep}/json/`);
-    const data = await res.json(); // ✅ PRIMEIRO pega o JSON
-
-    if (data.erro) {
-      setFreightError("CEP não encontrado");
+    if (cleanCep.length !== 8) {
       setAddress(null);
       return;
     }
 
-    // 🔥 endereço visual
-    setAddress({
-      city: data.localidade,
-      state: data.uf
-    });
+    try {
+      setLoadingCep(true);
+      setFreightError("");
 
-    // 🔥 dados que vão pro checkout / API
-    setCheckoutData(prev => ({
-      ...prev,
-      state: data.uf,
-      city: data.localidade
-    }));
+      const res = await fetch(`https://viacep.com.br/ws/${cleanCep}/json/`);
+      const data = await res.json(); // ✅ PRIMEIRO pega o JSON
 
-    // 🔥 calcula frete
-    calculateFreight(data.uf, data.localidade);
+      if (data.erro) {
+        setFreightError("CEP não encontrado");
+        setAddress(null);
+        return;
+      }
 
-  } catch (err) {
-    console.error(err);
-    setFreightError("Erro ao buscar CEP");
-  } finally {
-    setLoadingCep(false);
-  }
-};
+      // 🔥 endereço visual
+      setAddress({
+        city: data.localidade,
+        state: data.uf
+      });
+
+      // 🔥 dados que vão pro checkout / API
+      setCheckoutData(prev => ({
+        ...prev,
+        state: data.uf,
+        city: data.localidade
+      }));
+
+      // 🔥 calcula frete
+      calculateFreight(data.uf, data.localidade);
+
+    } catch (err) {
+      console.error(err);
+      setFreightError("Erro ao buscar CEP");
+    } finally {
+      setLoadingCep(false);
+    }
+  };
 
 
 
@@ -268,71 +271,72 @@ export default function ShoppingCart() {
   };
 
   const handleCheckout = async () => {
-  // 🔴 validações básicas
-  if (
-    !checkoutData.state ||
-    !checkoutData.city ||
-    !checkoutData.street ||
-    !checkoutData.neighboor ||
-    !cep
-  ) {
-    alert("Preencha todos os dados obrigatórios");
-    return;
-  }
-
-  if (cartProducts.length === 0) {
-    alert("Carrinho vazio");
-    return;
-  }
-
-  // 🔹 API espera ARRAY DE STRING
-  const products_id = cartProducts.map(p => String(p.id));
-  const amounts = cartProducts.map(p => String(p.quantity));
-
-  // 🔹 body FINAL exatamente como a API pede
-  const body = {
-    products_id,
-    amounts,
-    user_id: String(userId),
-    user_cep: String(cep),
-    sizes: checkoutData.sizes || "U",
-    status: "finished",
-    state: checkoutData.state,
-    city: checkoutData.city,
-    neighboor: checkoutData.neighboor,
-    street: checkoutData.street,
-    complement: checkoutData.complement || ""
-  };
-
-  console.log("📦 BODY ENVIADO PARA API:", body);
-
-  try {
-    const res = await fetch(`${url}/sales/`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(body)
-    });
-
-    const data = await res.json();
-
-    if (!res.ok) {
-      console.error("❌ Erro da API:", data);
-      alert(data?.message || "Erro ao finalizar pedido");
+    if (
+      !checkoutData.state ||
+      !checkoutData.city ||
+      !checkoutData.street ||
+      !checkoutData.neighboor ||
+      !checkoutData.number ||
+      !cep
+    ) {
+      alert("Preencha todos os dados obrigatórios");
       return;
     }
 
-    console.log("✅ Pedido criado:", data);
-    alert("✅ Pedido finalizado com sucesso!");
+    if (cartProducts.length === 0) {
+      alert("Carrinho vazio");
+      return;
+    }
 
-    setShowCheckout(false);
+    // arrays alinhados
+    const products_id = cartProducts.map(p => String(p.id));
+    const amounts = cartProducts.map(p => p.quantity); 
+    const sizes = cartProducts.map(() => checkoutData.sizes || "U");
+    const gravations = cartProducts.map(() => ""); // vazio se não usar
 
-  } catch (err) {
-    console.error("❌ Erro checkout:", err);
-    alert("Erro ao finalizar pedido");
-  }
-};
+    const body = {
+      products_id,
+      amounts,
+      sizes,
+      gravations,
+      user_id: String(userId),
+      cpf: checkoutData.cpf,
+      user_cep: String(cep),
+      state: checkoutData.state,
+      city: checkoutData.city,
+      neighboor: checkoutData.neighboor,
+      street: checkoutData.street,
+      number: checkoutData.number,
+      complement: checkoutData.complement || ""
+    };
+
+    console.log("📦 BODY FINAL:", body);
+
+    try {
+      const res = await fetch(`${url}/sales`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body)
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        console.error("Erro API:", data);
+        alert(data?.message || "Erro ao finalizar pedido");
+        return;
+      }
+
+      alert("✅ Pedido finalizado com sucesso!");
+      setShowCheckout(false);
+
+    } catch (err) {
+      console.error(err);
+      alert("Erro ao finalizar pedido");
+    }
+  };
 
 
 
@@ -673,6 +677,15 @@ export default function ShoppingCart() {
             </h5>
 
             <input
+              placeholder="CPF"
+              value={checkoutData.cpf}
+              onChange={e =>
+                setCheckoutData({ ...checkoutData, cpf: e.target.value })
+              }
+              style={inputStyle}
+            />
+
+            <input
               placeholder="Estado"
               value={checkoutData.state}
               onChange={e =>
@@ -700,6 +713,15 @@ export default function ShoppingCart() {
             />
 
             <input
+              placeholder="Número"
+              value={checkoutData.number}
+              onChange={e =>
+                setCheckoutData({ ...checkoutData, number: e.target.value })
+              }
+              style={inputStyle}
+            />
+
+            <input
               placeholder="Bairro"
               value={checkoutData.neighboor}
               onChange={e =>
@@ -709,13 +731,32 @@ export default function ShoppingCart() {
             />
 
             <input
-              placeholder="Complemento"
+              placeholder="Complemento (opcional)"
               value={checkoutData.complement}
               onChange={e =>
                 setCheckoutData({ ...checkoutData, complement: e.target.value })
               }
               style={inputStyle}
             />
+
+            <select
+              value={checkoutData.sizes}
+              onChange={e =>
+                setCheckoutData({ ...checkoutData, sizes: e.target.value })
+              }
+              style={inputStyle}
+            >
+              <option value="">Selecione o tamanho</option>
+
+              {Array.from({ length: 26 }, (_, i) => {
+                const size = i + 10;
+                return (
+                  <option key={size} value={String(size)}>
+                    {size}
+                  </option>
+                );
+              })}
+            </select>
 
             <div style={{ display: "flex", gap: "10px", marginTop: "15px" }}>
               <button onClick={() => setShowCheckout(false)}>
@@ -726,6 +767,7 @@ export default function ShoppingCart() {
                 Confirmar pedido
               </button>
             </div>
+
           </div>
         </div>
       )}
