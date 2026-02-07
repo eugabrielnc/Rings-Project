@@ -133,49 +133,54 @@ export default function ShoppingCart() {
 
   // 🔹 COMPARAR productId
   useEffect(() => {
-    if (!Array.isArray(products) || !Array.isArray(cart)) {
-      setCartProducts([]);
-      return;
-    }
+  if (!Array.isArray(products) || !Array.isArray(cart)) {
+    setCartProducts([]);
+    return;
+  }
 
-    // 1️⃣ Agrupa produtos iguais
-    const grouped = {};
+  const grouped = {};
 
-    cart
-      .filter(item => item.status === "cart" && item.products_id)
-      .forEach(item => {
-        try {
-          const parsed = JSON.parse(item.products_id);
+  cart
+    .filter(item => item.status === "cart" && item.order_infos)
+    .forEach(item => {
+      let orderInfo;
 
-          parsed.products_id.forEach((productId, index) => {
-            const amount = Number(parsed.products_amount?.[index]) || 1;
+      try {
+        orderInfo = JSON.parse(item.order_infos);
+      } catch (err) {
+        console.error("Erro ao parsear order_infos:", item.order_infos);
+        return;
+      }
 
-            if (!grouped[productId]) {
-              grouped[productId] = 0;
-            }
+      const products_id = orderInfo.products_id || [];
+      const products_amount = orderInfo.products_amount || [];
 
-            grouped[productId] += amount;
-          });
-        } catch (e) {
-          console.error("Erro ao parsear products_id:", item.products_id);
+      products_id.forEach((productId, index) => {
+        const quantity = Number(products_amount[index]) || 1;
+
+        if (!grouped[productId]) {
+          grouped[productId] = 0;
         }
+
+        grouped[productId] += quantity;
       });
+    });
 
-    // 2️⃣ Junta com os dados reais do produto
-    const mergedProducts = Object.entries(grouped)
-      .map(([productId, quantity]) => {
-        const product = products.find(p => p.id === productId);
-        if (!product) return null;
+  const mergedProducts = Object.entries(grouped)
+    .map(([productId, quantity]) => {
+      const product = products.find(p => p.id === productId);
+      if (!product) return null;
 
-        return {
-          ...product,
-          quantity
-        };
-      })
-      .filter(Boolean);
+      return {
+        ...product,
+        quantity
+      };
+    })
+    .filter(Boolean);
 
-    setCartProducts(mergedProducts);
-  }, [products, cart]);
+  console.log("🛒 CART PRODUCTS FINAL:", mergedProducts);
+  setCartProducts(mergedProducts);
+}, [products, cart]);
 
 
 
@@ -271,72 +276,71 @@ export default function ShoppingCart() {
   };
 
   const handleCheckout = async () => {
-    if (
-      !checkoutData.state ||
-      !checkoutData.city ||
-      !checkoutData.street ||
-      !checkoutData.neighboor ||
-      !checkoutData.number ||
-      !cep
-    ) {
-      alert("Preencha todos os dados obrigatórios");
+  if (
+    !checkoutData.state ||
+    !checkoutData.city ||
+    !checkoutData.street ||
+    !checkoutData.neighboor ||
+    !cep
+  ) {
+    alert("Preencha todos os dados obrigatórios");
+    return;
+  }
+
+  if (cartProducts.length === 0) {
+    alert("Carrinho vazio");
+    return;
+  }
+
+  // 🔥 exatamente como a API espera
+  const products_id = cartProducts.map(p => String(p.id));
+const amounts = cartProducts.map(p => String(p.quantity));
+
+// 🔥 sizes PRECISA ser array
+const sizes = cartProducts.map(() => String(checkoutData.sizes || "U"));
+
+  const body = {
+  products_id,
+  amounts,
+  sizes, // agora é LISTA ✅
+  user_id: String(userId),
+  user_cep: String(cep),
+  status: "finished",
+  state: checkoutData.state,
+  city: checkoutData.city,
+  neighboor: checkoutData.neighboor,
+  street: checkoutData.street,
+  complement: checkoutData.complement || ""
+};
+
+  console.log("📦 BODY ENVIADO:", body);
+
+  try {
+    const res = await fetch(`${url}/sales/carts`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(body)
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      console.error("Erro API:", data);
+      alert(data?.message || "Erro ao finalizar pedido");
       return;
     }
 
-    if (cartProducts.length === 0) {
-      alert("Carrinho vazio");
-      return;
-    }
+    alert("✅ Pedido finalizado com sucesso!");
+    setShowCheckout(false);
 
-    // arrays alinhados
-    const products_id = cartProducts.map(p => String(p.id));
-    const amounts = cartProducts.map(p => p.quantity); 
-    const sizes = cartProducts.map(() => checkoutData.sizes || "U");
-    const gravations = cartProducts.map(() => ""); // vazio se não usar
+  } catch (err) {
+    console.error("Erro checkout:", err);
+    alert("❌ Erro ao finalizar pedido");
+  }
+};
 
-    const body = {
-      products_id,
-      amounts,
-      sizes,
-      gravations,
-      user_id: String(userId),
-      cpf: checkoutData.cpf,
-      user_cep: String(cep),
-      state: checkoutData.state,
-      city: checkoutData.city,
-      neighboor: checkoutData.neighboor,
-      street: checkoutData.street,
-      number: checkoutData.number,
-      complement: checkoutData.complement || ""
-    };
-
-    console.log("📦 BODY FINAL:", body);
-
-    try {
-      const res = await fetch(`${url}/sales`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(body)
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        console.error("Erro API:", data);
-        alert(data?.message || "Erro ao finalizar pedido");
-        return;
-      }
-
-      alert("✅ Pedido finalizado com sucesso!");
-      setShowCheckout(false);
-
-    } catch (err) {
-      console.error(err);
-      alert("Erro ao finalizar pedido");
-    }
-  };
 
 
 
