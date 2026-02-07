@@ -88,7 +88,7 @@ export default function Vendas() {
             return {
               key: sale.id,
               id: sale.id,
-              orderInfos: JSON.parse(sale.products_id),
+              orderInfos: JSON.parse(sale.order_infos),
               userName: user?.name || "Usuário não encontrado",
               sizes: sale.sizes.split("/")[0],
               gravacoes: sale.sizes.split("/")[1],
@@ -232,10 +232,34 @@ useEffect(() => {
       console.log(orderInfos)
       return(
       <div className="container-modal-content">
-      <img src={`${url}/products/${order}/image/1`} width="100" height="100"  />
-      <p>{orderInfos?.["names"]?.[index]} </p>  
-      <p>{orderInfos?.["value"]?.[index]} </p>  
-      <p>{orderInfos?.["products_amount"]?.[index]} </p>  
+        <section className="container-principal-content">
+          <img src={`${url}/products/${order}/image/1`} width="100" height="100"  />
+          <p>{orderInfos?.["names"]?.[index]} </p>  
+          <p>{orderInfos?.["value"]?.[index]} </p>  
+          <p>{orderInfos?.["products_amount"]?.[index]} </p>  
+        </section>
+
+    <div className="container-secundary-content" >
+       <div className="client-field">
+         <label>Tamanhos</label>
+         <p>{orderInfos?.orderInfos?.["sizes"]?.[index]}</p>
+       </div>
+  
+      <div className="client-field">
+         <label>Gravações</label>
+         <p>{orderInfos?.orderInfos?.["gravations"]?.[index]}</p>
+       </div>
+   
+        <div className="client-field">
+         <label>Pedra</label>
+         <p>{orderInfos?.orderInfos?.["stone"]?.[index]}</p>
+       </div>
+      
+       <div className="client-field">
+         <label>Quantidade</label>
+         <p>{orderInfos?.orderInfos?.["products_amount"]?.[index]}</p>
+       </div>
+    </div>
       </div>
 
       )} )}

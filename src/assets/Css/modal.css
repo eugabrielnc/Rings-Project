@@ -1,3 +1,21 @@
+.modal-grid-form{
+
+  display:flex;
+  flex-direction:row;
+  gap:20px;
+
+
+}
+
+.form-buttons{
+  
+  margin-top:20px;
+
+
+}
+.column-form{}
+
+
 /* Grid principal */
 .modal-grid {
   display: grid;
@@ -10,6 +28,15 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
+}
+.container-secundary-content{
+  background-color:red;
+  display: flex;
+  justify-content:row;
+  background: #f9f9f9;
+  border-radius: 12px;
+  padding: 16px;
+  gap: 14px;
 }
 
 /* Coluna do cliente */
@@ -30,7 +57,7 @@
 }
 
 /* Label */
-.client-field label {
+.client-field label, .modal-grid-form label {
   font-size: 0.75rem;
   font-weight: 600;
   text-transform: uppercase;
@@ -45,10 +72,18 @@
   color: #222;
 }
 
+.container-principal-content{
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+
 /* Reaproveitando o card do produto */
 .container-modal-content {
   display: flex;
   align-items: center;
+  flex-direction:column;
   gap: 14px;
   padding: 12px;
   background: #f5f5f5;

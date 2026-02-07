@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import Modal from "../componentes/Modal.jsx"
 import { useParams } from "react-router-dom";
 import Select from "react-select";
 import { useNavigate } from "react-router-dom";
@@ -8,16 +9,9 @@ import { Navigation } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 
-// NOTE:
-// - This component is a direct JSX conversion of the original HTML template.
-// - It does not include the original jQuery plugin initializations (owl.carousel, magnific-popup, etc.).
-//   If you need those behaviors, import the corresponding libraries or implement React-friendly alternatives.
-// - Add the CSS files (bootstrap, font-awesome, style.css, etc.) to your index.html or import them in your main entry.
-
 export default function ShopDetails() {
 
-
-
+  const [valueFreight, setValueFreight] = useState(100)
 
   const pageStyle = {
     minHeight: "100vh",
@@ -69,6 +63,9 @@ export default function ShopDetails() {
   const [thumbLoaded, setThumbLoaded] = useState({});
   const [thumbHidden, setThumbHidden] = useState({});
   const [thumbAttempts, setThumbAttempts] = useState({});
+
+  const [checkoutData, setCheckoutData] = useState({})
+  const [modalOpen, setModalOpen] = useState(false)
 
   const url = import.meta.env.VITE_API_URL;
   const { id } = useParams();
@@ -136,7 +133,6 @@ export default function ShopDetails() {
 
       const data = await response.json();
       console.log("Adicionado ao carrinho:", data);
-      alert("Produto adicionado ao carrinho 🛒");
 
     } catch (error) {
       console.error(error);
@@ -161,7 +157,7 @@ export default function ShopDetails() {
     { value: 22, label: '22' },
     { value: 23, label: '23' },
     { value: 24, label: '24' },
-    { value: 25, label: '25' },
+   { value: 25, label: '25' },
     { value: 26, label: '26' },
     { value: 27, label: '27' },
     { value: 28, label: '28' },
@@ -173,6 +169,40 @@ export default function ShopDetails() {
     { value: 34, label: '34' },
     { value: 35, label: '35' }
   ];
+
+
+  useEffect(() => {
+
+    //console.log((checkoutData.cep)length == 8)
+
+    if((checkoutData?.cep || "").length == 8){
+
+      fetch(`https://viacep.com.br/ws/${checkoutData.cep}/json/`)
+      .then(response => response.json())
+      .then(data => {setCheckoutData(prev => (
+        {...prev,
+          street: data["logradouro"],
+          city: data["localidade"],
+          state:data["estado"]
+          
+        }))});
+
+      fetch(`${url}/freight/calculate`, {method:'POST',   headers: {
+    "Content-Type": "application/json"
+  },body: JSON.stringify({state:checkoutData["state"], city:checkoutData["city"]}) })
+      .then(res => res.json())
+      .then(data => setValueFreight(data))
+      .catch(error => console.error(error)) 
+      console.log("CHEGOU")
+
+
+    }
+
+
+
+  }, [checkoutData?.cep])
+
+
 
   // Estilos customizados para o react-select
   const customStyles = {
@@ -256,14 +286,24 @@ export default function ShopDetails() {
 
       const body = {
         products_id: [product.id],
-        amounts: [String(selectedAmount)],
+        amounts: [selectedAmount],
         sizes: [
-          `masc:${selectedMascleSize.value}|fem:${selectedFemaleSize.value}|grav_m:${gravacaoMasculino}|grav_f:${gravacaoFeminino}|pedra:${selectedStone}`
+          `masc:${selectedMascleSize.value}|fem:${selectedFemaleSize.value}`
         ],
-        user_id: authData?.user?.id || authData?.id
+        gravations:[`grav_m:${gravacaoMasculino}|grav_f:${gravacaoFeminino}`],
+        stone:`pedra:${selectedStone}`,
+        user_id: authData?.user?.id || authData?.id,
+        user_cep: checkoutData?.cep || "",
+        cpf: checkoutData?.state || "",
+        state: checkoutData?.state || "",
+        city: checkoutData?.city || "",
+        neighboor:  checkoutData?.neighboor || "",
+        street: checkoutData?.street || "",
+        number:  checkoutData?.number || "",
+        complement: checkoutData?.complement || ""
       };
 
-      const response = await fetch(`${url}/sales/carts`, {
+      const response = await fetch(`${url}/sales`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -273,21 +313,22 @@ export default function ShopDetails() {
         body: JSON.stringify(body)
       });
 
+      /*
       if (!response.ok) {
         throw new Error("Erro ao adicionar ao carrinho");
       }
+      */
 
       const data = await response.json();
       console.log("Produto adicionado ao carrinho:", data);
 
       alert("Produto adicionado ao carrinho 🛒");
 
-
-      navigate("/shopcart");
+      window.location.href = data;
+      //navigate("/shopcart");
 
     } catch (error) {
       console.error(error);
-      alert("Erro ao adicionar ao carrinho");
     }
   };
 
@@ -319,23 +360,140 @@ export default function ShopDetails() {
         [index]: (prev[index] || 0) + 1,
       }));
     }
-
-
-
-
-
   }
-
-
-
-
-
   return (
 
     <div style={pageStyle}>
       {/* Overlay */}
       <div style={overlayStyle}></div>
+
+      <Modal  className="Modal" isOpen={modalOpen} onClose={() => console.log()}>
+         
+          <h5 style={{ marginBottom: "15px" }}>
+           📦 Dados de entrega
+         </h5>
+  
+        <div className="modal-grid-form">
+          <div className="column-form">
+              <div className="client-field">   
+              <label>Cep </label>
+              <input
+              placeholder="CEP"
+              value={checkoutData.cep}
+              onChange={e =>
+                setCheckoutData({ ...checkoutData, cep: e.target.value })
+              }
+              />
+          </div>  
+
+           <div className="client-field">   
+            <label>Valor do frete</label>
+            <label>{valueFreight == 0 ? "Grátis" : valueFreight   }</label>
+            
+           </div>        
+          </div>
+      
+        <div className="column-form">
+          <div className="client-field">   
+            <label>Estado </label>
+            <input
+              placeholder="Estado"
+              value={checkoutData.state}
+              onChange={e =>
+                setCheckoutData({ ...checkoutData, state: e.target.value })
+              }
+            />
+          </div>  
+          <div className="client-field">   
+            <label>Cidade </label>
+            <input
+              placeholder="Cidade"
+              value={checkoutData.city}
+              onChange={e =>
+                setCheckoutData({ ...checkoutData, city: e.target.value })
+              }
+            />
+         </div>  
+          </div>  
+          
+          
+          <div className="column-form">   
+          <div className="client-field">   
+            <label>Rua </label>
+            <input
+              placeholder="Rua"
+              value={checkoutData.street}
+              onChange={e =>
+                setCheckoutData({ ...checkoutData, street: e.target.value })
+              }
+            />
+          </div>  
+ 
+          <div className="client-field">   
+              <label>Número da casa </label>         
+                <input
+                placeholder="Número"
+                value={checkoutData.number}
+                onChange={e =>
+                setCheckoutData({ ...checkoutData, number: e.target.value })
+                 }
+               />
+            </div>  
+          </div>  
+
+          
+          <div className="column-form">   
+          <div className="client-field">   
+            <label>Bairro </label>         
+            <input
+              placeholder="Bairro"
+              value={checkoutData.neighboor}
+              onChange={e =>
+                setCheckoutData({ ...checkoutData, neighboor: e.target.value })
+              }
+            />
+
+          </div>  
+
+          <div className="client-field">   
+            <label>Complemento</label>
+            <input
+              placeholder="Complemento (opcional)"
+              value={checkoutData.complement}
+              onChange={e =>
+                setCheckoutData({ ...checkoutData, complement: e.target.value })
+              }
+            />
+          </div>  
+          </div>  
+           <div className="client-field">   
+            <label>CPF </label>
+            <input
+            placeholder="CPF"
+            value={checkoutData.cpf}
+            onChange={e =>
+              setCheckoutData({ ...checkoutData, cpf: e.target.value })
+                }
+             />
+         </div>  
+        </div>
+
+
+        <section className="form-buttons">
+          <button onClick={() => addToCart()}>
+           Comprar
+          </button>
+ 
+          <button onClick={() => setModalOpen(false)}>
+             Fechar
+          </button>
+        
+        </section>
+       
+        
+      </Modal>
       <div style={contentStyle}>
+      
         <>
           {/* Shop Details Section Begin */}
           <section className="shop-details"
@@ -680,7 +838,7 @@ export default function ShopDetails() {
                           type="button"
                           className="primary-btn"
                           style={{ borderRadius: '10px' }}
-                          onClick={addToCart}
+                          onClick={() => setModalOpen(true)}
                         >
                           Comprar
                         </button>
@@ -823,6 +981,7 @@ export default function ShopDetails() {
           {/* Search End */}
         </>
       </div>
+    
     </div>
   );
 }
