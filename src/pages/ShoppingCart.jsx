@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
+import Modal from "../componentes/Modal.jsx"
 import '../assets/Css/bootstrap.min.css';
 import '../assets/Css/font-awesome.min.css';
+import Select from "react-select";
 import '../assets/Css/elegant-icons.css';
 import '../assets/Css/magnific-popup.css';
 import '../assets/Css/nice-select.css';
@@ -9,7 +11,36 @@ import '../assets/Css/slicknav.min.css';
 import '../assets/Css/style.css';
 import { getAuthData } from '../utils/dadosuser'
 export default function ShoppingCart() {
+  
+  const [modalOpen, setModalOpen] = useState(false)
+  const [valueFreight, setValueFreight] = useState(0)
+  const [selectedProduct, setSelectProduct] = useState({id:"", name:"", productIndex:-1 , selectedIndex:-1 , totalIndex:0 })
+  const [productToCheckout, setProductToCheckout] = useState({gravationFemale:"", gravationMascle:"", sizeMascle:0, sizeFemale:0, sizeUniqueRing:0})
 
+  const [isSoloRing, setIsSoloRing] = useState(true)
+  const [isDualRing, setIsDualRing] = useState(false)
+ 
+  const customStyles = {
+    control: (provided, state) => ({
+      ...provided,
+      minHeight: '50px',
+      borderColor: state.isFocused ? '#d4a574' : '#e1e1e1',
+      boxShadow: state.isFocused ? '0 0 0 1px #d4a574' : 'none',
+      '&:hover': {
+        borderColor: '#d4a574'
+      }
+    }),
+    option: (provided, state) => ({
+      ...provided,
+      backgroundColor: state.isSelected ? '#d4a574' : state.isFocused ? '#f5f5f5' : 'white',
+      color: state.isSelected ? 'white' : '#111',
+      cursor: 'pointer',
+      '&:hover': {
+        backgroundColor: state.isSelected ? '#d4a574' : '#f5f5f5'
+      }
+    })
+  };
+ 
   const inputStyle = {
     width: "100%",
     height: "45px",
@@ -62,7 +93,10 @@ export default function ShoppingCart() {
     city: "",
     state: "",
     cpf: "",
-    sizes: "U"
+    sizes: [], 
+    gravations: [],
+    products_id:[]
+
   });
 
 
@@ -178,7 +212,6 @@ export default function ShoppingCart() {
     })
     .filter(Boolean);
 
-  console.log("🛒 CART PRODUCTS FINAL:", mergedProducts);
   setCartProducts(mergedProducts);
 }, [products, cart]);
 
@@ -341,6 +374,78 @@ const sizes = cartProducts.map(() => String(checkoutData.sizes || "U"));
   }
 };
 
+useEffect(() => { console.log(checkoutData)}, [checkoutData])
+
+
+function FinalizeCheckout(){
+ 
+  const index = selectedProduct["selectedIndex"] + 1
+  const totalIndexCarts = cartProducts.length
+
+  if(cartProducts[index]?.["name"]?.includes("Par") || cartProducts[index]?.["name"]?.includes("par") ){
+   setIsSoloRing(false) 
+   setIsDualRing(true)
+  } 
+ if(cartProducts[index]?.["name"]?.includes("+") ){
+   setIsSoloRing(true) 
+   setIsDualRing(true)
+  } 
+  if(index > 0){
+    const products_id_list = checkoutData.products_id
+    const gravations_list = checkoutData.gravations
+    const sizes_list = checkoutData.sizes
+    
+    gravations_list.push(`grav_m:${productToCheckout.gravationMascle}|grav_f:${productToCheckout.gravationFemale}`)
+    sizes_list.push(`masc:${productToCheckout.sizeMascle}|fem:${productToCheckout.sizeFemale}`)
+    products_id_list.push(selectedProduct["id"])  
+
+    setCheckoutData((prev) => ({...prev, products_id:products_id_list }))   
+
+  }
+  if(index == totalIndexCarts){
+    setModalOpen(false)
+    setShowCheckout(true)
+    return
+  }
+
+ 
+  setSelectProduct(prev => ({...prev, totalIndex:totalIndexCarts, selectedIndex:index,
+    id:cartProducts[index]["id"], name:cartProducts[index]["name"] }) )
+
+  setModalOpen(true)
+  }
+
+
+
+  // Opções de tamanhos (Aro 10 até 35)
+  const sizeOptions = [
+    { value: 10, label: '10' },
+    { value: 11, label: '11' },
+    { value: 12, label: '12' },
+    { value: 13, label: '13' },
+    { value: 14, label: '14' },
+    { value: 15, label: '15' },
+    { value: 16, label: '16' },
+    { value: 17, label: '17' },
+    { value: 18, label: '18' },
+    { value: 19, label: '19' },
+    { value: 20, label: '20' },
+    { value: 21, label: '21' },
+    { value: 22, label: '22' },
+    { value: 23, label: '23' },
+    { value: 24, label: '24' },
+   { value: 25, label: '25' },
+    { value: 26, label: '26' },
+    { value: 27, label: '27' },
+    { value: 28, label: '28' },
+    { value: 29, label: '29' },
+    { value: 30, label: '30' },
+    { value: 31, label: '31' },
+    { value: 32, label: '32' },
+    { value: 33, label: '33' },
+    { value: 34, label: '34' },
+    { value: 35, label: '35' }
+  ];
 
 
 
@@ -619,7 +724,8 @@ const sizes = cartProducts.map(() => String(checkoutData.sizes || "U"));
                         fontWeight: "600"
                       }}
                       disabled={cartProducts.length === 0}
-                      onClick={() => setShowCheckout(true)}
+                      //onClick={() => setShowCheckout(true)}
+                      onClick={() => FinalizeCheckout()}
 
                     >
                       Finalizar compra
@@ -652,8 +758,105 @@ const sizes = cartProducts.map(() => String(checkoutData.sizes || "U"));
         </>
 
       </div>
+      <Modal  className="Modal" isOpen={modalOpen} onClose={() => console.log()}>
+         
+          <h5 style={{ marginBottom: "15px" }}>
+           Selecione o que foi pedido abaixo 
+         </h5>
+  
+         <div className="container-modal-content">
+           <img src={`${url}/products/${selectedProduct["id"]}/image/1`} width="100" height="100"  />
+            <p>{selectedProduct["name"]} </p>
+         </div>
 
+    {isDualRing  ? (
+        <div className="modal-grid-form">
 
+          <div className="column-form">
+              
+            <div className="client-field">   
+              <label>Tamanho (aliança feminina) </label>
+              <Select
+              styles={customStyles}
+              options={sizeOptions}
+              value={productToCheckout.sizeFemale}
+              onChange={e =>
+                setProductToCheckout({ ...productToCheckout, sizeFemale: e.target.value })
+              }
+              />
+          </div>  
+              <div className="client-field">   
+                <label>Gravação (aliança feminina) </label>
+                <input
+                placeholder="CEP"
+                value={productToCheckout.gravationFemale}
+                onChange={e =>
+                  setProductToCheckout({ ...productToCheckout, gravationFemale: e.target.value })
+                   }
+                  />
+              </div>  
+          </div>
+      
+          <div className="column-form">
+              <div className="client-field">   
+              <label>Tamanho (aliança masculina) </label>
+              <Select
+
+              options={sizeOptions}
+              value={productToCheckout.sizeMascle}
+              onChange={e =>
+                setProductToCheckout({ ...productToCheckout, sizeMascle: e.target.value })
+              }
+              />
+               </div>  
+          
+              <div className="client-field">   
+                 <label>Gavação (aliança masculina) </label>
+                 <input
+                 placeholder="CEP"
+                 value={productToCheckout.gravationMascle}
+                 onChange={e =>
+                   setProductToCheckout({ ...productToCheckout, gravationMascle: e.target.value })
+                   }
+                  />
+              </div>  
+            
+            </div>
+
+          </div>
+    
+
+    ): null}
+    {isSoloRing  ? (
+
+      <div  className="modal-grid-form" >
+      <div className="client-field">   
+              <label>Tamanho (aliança solitaria) </label>
+              <Select
+               options={sizeOptions}
+              value={productToCheckout.sizeUniqueRing}
+              onChange={e =>
+                setProductToCheckout({ ...productToCheckout, sizeUniqueRing: e.target.value })
+              }
+              />
+          </div>
+      </div>
+
+    ): null}
+
+        <section className="form-buttons">
+          <button onClick={FinalizeCheckout}>
+            Avançar
+          </button>
+ 
+          <button onClick={() => setModalOpen(false)}>
+             Fechar
+          </button>
+        
+        </section>
+       
+        
+      </Modal>
 
       {/* 🔥 MODAL CHECKOUT */}
       {showCheckout && (
