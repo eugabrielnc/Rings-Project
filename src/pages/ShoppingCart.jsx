@@ -423,7 +423,11 @@ useEffect(() => { console.log(checkoutData)}, [checkoutData])
 
 
 async function FinalizeCheckout(){
+
+  setIsSoloRing(true)
+  setIsDualRing(false)
  
+
   const index = selectedProduct["selectedIndex"] + 1
   const totalIndexCarts = cartProducts.length
    
@@ -431,8 +435,6 @@ async function FinalizeCheckout(){
   const data = await res.json()
   const stone = data[0]?.stone
   setIsStone(stone)
-  
-
 
   if(cartProducts[index]?.["name"]?.includes("Par") || cartProducts[index]?.["name"]?.includes("par") ){
    setIsSoloRing(false) 
@@ -453,10 +455,12 @@ async function FinalizeCheckout(){
     products_id_list.push(selectedProduct["id"])  
     stones_list.push(selectedStone)
 
-
     setCheckoutData((prev) => ({...prev, products_id:products_id_list, stones:stones_list,
       sizes:sizes_list, gravations:gravations_list }))   
 
+  setSelectedStone("")
+  setSelectProduct({id:"", name:"", productIndex:-1 , selectedIndex:-1 , totalIndex:0 })
+ setProductToCheckout({gravationFemale:"", gravationMascle:"", sizeMascle:0, sizeFemale:0, sizeUniqueRing:0})
   }
   if(index == totalIndexCarts){
     setModalOpen(false)
@@ -467,8 +471,8 @@ async function FinalizeCheckout(){
  
   setSelectProduct(prev => ({...prev, totalIndex:totalIndexCarts, selectedIndex:index,
     id:cartProducts[index]["id"], name:cartProducts[index]["name"] }) )
-
   setModalOpen(true)
+
   }
 
 
@@ -503,8 +507,6 @@ async function FinalizeCheckout(){
     { value: 35, label: '35' }
   ];
 
-
-useEffect(() => { console.log(productToCheckout) }, [productToCheckout])
 
 
 
@@ -1146,7 +1148,7 @@ useEffect(() => { console.log(productToCheckout) }, [productToCheckout])
            Comprar
           </button>
  
-          <button onClick={() => setModalOpen(false)}>
+          <button onClick={() => setShowCheckout(false)}>
              Fechar
           </button>
         
