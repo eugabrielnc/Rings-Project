@@ -11,7 +11,7 @@ import 'swiper/css/navigation';
 
 export default function ShopDetails() {
 
-  const [valueFreight, setValueFreight] = useState(100)
+  const [valueFreight, setValueFreight] = useState(0)
 
   const pageStyle = {
     minHeight: "100vh",
@@ -284,6 +284,7 @@ export default function ShopDetails() {
         return;
       }
 
+      console.log(product.id)
       const body = {
         products_id: [product.id],
         amounts: [selectedAmount],

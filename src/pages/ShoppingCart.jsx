@@ -13,10 +13,12 @@ import { getAuthData } from '../utils/dadosuser'
 export default function ShoppingCart() {
   
   const [modalOpen, setModalOpen] = useState(false)
-  const [valueFreight, setValueFreight] = useState(0)
+  const [valueFreight, setValueFreight] = useState(100)
   const [selectedProduct, setSelectProduct] = useState({id:"", name:"", productIndex:-1 , selectedIndex:-1 , totalIndex:0 })
   const [productToCheckout, setProductToCheckout] = useState({gravationFemale:"", gravationMascle:"", sizeMascle:0, sizeFemale:0, sizeUniqueRing:0})
 
+  const [selectedStone,setSelectedStone] = useState("")
+  const [isStone, setIsStone] = useState(0)
   const [isSoloRing, setIsSoloRing] = useState(true)
   const [isDualRing, setIsDualRing] = useState(false)
  
@@ -95,7 +97,9 @@ export default function ShoppingCart() {
     cpf: "",
     sizes: [], 
     gravations: [],
-    products_id:[]
+    products_id:[],
+    stones:[]
+
 
   });
 
@@ -146,6 +150,39 @@ export default function ShoppingCart() {
       })
       .catch((err) => console.error("Erro produtos:", err));
   }, [url]);
+
+  useEffect(() => {
+
+    //console.log((checkoutData.cep)length == 8)
+
+    if((checkoutData?.cep || "").length == 8){
+
+      fetch(`https://viacep.com.br/ws/${checkoutData.cep}/json/`)
+      .then(response => response.json())
+      .then(data => {setCheckoutData(prev => (
+        {...prev,
+          street: data["logradouro"],
+          city: data["localidade"],
+          state:data["estado"]
+          
+        }))});
+
+      fetch(`${url}/freight/calculate`, {method:'POST',   headers: {
+    "Content-Type": "application/json"
+  },body: JSON.stringify({state:checkoutData["state"], city:checkoutData["city"]}) })
+      .then(res => res.json())
+      .then(data => setValueFreight(data))
+      .catch(error => console.error(error)) 
+      console.log("CHEGOU")
+
+
+    }
+
+
+
+  }, [checkoutData?.cep])
+
+
 
   // 🔹 BUSCAR CARRINHO
   useEffect(() => {
@@ -313,8 +350,7 @@ export default function ShoppingCart() {
     !checkoutData.state ||
     !checkoutData.city ||
     !checkoutData.street ||
-    !checkoutData.neighboor ||
-    !cep
+    !checkoutData.neighboor 
   ) {
     alert("Preencha todos os dados obrigatórios");
     return;
@@ -327,7 +363,7 @@ export default function ShoppingCart() {
 
   // 🔥 exatamente como a API espera
   const products_id = cartProducts.map(p => String(p.id));
-const amounts = cartProducts.map(p => String(p.quantity));
+const amounts = cartProducts.map(p => p.quantity);
 
 // 🔥 sizes PRECISA ser array
 const sizes = cartProducts.map(() => String(checkoutData.sizes || "U"));
@@ -335,21 +371,27 @@ const sizes = cartProducts.map(() => String(checkoutData.sizes || "U"));
   const body = {
   products_id,
   amounts,
-  sizes, // agora é LISTA ✅
+  sizes: checkoutData.sizes, // agora é LISTA ✅
   user_id: String(userId),
   user_cep: String(cep),
-  status: "finished",
   state: checkoutData.state,
   city: checkoutData.city,
   neighboor: checkoutData.neighboor,
   street: checkoutData.street,
-  complement: checkoutData.complement || ""
+  complement: checkoutData.complement || "",
+  gravations: checkoutData.gravations,
+  cpf: checkoutData.cpf,
+  stone: checkoutData.stones,
+  number: checkoutData.number
+
+
+    
 };
 
   console.log("📦 BODY ENVIADO:", body);
 
   try {
-    const res = await fetch(`${url}/sales/carts`, {
+    const res = await fetch(`${url}/sales`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -365,8 +407,11 @@ const sizes = cartProducts.map(() => String(checkoutData.sizes || "U"));
       return;
     }
 
-    alert("✅ Pedido finalizado com sucesso!");
+    alert("✅ Pedido finalizado com sucesso! Você será redirecionado para a página de pagamento");
     setShowCheckout(false);
+      
+    console.log(data)
+    window.location.href = data;
 
   } catch (err) {
     console.error("Erro checkout:", err);
@@ -377,10 +422,17 @@ const sizes = cartProducts.map(() => String(checkoutData.sizes || "U"));
 useEffect(() => { console.log(checkoutData)}, [checkoutData])
 
 
-function FinalizeCheckout(){
+async function FinalizeCheckout(){
  
   const index = selectedProduct["selectedIndex"] + 1
   const totalIndexCarts = cartProducts.length
+   
+  const res = await fetch(`${url}/products/${cartProducts[index]?.["id"]}`)
+  const data = await res.json()
+  const stone = data[0]?.stone
+  setIsStone(stone)
+  
+
 
   if(cartProducts[index]?.["name"]?.includes("Par") || cartProducts[index]?.["name"]?.includes("par") ){
    setIsSoloRing(false) 
@@ -394,12 +446,16 @@ function FinalizeCheckout(){
     const products_id_list = checkoutData.products_id
     const gravations_list = checkoutData.gravations
     const sizes_list = checkoutData.sizes
-    
-    gravations_list.push(`grav_m:${productToCheckout.gravationMascle}|grav_f:${productToCheckout.gravationFemale}`)
-    sizes_list.push(`masc:${productToCheckout.sizeMascle}|fem:${productToCheckout.sizeFemale}`)
-    products_id_list.push(selectedProduct["id"])  
+    const stones_list = checkoutData.stones
 
-    setCheckoutData((prev) => ({...prev, products_id:products_id_list }))   
+    gravations_list.push(`grav_m:${productToCheckout.gravationMascle}|grav_f:${productToCheckout.gravationFemale}`)
+    sizes_list.push(`masc:${productToCheckout.sizeMascle}|fem:${productToCheckout.sizeFemale}|Unique:${productToCheckout.sizeUniqueRing}`)
+    products_id_list.push(selectedProduct["id"])  
+    stones_list.push(selectedStone)
+
+
+    setCheckoutData((prev) => ({...prev, products_id:products_id_list, stones:stones_list,
+      sizes:sizes_list, gravations:gravations_list }))   
 
   }
   if(index == totalIndexCarts){
@@ -448,6 +504,7 @@ function FinalizeCheckout(){
   ];
 
 
+useEffect(() => { console.log(productToCheckout) }, [productToCheckout])
 
 
 
@@ -768,7 +825,108 @@ function FinalizeCheckout(){
            <img src={`${url}/products/${selectedProduct["id"]}/image/1`} width="100" height="100"  />
             <p>{selectedProduct["name"]} </p>
          </div>
+        {isStone == 1 && (
+        <div>
 
+                <div style={{ marginTop: '30px' }}>
+                            <h4 style={{
+                              fontSize: '16px',
+                              fontWeight: '600',
+                              color: '#333',
+                              marginBottom: '15px',
+                              alignItems: 'center'
+                            }}>
+                              Escolha a cor de pedras
+                            </h4>
+                            <div className="pedras">
+                              <div
+                                className={`pedra-item ${selectedStone === 'CRISTAL' ? 'selected' : ''}`}
+                                onClick={() => setSelectedStone('CRISTAL')}
+                              >
+                                <div
+                                  className="pedra-option"
+                                  style={{ backgroundImage: 'url("/img/pedras/cristal.png")' }}
+                                ></div>
+
+                                <span className="pedras-texto">Cristal</span>
+                              </div>
+
+                              <div
+                                className={`pedra-item ${selectedStone === 'CITRINO' ? 'selected' : ''}`}
+                                onClick={() => setSelectedStone('CITRINO')}
+                              >
+                                <div
+                                  className="pedra-option"
+                                  style={{ backgroundImage: 'url("/img/pedras/citrino.png")' }}
+                                ></div>
+                                <span className="pedras-texto">Citrino</span>
+                              </div>
+
+                              <div
+                                className={`pedra-item ${selectedStone === 'AQUAMARINE' ? 'selected' : ''}`}
+                                onClick={() => setSelectedStone('AQUAMARINE')}
+                              >
+                                <div
+                                  className="pedra-option"
+                                  style={{ backgroundImage: 'url("/img/pedras/aquamarine.png")' }}
+                                ></div>
+                                <span className="pedras-texto">Aquamarine</span>
+                              </div>
+                              <div
+                                className={`pedra-item ${selectedStone === 'AMETISTA' ? 'selected' : ''}`}
+                                onClick={() => setSelectedStone('AMETISTA')}
+                              >
+                                <div
+                                  className="pedra-option"
+                                  style={{ backgroundImage: 'url("/img/pedras/ametista.png")' }}
+                                ></div>
+                                <span className="pedras-texto">Ametista</span>
+                              </div>
+                              <div
+                                className={`pedra-item ${selectedStone === 'PRETO' ? 'selected' : ''}`}
+                                onClick={() => setSelectedStone('PRETO')}
+                              >
+                                <div
+                                  className="pedra-option"
+                                  style={{ backgroundImage: 'url("/img/pedras/preto.png")' }}
+                                ></div>
+                                <span className="pedras-texto">Preto</span>
+                              </div>
+                              <div
+                                className={`pedra-item ${selectedStone === 'ROSA' ? 'selected' : ''}`}
+                                onClick={() => setSelectedStone('ROSA')}
+                              >
+                                <div
+                                  className="pedra-option"
+                                  style={{ backgroundImage: 'url("/img/pedras/rosa.png")' }}
+                                ></div>
+                                <span className="pedras-texto">Rosa</span>
+                              </div>
+                              <div
+                                className={`pedra-item ${selectedStone === 'VERDE' ? 'selected' : ''}`}
+                                onClick={() => setSelectedStone('VERDE')}
+                              >
+                                <div
+                                  className="pedra-option"
+                                  style={{ backgroundImage: 'url("/img/pedras/verde.png")' }}
+                                ></div>
+                                <span className="pedras-texto">Verde</span>
+                              </div>
+                              <div
+                                className={`pedra-item ${selectedStone === 'VERMELHO' ? 'selected' : ''}`}
+                                onClick={() => setSelectedStone('VERMELHO')}
+                              >
+                                <div
+                                  className="pedra-option"
+                                  style={{ backgroundImage: 'url("/img/pedras/vermelho.png")' }}
+                                ></div>
+                                <span className="pedras-texto">Vermelho</span>
+                              </div>
+                            </div>
+                          </div>
+ 
+              </div>
+        )}
     {isDualRing  ? (
         <div className="modal-grid-form">
 
@@ -779,9 +937,12 @@ function FinalizeCheckout(){
               <Select
               styles={customStyles}
               options={sizeOptions}
-              value={productToCheckout.sizeFemale}
-              onChange={e =>
-                setProductToCheckout({ ...productToCheckout, sizeFemale: e.target.value })
+              value={sizeOptions.find(
+                opt => opt.value === checkoutData.sizeFemale
+                )}
+
+              onChange={(options) =>
+                setProductToCheckout({ ...productToCheckout, sizeFemale: options.value})
               }
               />
           </div>  
@@ -789,8 +950,8 @@ function FinalizeCheckout(){
                 <label>Gravação (aliança feminina) </label>
                 <input
                 placeholder="CEP"
-                value={productToCheckout.gravationFemale}
-                onChange={e =>
+              value={productToCheckout.gravationFemale }                
+              onChange={(e) =>
                   setProductToCheckout({ ...productToCheckout, gravationFemale: e.target.value })
                    }
                   />
@@ -801,11 +962,13 @@ function FinalizeCheckout(){
               <div className="client-field">   
               <label>Tamanho (aliança masculina) </label>
               <Select
-
+              styles={customStyles}
               options={sizeOptions}
-              value={productToCheckout.sizeMascle}
-              onChange={e =>
-                setProductToCheckout({ ...productToCheckout, sizeMascle: e.target.value })
+              value={sizeOptions.find(
+                opt => opt.value === checkoutData.sizeMascle
+                )}
+              onChange={options =>
+                setProductToCheckout({ ...productToCheckout, sizeMascle: options.value })
               }
               />
                </div>  
@@ -813,7 +976,7 @@ function FinalizeCheckout(){
               <div className="client-field">   
                  <label>Gavação (aliança masculina) </label>
                  <input
-                 placeholder="CEP"
+                 placeholder="Escolha a gravação"
                  value={productToCheckout.gravationMascle}
                  onChange={e =>
                    setProductToCheckout({ ...productToCheckout, gravationMascle: e.target.value })
@@ -833,11 +996,16 @@ function FinalizeCheckout(){
       <div className="client-field">   
               <label>Tamanho (aliança solitaria) </label>
               <Select
+               styles={customStyles}
+               placeholder="Escolha o tamanho..."
                options={sizeOptions}
-              value={productToCheckout.sizeUniqueRing}
-              onChange={e =>
-                setProductToCheckout({ ...productToCheckout, sizeUniqueRing: e.target.value })
+               value={sizeOptions.find(
+                opt => opt.value === checkoutData.sizeUniqueRing
+                )}
+              onChange={(option) =>
+                setProductToCheckout({ ...productToCheckout, sizeUniqueRing: option.value })
               }
+              isSearchable={false}
               />
           </div>
       </div>
@@ -858,129 +1026,135 @@ function FinalizeCheckout(){
         
       </Modal>
 
-      {/* 🔥 MODAL CHECKOUT */}
-      {showCheckout && (
-        <div
-          style={{
-            position: "fixed",
-            inset: 0,
-            background: "rgba(0,0,0,0.5)",
-            zIndex: 9999,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center"
-          }}
-        >
-          <div
-            style={{
-              width: "420px",
-              background: "#fff",
-              borderRadius: "8px",
-              padding: "20px"
-            }}
-          >
-            <h5 style={{ marginBottom: "15px" }}>
-              📦 Dados de entrega
-            </h5>
+           <Modal  className="Modal" isOpen={showCheckout} onClose={() => console.log()}>
+         
+          <h5 style={{ marginBottom: "15px" }}>
+           📦 Dados de entrega
+         </h5>
+                  
+        
 
-            <input
-              placeholder="CPF"
-              value={checkoutData.cpf}
+
+        <div className="modal-grid-form">
+          <div className="column-form">
+              <div className="client-field">   
+              <label>Cep </label>
+              <input
+              placeholder="CEP"
+              value={checkoutData.cep}
               onChange={e =>
-                setCheckoutData({ ...checkoutData, cpf: e.target.value })
+                setCheckoutData({ ...checkoutData, cep: e.target.value })
               }
-              style={inputStyle}
-            />
+              />
+          </div>  
 
+           <div className="client-field">   
+            <label>Valor do frete</label>
+            <label>{valueFreight == 0 ? "Grátis" : valueFreight   }</label>
+            
+           </div>        
+          </div>
+      
+        <div className="column-form">
+          <div className="client-field">   
+            <label>Estado </label>
             <input
               placeholder="Estado"
               value={checkoutData.state}
               onChange={e =>
                 setCheckoutData({ ...checkoutData, state: e.target.value })
               }
-              style={inputStyle}
             />
-
+          </div>  
+          <div className="client-field">   
+            <label>Cidade </label>
             <input
               placeholder="Cidade"
               value={checkoutData.city}
               onChange={e =>
                 setCheckoutData({ ...checkoutData, city: e.target.value })
               }
-              style={inputStyle}
             />
-
+         </div>  
+          </div>  
+          
+          
+          <div className="column-form">   
+          <div className="client-field">   
+            <label>Rua </label>
             <input
               placeholder="Rua"
               value={checkoutData.street}
               onChange={e =>
                 setCheckoutData({ ...checkoutData, street: e.target.value })
               }
-              style={inputStyle}
             />
-
-            <input
-              placeholder="Número"
-              value={checkoutData.number}
-              onChange={e =>
+          </div>  
+ 
+          <div className="client-field">   
+              <label>Número da casa </label>         
+                <input
+                placeholder="Número"
+                value={checkoutData.number}
+                onChange={e =>
                 setCheckoutData({ ...checkoutData, number: e.target.value })
-              }
-              style={inputStyle}
-            />
+                 }
+               />
+            </div>  
+          </div>  
 
+          
+          <div className="column-form">   
+          <div className="client-field">   
+            <label>Bairro </label>         
             <input
               placeholder="Bairro"
               value={checkoutData.neighboor}
               onChange={e =>
                 setCheckoutData({ ...checkoutData, neighboor: e.target.value })
               }
-              style={inputStyle}
             />
 
+          </div>  
+
+          <div className="client-field">   
+            <label>Complemento</label>
             <input
               placeholder="Complemento (opcional)"
               value={checkoutData.complement}
               onChange={e =>
                 setCheckoutData({ ...checkoutData, complement: e.target.value })
               }
-              style={inputStyle}
             />
-
-            <select
-              value={checkoutData.sizes}
-              onChange={e =>
-                setCheckoutData({ ...checkoutData, sizes: e.target.value })
-              }
-              style={inputStyle}
-            >
-              <option value="">Selecione o tamanho</option>
-
-              {Array.from({ length: 26 }, (_, i) => {
-                const size = i + 10;
-                return (
-                  <option key={size} value={String(size)}>
-                    {size}
-                  </option>
-                );
-              })}
-            </select>
-
-            <div style={{ display: "flex", gap: "10px", marginTop: "15px" }}>
-              <button onClick={() => setShowCheckout(false)}>
-                Cancelar
-              </button>
-
-              <button onClick={handleCheckout}>
-                Confirmar pedido
-              </button>
-            </div>
-
-          </div>
+          </div>  
+          </div>  
+           <div className="client-field">   
+            <label>CPF </label>
+            <input
+            placeholder="CPF"
+            value={checkoutData.cpf}
+            onChange={e =>
+              setCheckoutData({ ...checkoutData, cpf: e.target.value })
+                }
+             />
+         </div>  
         </div>
-      )}
 
+
+        <section className="form-buttons">
+          <button onClick={() => handleCheckout()}>
+           Comprar
+          </button>
+ 
+          <button onClick={() => setModalOpen(false)}>
+             Fechar
+          </button>
+        
+        </section>
+       
+        
+      </Modal>
     </div>
-
 
   );
 }
