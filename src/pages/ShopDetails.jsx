@@ -8,10 +8,12 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
-
 export default function ShopDetails() {
-
+  const [typeProduct, setTypeProduct] = useState("")
   const [valueFreight, setValueFreight] = useState(0)
+  const [isUniqueRing, setIsUniqueRing] = useState(false)
+  const [isDualRing, setIsDualRing] = useState(true)
+  const [sizeUniqueRing, setSizeUniqueRing] = useState(false)
 
   const pageStyle = {
     minHeight: "100vh",
@@ -89,6 +91,25 @@ export default function ShopDetails() {
   }
 
 
+  useEffect(() => { 
+ //Formatura, brincos, par de alianças, aliança solitaria
+    
+    setTypeProduct(product.type || "")
+    
+    if((product?.["name"]  || "").includes("Par")){
+      setIsDualRing(true)
+    }
+    else if(product?.type == "Formatura" ){
+      setIsDualRing(false)
+      setIsUniqueRing(true)
+    }
+    if((product?.["name"] || "").includes("+") ){
+      setIsDualRing(true)
+      setIsUniqueRing(true)
+    }
+
+
+  }, [product])
 
 
   const handleAddSimilarToCart = async (produto) => {
@@ -193,12 +214,8 @@ export default function ShopDetails() {
       .then(res => res.json())
       .then(data => setValueFreight(data))
       .catch(error => console.error(error)) 
-      console.log("CHEGOU")
-
 
     }
-
-
 
   }, [checkoutData?.cep])
 
@@ -289,10 +306,10 @@ export default function ShopDetails() {
         products_id: [product.id],
         amounts: [selectedAmount],
         sizes: [
-          `masc:${selectedMascleSize.value}|fem:${selectedFemaleSize.value}`
+          `${selectedMascleSize.value}|${selectedFemaleSize.value}|${sizeUniqueRing}`
         ],
-        gravations:[`grav_m:${gravacaoMasculino}|grav_f:${gravacaoFeminino}`],
-        stone:`pedra:${selectedStone}`,
+        gravations:[`${gravacaoMasculino}|${gravacaoFeminino}`],
+        stone: [selectedStone],
         user_id: authData?.user?.id || authData?.id,
         user_cep: checkoutData?.cep || "",
         cpf: checkoutData?.state || "",
@@ -636,8 +653,13 @@ export default function ShopDetails() {
                         R$ {product.price ? Number(product.price).toFixed(2) : '0.00'}
                       </h3>
                       <div className="product__details__option">
+
                         <div className="products_details">
+                { isDualRing == true && (
+
+                    <>
                           <div className="product__details__option__size">
+                      
                             <span style={{ display: 'block', marginBottom: '10px', fontWeight: '600' }}>
                               Selecione o Tamanho  (Masculino):
                             </span>
@@ -649,12 +671,10 @@ export default function ShopDetails() {
                               placeholder="Escolha o tamanho..."
                               isSearchable={false}
                             />
-                            {selectedMascleSize && (
                               <p style={{ marginTop: '10px', fontSize: '13px', color: '#666' }}>
                                 <i className="fa fa-info-circle" style={{ marginRight: '5px' }}></i>
                                 Não sabe seu tamanho? <a href="/medida" style={{ color: '#d4a574', fontWeight: '600' }}>Meça aqui!</a>
                               </p>
-                            )}
 
                             {/* Campo de Gravação Masculino */}
                             <div style={{ marginTop: '20px' }}>
@@ -727,8 +747,35 @@ export default function ShopDetails() {
                                 Máximo 15 caracteres ({gravacaoFeminino.length}/15)
                               </p>
                             </div>
-                          </div>
+                         </div>
+                  </>
+                  )}
+            
+                  {isUniqueRing  && ( 
+
+                        <div className="product__details__option__size">
+                      
+                            <span style={{ display: 'block', marginBottom: '10px', fontWeight: '600' }}>
+                              Selecione o Tamanho  (Solitaria):
+                            </span>
+                            <Select
+                              options={sizeOptions}
+                              value={sizeUniqueRing}
+                              onChange={setSizeUniqueRing}
+                              styles={customStyles}
+                              placeholder="Escolha o tamanho..."
+                              isSearchable={false}
+                            />
+                              <p style={{ marginTop: '10px', fontSize: '13px', color: '#666' }}>
+                                <i className="fa fa-info-circle" style={{ marginRight: '5px' }}></i>
+                                Não sabe seu tamanho? <a href="/medida" style={{ color: '#d4a574', fontWeight: '600' }}>Meça aqui!</a>
+                              </p>
+                         </div>
+
+                  )}
+
                         </div>
+
                         {product.stone === 1 && (
 
                           <div style={{ marginTop: '30px' }}>
@@ -846,6 +893,7 @@ export default function ShopDetails() {
 
                       </div>
                     </div>
+
                   </div>
                 </div>
               </div>

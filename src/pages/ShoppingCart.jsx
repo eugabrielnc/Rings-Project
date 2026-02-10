@@ -450,8 +450,8 @@ async function FinalizeCheckout(){
     const sizes_list = checkoutData.sizes
     const stones_list = checkoutData.stones
 
-    gravations_list.push(`grav_m:${productToCheckout.gravationMascle}|grav_f:${productToCheckout.gravationFemale}`)
-    sizes_list.push(`masc:${productToCheckout.sizeMascle}|fem:${productToCheckout.sizeFemale}|Unique:${productToCheckout.sizeUniqueRing}`)
+    gravations_list.push(`${productToCheckout.gravationMascle}|:${productToCheckout.gravationFemale}`)
+    sizes_list.push(`${productToCheckout.sizeMascle}|${productToCheckout.sizeFemale}|${productToCheckout.sizeUniqueRing}`)
     products_id_list.push(selectedProduct["id"])  
     stones_list.push(selectedStone)
 
