@@ -98,8 +98,8 @@ export default function ShoppingCart() {
     sizes: [], 
     gravations: [],
     products_id:[],
-    stones:[]
-
+    stones:[],
+    cep:""
 
   });
 
@@ -112,7 +112,7 @@ export default function ShoppingCart() {
   const handleDeleteFromCart = async (cartId) => {
     try {
       const response = await fetch(
-        `${url}/sales/carts?cart_id=${cartId}`,
+        `${url}/sales/carts?user_id=${cartId}`,
         {
           method: "DELETE",
           headers: {
@@ -163,8 +163,8 @@ export default function ShoppingCart() {
         {...prev,
           street: data["logradouro"],
           city: data["localidade"],
-          state:data["estado"]
-          
+          state:data["estado"],
+          neighboor: data["bairro"]
         }))});
 
       fetch(`${url}/freight/calculate`, {method:'POST',   headers: {
@@ -373,7 +373,7 @@ const sizes = cartProducts.map(() => String(checkoutData.sizes || "U"));
   amounts,
   sizes: checkoutData.sizes, // agora é LISTA ✅
   user_id: String(userId),
-  user_cep: String(cep),
+  user_cep: checkoutData.cep,
   state: checkoutData.state,
   city: checkoutData.city,
   neighboor: checkoutData.neighboor,
@@ -383,7 +383,6 @@ const sizes = cartProducts.map(() => String(checkoutData.sizes || "U"));
   cpf: checkoutData.cpf,
   stone: checkoutData.stones,
   number: checkoutData.number
-
 
     
 };
@@ -434,7 +433,13 @@ async function FinalizeCheckout(){
   const res = await fetch(`${url}/products/${cartProducts[index]?.["id"]}`)
   const data = await res.json()
   const stone = data[0]?.stone
+  const typeProduct = data[0]?.type
+  console.log(typeProduct, "AQUI")
   setIsStone(stone)
+
+  if(typeProduct == "Brincos" || typeProduct == "Pingentes"){
+    setIsSoloRing(false)
+  }
 
   if(cartProducts[index]?.["name"]?.includes("Par") || cartProducts[index]?.["name"]?.includes("par") ){
    setIsSoloRing(false) 
@@ -450,7 +455,7 @@ async function FinalizeCheckout(){
     const sizes_list = checkoutData.sizes
     const stones_list = checkoutData.stones
 
-    gravations_list.push(`${productToCheckout.gravationMascle}|:${productToCheckout.gravationFemale}`)
+    gravations_list.push(`${productToCheckout.gravationMascle}|${productToCheckout.gravationFemale}`)
     sizes_list.push(`${productToCheckout.sizeMascle}|${productToCheckout.sizeFemale}|${productToCheckout.sizeUniqueRing}`)
     products_id_list.push(selectedProduct["id"])  
     stones_list.push(selectedStone)
@@ -608,7 +613,7 @@ async function FinalizeCheckout(){
                               <i
                                 className="fa fa-close"
                                 style={{ cursor: "pointer" }}
-                                onClick={() => handleDeleteFromCart(product.cartId)}
+                                onClick={() => handleDeleteFromCart(product.id)}
                               />
                             </td>
                           </tr>
@@ -927,7 +932,7 @@ async function FinalizeCheckout(){
                             </div>
                           </div>
  
-              </div>
+        </div>
         )}
     {isDualRing  ? (
         <div className="modal-grid-form">
@@ -1048,26 +1053,22 @@ async function FinalizeCheckout(){
                 setCheckoutData({ ...checkoutData, cep: e.target.value })
               }
               />
-          </div>  
-
-           <div className="client-field">   
-            <label>Valor do frete</label>
-            <label>{valueFreight == 0 ? "Grátis" : valueFreight   }</label>
-            
-           </div>        
-          </div>
-      
-        <div className="column-form">
-          <div className="client-field">   
-            <label>Estado </label>
-            <input
+            <div className="client-field">   
+              <label>Estado </label>
+              <input 
               placeholder="Estado"
               value={checkoutData.state}
               onChange={e =>
-                setCheckoutData({ ...checkoutData, state: e.target.value })
-              }
-            />
+              setCheckoutData({ ...checkoutData, state: e.target.value })
+              }    
+              />     
+            </div>   
           </div>  
+
+                   
+          </div>
+      
+        <div className="column-form">
           <div className="client-field">   
             <label>Cidade </label>
             <input
@@ -1077,6 +1078,17 @@ async function FinalizeCheckout(){
                 setCheckoutData({ ...checkoutData, city: e.target.value })
               }
             />
+          <div className="client-field">   
+            <label>Bairro </label>         
+            <input
+              placeholder="Bairro"
+              value={checkoutData.neighboor}
+              onChange={e =>
+                setCheckoutData({ ...checkoutData, neighboor: e.target.value })
+              }
+            />
+
+          </div> 
          </div>  
           </div>  
           
@@ -1107,17 +1119,7 @@ async function FinalizeCheckout(){
 
           
           <div className="column-form">   
-          <div className="client-field">   
-            <label>Bairro </label>         
-            <input
-              placeholder="Bairro"
-              value={checkoutData.neighboor}
-              onChange={e =>
-                setCheckoutData({ ...checkoutData, neighboor: e.target.value })
-              }
-            />
-
-          </div>  
+           
 
           <div className="client-field">   
             <label>Complemento</label>
@@ -1128,18 +1130,19 @@ async function FinalizeCheckout(){
                 setCheckoutData({ ...checkoutData, complement: e.target.value })
               }
             />
+             <div className="client-field">   
+                <label>CPF </label>
+                <input
+                placeholder="CPF"
+                value={checkoutData.cpf}
+                onChange={e =>
+                   setCheckoutData({ ...checkoutData, cpf: e.target.value })
+                   }
+                />
+             </div> 
           </div>  
           </div>  
-           <div className="client-field">   
-            <label>CPF </label>
-            <input
-            placeholder="CPF"
-            value={checkoutData.cpf}
-            onChange={e =>
-              setCheckoutData({ ...checkoutData, cpf: e.target.value })
-                }
-             />
-         </div>  
+            
         </div>
 
 

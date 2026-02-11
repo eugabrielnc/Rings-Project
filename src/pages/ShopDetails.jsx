@@ -10,9 +10,9 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 export default function ShopDetails() {
   const [typeProduct, setTypeProduct] = useState("")
-  const [valueFreight, setValueFreight] = useState(0)
-  const [isUniqueRing, setIsUniqueRing] = useState(false)
-  const [isDualRing, setIsDualRing] = useState(true)
+  const [valueFreight, setValueFreight] = useState(0.01)
+  const [isUniqueRing, setIsUniqueRing] = useState(true)
+  const [isDualRing, setIsDualRing] = useState(false)
   const [sizeUniqueRing, setSizeUniqueRing] = useState(false)
 
   const pageStyle = {
@@ -48,8 +48,8 @@ export default function ShopDetails() {
     });
   }, []);
   const [product, setProduct] = useState({});
-  const [selectedMascleSize, setSelectedMascleSize] = useState(null);
-  const [selectedFemaleSize, setSelectedFemaleSize] = useState(null);
+  const [selectedMascleSize, setSelectedMascleSize] = useState(0);
+  const [selectedFemaleSize, setSelectedFemaleSize] = useState(0);
 
   const [selectedAmount, setSelectedAmount] = useState(1);
 
@@ -92,7 +92,6 @@ export default function ShopDetails() {
 
 
   useEffect(() => { 
- //Formatura, brincos, par de alianças, aliança solitaria
     
     setTypeProduct(product.type || "")
     
@@ -195,28 +194,34 @@ export default function ShopDetails() {
   useEffect(() => {
 
     //console.log((checkoutData.cep)length == 8)
-
     if((checkoutData?.cep || "").length == 8){
+      async function fetchDatas(){
 
-      fetch(`https://viacep.com.br/ws/${checkoutData.cep}/json/`)
-      .then(response => response.json())
-      .then(data => {setCheckoutData(prev => (
+      const res = await fetch(`https://viacep.com.br/ws/${checkoutData.cep}/json/`)
+      const data = await res.json()
+      console.log(data)
+       {setCheckoutData(prev => (
         {...prev,
           street: data["logradouro"],
           city: data["localidade"],
-          state:data["estado"]
-          
-        }))});
+          state:data["estado"],
+          neighboor:data["bairro"]          
+        }))};
 
-      fetch(`${url}/freight/calculate`, {method:'POST',   headers: {
-    "Content-Type": "application/json"
-  },body: JSON.stringify({state:checkoutData["state"], city:checkoutData["city"]}) })
-      .then(res => res.json())
-      .then(data => setValueFreight(data))
-      .catch(error => console.error(error)) 
+      const freightRes = await fetch(`${url}/freight/calculate`, {method:'POST',
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(
+          {state:data["estado"],
+            city:data["localidade"]
+          }) })
+      const freightData = await freightRes.json()
+        setValueFreight(freightData)
+      //.catch(error => console.error(error)) 
 
     }
-
+      fetchDatas()
+      }
+  
   }, [checkoutData?.cep])
 
 
@@ -254,7 +259,8 @@ export default function ShopDetails() {
       .then(([productData, allProducts]) => {
         console.log("Product Details:", productData);
         console.log("Todos os produtos:", allProducts);
-
+        
+        setTypeProduct(productData[0]["type"])
         setProduct(productData[0] || {});
         setProdutos(allProducts || []);
         setLoading(false);
@@ -291,7 +297,7 @@ export default function ShopDetails() {
       }
 
       // validações básicas
-      if (!selectedMascleSize || !selectedFemaleSize) {
+      if ((!selectedMascleSize || !selectedFemaleSize) && isDualRing) {
         alert("Selecione os tamanhos antes de continuar.");
         return;
       }
@@ -306,13 +312,13 @@ export default function ShopDetails() {
         products_id: [product.id],
         amounts: [selectedAmount],
         sizes: [
-          `${selectedMascleSize.value}|${selectedFemaleSize.value}|${sizeUniqueRing}`
+          `${selectedMascleSize?.value}|${selectedFemaleSize?.value}|${sizeUniqueRing?.value}`
         ],
         gravations:[`${gravacaoMasculino}|${gravacaoFeminino}`],
         stone: [selectedStone],
         user_id: authData?.user?.id || authData?.id,
         user_cep: checkoutData?.cep || "",
-        cpf: checkoutData?.state || "",
+        cpf: checkoutData?.cpf || "",
         state: checkoutData?.state || "",
         city: checkoutData?.city || "",
         neighboor:  checkoutData?.neighboor || "",
@@ -406,7 +412,13 @@ export default function ShopDetails() {
 
            <div className="client-field">   
             <label>Valor do frete</label>
-            <label>{valueFreight == 0 ? "Grátis" : valueFreight   }</label>
+            
+            {valueFreight !== 0.01 && 
+              
+              <p>{valueFreight == 0 ? "Grátis" : valueFreight} </p>
+
+            }
+          
             
            </div>        
           </div>
@@ -751,7 +763,7 @@ export default function ShopDetails() {
                   </>
                   )}
             
-                  {isUniqueRing  && ( 
+                  {isUniqueRing && (typeProduct == "Alianças" || typeProduct == "Anéis")  && ( 
 
                         <div className="product__details__option__size">
                       

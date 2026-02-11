@@ -239,25 +239,54 @@ useEffect(() => {
           <p>{orderInfos?.["products_amount"]?.[index]} </p>  
         </section>
 
-    <div className="container-secundary-content" >
-       <div className="client-field">
-         <label>Tamanhos</label>
-         <p>{orderInfos?.orderInfos?.["sizes"]?.[index]}</p>
-       </div>
+        <div className="container-secundary-content" >
+          
+          <div className="container-inside" >
+            <div className="client-field">
+              <h6>Tamanhos</h6>
+            </div>
+         
+            <div className="client-field">
+              <label>Masc</label>
+              <p>{(orderInfos?.orderInfos?.["sizes"]?.[index]).split("|")[0]}</p>
+            </div>
+
+            <div className="client-field">
+            <label>Fem</label>
+            <p>{(orderInfos?.orderInfos?.["sizes"]?.[index]).split("|")[1]}</p>
+            </div>
+            
+            <div className="client-field">
+              <label>Solo</label>
+              <p>{(orderInfos?.orderInfos?.["sizes"]?.[index]).split("|")[2]}</p>
+            </div>
+        </div>
   
       <div className="client-field">
-         <label>Gravações</label>
-         <p>{orderInfos?.orderInfos?.["gravations"]?.[index]}</p>
+        <div className="container-inside" >
+         <h6>Gravações</h6>
+
+           <label>Masc</label>
+           <p>{(orderInfos?.orderInfos?.["gravations"]?.[index]).split("|")[0]}</p>
+           <label>Femi</label>
+           <p>{(orderInfos?.orderInfos?.["gravations"]?.[index]).split("|")[1]}</p>
+
+         </div>
+
        </div>
    
-        <div className="client-field">
-         <label>Pedra</label>
-         <p>{orderInfos?.orderInfos?.["stone"]?.[index]}</p>
-       </div>
-      
-       <div className="client-field">
-         <label>Quantidade</label>
-         <p>{orderInfos?.orderInfos?.["products_amount"]?.[index]}</p>
+        <div className="container-inside" >
+          <div className="client-field">
+            <h6>Pedra</h6>
+            <p>{orderInfos?.orderInfos?.["stone"]?.[index]}</p>
+          </div>
+        </div>
+
+       <div className="container-inside" >
+         <div className="client-field">
+            <h6>Quantidade</h6>
+            <p>{orderInfos?.orderInfos?.["products_amount"]?.[index]}</p>
+         </div>
        </div>
     </div>
       </div>
@@ -312,6 +341,10 @@ useEffect(() => {
     </div>
 
      </div>
+
+     <button className="clear-filters" onClick={() => setOpen(false)} >
+      Fechar
+     </button>
 
   </Modal>
 
