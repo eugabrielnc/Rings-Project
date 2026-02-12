@@ -19,29 +19,38 @@ export default function MeusPedidos() {
   }, []);
 
   useEffect(() => {
-    if (!id) return;
+  if (!id) {
+    console.log("ID não encontrado no authData");
+    return;
+  }
 
-    async function fetchData() {
-      try {
-        const [salesRes, productsRes] = await Promise.all([
-          fetch(`${url}/sales/${id}`),
-          fetch(`${url}/products`)
-        ]);
+  async function fetchData() {
+    try {
+      
+      
 
-        const salesData = await salesRes.json();
-        const productsData = await productsRes.json();
+      const salesRes = await fetch(`${url}/sales/${id}`);
+      console.log("📡 Status resposta sales:", salesRes.status);
 
-        setSales(Array.isArray(salesData) ? salesData : [salesData]);
-        setProducts(productsData);
-      } catch (error) {
-        console.error("Erro ao buscar dados:", error);
-      } finally {
-        setLoading(false);
-      }
+      const salesData = await salesRes.json();
+      console.log("📦 Dados recebidos de /sales:", salesData);
+
+      const productsRes = await fetch(`${url}/products`);
+      
+
+      const productsData = await productsRes.json();
+      
+      setSales(Array.isArray(salesData) ? salesData : [salesData]);
+      setProducts(productsData);
+    } catch (error) {
+      console.error("❌ Erro ao buscar dados:", error);
+    } finally {
+      setLoading(false);
     }
+  }
 
-    fetchData();
-  }, [id, url]);
+  fetchData();
+}, [id, url]);
 
   function getStatusColor(status) {
     switch (status) {
@@ -70,15 +79,36 @@ export default function MeusPedidos() {
   }
 
   const salesWithProduct = sales
-    .filter((sale) => sale.status !== "cart")
-    .map((sale) => {
-      const product = products.find(
-        (product) => product.id === sale.product_id
-      );
-      if (!product) return null;
-      return { ...sale, product };
-    })
-    .filter(Boolean);
+  .filter((sale) => sale.status !== "cart")
+  .map((sale) => {
+    if (!sale.order_infos) return null;
+
+    let parsed;
+
+    try {
+      parsed = JSON.parse(sale.order_infos);
+    } catch (error) {
+      console.error("Erro ao converter order_infos:", sale.order_infos);
+      return null;
+    }
+
+    const productId = parsed.products_id?.[0]; // pega o primeiro produto
+    const productAmount = parsed.products_amount?.[0];
+
+    const product = products.find(
+      (product) => product.id === productId
+    );
+
+    if (!product) return null;
+
+    return {
+      ...sale,
+      product,
+      amount: productAmount
+    };
+  })
+  .filter(Boolean);
+
 
   return (
     <section style={{ padding: "20px", maxWidth: "1200px", margin: "0 auto" }}>
