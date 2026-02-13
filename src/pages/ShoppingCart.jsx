@@ -1038,10 +1038,6 @@ async function FinalizeCheckout(){
           <h5 style={{ marginBottom: "15px" }}>
            📦 Dados de entrega
          </h5>
-                  
-        
-
-
         <div className="modal-grid-form">
           <div className="column-form">
               <div className="client-field">   
