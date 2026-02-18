@@ -486,6 +486,7 @@ useEffect(() => {
   ))}
 </tbody>
         </table>
+
       </div>
     </div>
   );

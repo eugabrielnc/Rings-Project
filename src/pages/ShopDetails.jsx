@@ -58,7 +58,7 @@ export default function ShopDetails() {
   const [gravacaoMasculino, setGravacaoMasculino] = useState('');
   const [gravacaoFeminino, setGravacaoFeminino] = useState('');
   const [selectedStone, setSelectedStone] = useState('');
-  const [productImages, setProductImages] = useState([]);
+  const [productImages, setProductImages] = useState(["2","3"]);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const MAX_RETRIES = 10;
   const [thumbRetry, setThumbRetry] = useState({});
@@ -276,12 +276,13 @@ export default function ShopDetails() {
 
     setProductImages([]);
 
-    setProductImages([
+
+    /*setProductImages([
       `${url}/products/${id}/image/1`,
       `${url}/products/${id}/image/2`,
       `${url}/products/${id}/image/3`,
       `${url}/products/${id}/image/4`,
-    ]);
+    ]);*/
   },
     [id, url]);
   const navigate = useNavigate();
@@ -548,7 +549,7 @@ export default function ShopDetails() {
                       <div className="tab-pane active" id="tabs-1" role="tabpanel">
                         <div className="product__details__pic__item">
                           <img
-                            src={`${url}/products/${id}/image/${selectedImageIndex + 1}`}
+                            src={product.image_url}
                             alt={product.name}
                             style={{ width: "100%", borderRadius: 8 }}
                             onError={(e) => {
@@ -560,92 +561,74 @@ export default function ShopDetails() {
 
                         </div>
                       </div>
-                      {productImages.length > 0 && (
                         <div style={{ display: "flex", gap: "10px", marginTop: "15px" }}>
-                          {productImages.map((img, index) => {
-                            if (thumbHidden[index]) return null;
 
-                            const retry = thumbRetry[index] || 0;
-                            const loaded = thumbLoaded[index];
 
-                            return (
+                        {product.image2_url && 
                               <div
-                                key={index}
+                              className="miniatura-imagem-container"  
                                 onClick={() => {
                                   setSelectedImageIndex(index);
                                   retryThumb(index);
                                 }}
-                                style={{
-                                  width: 70,
-                                  height: 70,
-                                  borderRadius: 6,
-                                  overflow: "hidden",
-                                  border:
-                                    selectedImageIndex === index
-                                      ? "2px solid #d4a574"
-                                      : "1px solid #ccc",
-                                  position: "relative",
-                                  cursor: "pointer",
-                                  background: "#f2f2f2",
-                                }}
+                              style={{
+                              width: 70,
+                              height: 70,
+                                borderradius: 14,
+                              overflow: "hidden",
+                              border: "1px solid #ccc",
+                              position: "relative",
+                              cursor: "pointer",
+                              background: "#f2f2f2"}}
                               >
-                                {!loaded && (
-                                  <div
-                                    style={{
-                                      position: "absolute",
-                                      inset: 0,
-                                      display: "flex",
-                                      alignItems: "center",
-                                      justifyContent: "center",
-                                      fontSize: 11,
-                                      color: "#999",
-                                      background: "#f2f2f2",
-                                    }}
-                                  >
-                                    carregando…
-                                  </div>
-                                )}
 
                                 <img
-                                  src={`${img}?r=${thumbRetry[index] || 0}`}
-                                  alt={`Miniatura ${index + 1}`}
-                                  onLoad={(e) => {
-                                    const isEmpty =
-                                      e.target.naturalWidth === 0 ||
-                                      e.target.currentSrc.endsWith("/ ");
+                                  src={product.image2_url}
+                                  alt={`Miniatura 1`}
+                                style={{
+                                  width: "100%",
+                                  height: "100%",
+                                  transition: "opacity 0.3s ease"
 
-                                    if (isEmpty) {
-                                      // imagem vazia → não tenta mais
-                                      setThumbHidden(prev => ({ ...prev, [index]: true }));
-                                      return;
-                                    }
+                                }}
+                               />
+                              </div>
+                        }
+                        {product.image3_url && 
+                              <div
+                                onClick={() => {
+                                  setSelectedImageIndex(index);
+                                  retryThumb(index);
+                                }}
+                           style={{
+                              width: 70,
+                              height: 70,
+                                borderradius: 14,
+                              overflow: "hidden",
+                              border: "1px solid #ccc",
+                              position: "relative",
+                              cursor: "pointer",
+                              background: "#f2f2f2"}}
+    
+                             >
 
-                                    // imagem válida
-                                    setThumbLoaded(prev => ({ ...prev, [index]: true }));
-                                  }}
-                                  onError={() => {
-                                    // erro real → tenta novamente
-                                    setTimeout(() => retryThumb(index), 700);
-                                  }}
-                                  style={{
-                                    width: "100%",
-                                    height: "100%",
-                                    objectFit: "cover",
-                                    opacity: thumbLoaded[index] ? 1 : 0,
-                                    transition: "opacity 0.3s ease",
-                                  }}
-                                />
+                                <img
+                                  className="miniatura-imagem"
+                                  src={product.image3_url}
+                                  alt={`Miniatura 1`}
+                                 style={{
+                                  width: "100%",
+                                  height: "100%",
+                                  transition: "opacity 0.3s ease"
+
+                                }}
+  
+                               />
 
 
                               </div>
-                            );
-                          })}
+                        }
                         </div>
-                      )}
-
-
-
-
 
 
                     </div>
@@ -960,7 +943,7 @@ export default function ShopDetails() {
                           <div className="product__item">
                             <div className="product__item__pic" style={{ position: 'relative', paddingBottom: '100%', background: '#f5f5f5' }}>
                               <img
-                                src={`${url}/products/${produtos.id}/image/1`}
+                                src={`${url}/products/${product.id}/image/1`}
                                 alt={produtos.name}
                                 style={{
                                   width: '100%',

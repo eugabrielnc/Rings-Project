@@ -99,7 +99,8 @@ useEffect(() => {
 
   
 
-  // FUNÇÃO PARA CARREGAR UMA IMAGEM COM RETRY AUTOMÁTICO
+ // FUNÇÃO PARA CARREGAR UMA IMAGEM COM RETRY AUTOMÁTICO
+/*
   const loadProductImage = async (productId, delay = 0, retryCount = 0) => {
     const MAX_RETRIES = 10; // tentativas 
     const RETRY_DELAY = 100; // delay da tentativa 
@@ -163,14 +164,14 @@ useEffect(() => {
       });
     }
   };
-
-  useEffect(() => {
+*/
+  /*useEffect(() => {
     currentProducts.forEach((product, index) => {
       //delay
-      loadProductImage(product.id, index * 200);
+  //    loadProductImage(product.id, index * 200);
     });
   }, [currentProducts, currentPage]);
-
+*/
   const addToCart = async (product) => {
   try {
     const authData = getAuthData();
@@ -676,12 +677,12 @@ useEffect(() => {
                     <div key={`${product.id}-${renderKey}-${index}`} className="col-lg-4 col-md-6 col-sm-6">
                       <div className="product__item">
                         <div className="product__item__pic set-bg" style={{ position: 'relative', paddingBottom: '100%', background: '#f5f5f5' }}>
-                          {imageCache[product.id] ? (
-                            <img
-                              src={imageCache[product.id]}
-                              alt={product.name}
-                              
-                            />
+                    <img
+                      src={product.image_url}
+                      alt={product.name}
+                      
+                    />
+                          {/*imageCache[product.id] ? (
                           ) : (
                             <div style={{
                               position: 'absolute',
@@ -705,7 +706,7 @@ useEffect(() => {
                                 <span style={{ color: '#999', fontSize: '13px' }}>Carregando...</span>
                               </div>
                             </div>
-                          )}
+                          )*/}
                           <ul className="product__hover">
                             <li><a href="#"><span className="arrow_expand" /></a></li>
                             <li><a href="#"><span className="icon_heart_alt" /></a></li>

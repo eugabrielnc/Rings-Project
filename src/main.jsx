@@ -36,8 +36,9 @@ import NovaSenha from "./pages/novasenha";
 import EditUserPage from "./pages/edituser";
 import Fretes from "./pages/Fretes"; 
 import FretesForm from "./pages/FretesForm"; 
-
 import ScrollToTop from "./utils/scrollToTop";
+
+
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <BrowserRouter>
