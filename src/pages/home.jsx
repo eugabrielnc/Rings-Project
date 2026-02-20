@@ -26,30 +26,30 @@ import { Link } from "react-router-dom";
 export default function MaleFashion() {
 
 
-const pageStyle = {
-  minHeight: "100vh",
-  backgroundImage: "url('/img/fundo2.jpeg')",
-  backgroundSize: "cover",
-  backgroundPosition: "center top",
-  backgroundRepeat: "no-repeat",
-  position: "relative",
-};
+  const pageStyle = {
+    minHeight: "100vh",
+    backgroundImage: "url('/img/fundo2.jpeg')",
+    backgroundSize: "cover",
+    backgroundPosition: "center top",
+    backgroundRepeat: "no-repeat",
+    position: "relative",
+  };
 
 
   const overlayStyle = {
-  position: "absolute",
-  inset: 0,
-  backgroundColor: "rgba(255,255,255,0.25)", 
-  zIndex: 0,
-};
+    position: "absolute",
+    inset: 0,
+    backgroundColor: "rgba(255,255,255,0.25)",
+    zIndex: 0,
+  };
 
   const contentStyle = {
-  position: "relative",
-  zIndex: 1,
-};
+    position: "relative",
+    zIndex: 1,
+  };
 
 
-  
+
   useEffect(() => {
     const setBgElements = document.querySelectorAll('[data-setbg]');
     setBgElements.forEach((el) => {
@@ -69,73 +69,13 @@ const pageStyle = {
   const [products, setProducts] = useState([]);
 
   // Cache de imagens
-  const [imageCache, setImageCache] = useState({});
-  const [loadingImages, setLoadingImages] = useState(new Set());
-
-  const loadProductImage = async (productId, delay = 0, retryCount = 0) => {
-    const MAX_RETRIES = 10; // tentativas
-    const RETRY_DELAY = 100; // delay de tentativas
-
-    if (imageCache[productId] || loadingImages.has(productId)) {
-      return;
-    }
 
 
-    setLoadingImages(prev => new Set([...prev, productId]));
 
-
-    await new Promise(resolve => setTimeout(resolve, delay));
-
-    try {
-      const response = await fetch(`${url}/products/${productId}/image/1`, {
-        headers: {
-          'Cache-Control': 'no-cache'
-        }
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}`);
-      }
-
-      const blob = await response.blob();
-      const imageUrl = URL.createObjectURL(blob);
-
-      setImageCache(prev => ({
-        ...prev,
-        [productId]: imageUrl
-      }));
-
-    } catch (error) {
-
-
-      if (retryCount < MAX_RETRIES) {
-        setLoadingImages(prev => {
-          const newSet = new Set(prev);
-          newSet.delete(productId);
-          return newSet;
-        });
-
-
-        await new Promise(resolve => setTimeout(resolve, RETRY_DELAY));
-
-
-        return loadProductImage(productId, 0, retryCount + 1);
-      } else {
-        setImageCache(prev => ({
-          ...prev,
-          [productId]: 'https://via.placeholder.com/400x400.png?text=Sem+Imagem'
-        }));
-      }
-    } finally {
-      setLoadingImages(prev => {
-        const newSet = new Set(prev);
-        newSet.delete(productId);
-        return newSet;
-      });
-    }
-  };
 
   useEffect(() => {
+    console.log("Chamando endpoint:", `${url}/products/`);
+
     fetch(`${url}/products/`, {
       method: "GET",
       headers: {
@@ -143,34 +83,20 @@ const pageStyle = {
         "accept": "application/json"
       }
     })
-      .then((response) => response.json())
+      .then((response) => {
+        console.log("Status da resposta:", response.status);
+        return response.json();
+      })
       .then((data) => {
+        console.log("Dados recebidos do /products:", data);
         setProducts(data);
       })
       .catch((error) => {
+        console.error("Erro ao buscar /products:", error);
       });
   }, [url]);
 
 
-  useEffect(() => {
-    if (products.length > 0) {
-      const bestSellers = [...products]
-        .sort((a, b) => b.sales - a.sales)
-        .slice(0, 15);
-
-      const newProducts = [...products]
-        .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
-        .slice(0, 15);
-
-      // remove duplicados 
-      const allProductsToLoad = [...new Map([...bestSellers, ...newProducts].map(p => [p.id, p])).values()];
-
-      allProductsToLoad.forEach((product, index) => {
-        // Delay 
-        loadProductImage(product.id, index * 200);
-      });
-    }
-  }, [products]);
 
   const navigate = useNavigate();
 
@@ -278,7 +204,7 @@ const pageStyle = {
       });
     }
 
-    
+
 
 
   };
@@ -445,8 +371,8 @@ const pageStyle = {
                     <div className="banner__item__text">
                       <h2>Alianças de moeda</h2>
                       <Link to={`/shop?title=Alianças&filter=Moeda Antiga com Banho a Ouro 18k`} >
-                          Compre agora
-                        </Link>
+                        Compre agora
+                      </Link>
                     </div>
                   </div>
                 </div>
@@ -504,49 +430,18 @@ const pageStyle = {
                         <SwiperSlide key={product.id}>
                           <div className="product__item">
                             <div className="product__item__pic" style={{ position: 'relative', paddingBottom: '100%', background: '#f5f5f5' }}>
-                              {imageCache[product.id] ? (
-                                <img
-                                  src={imageCache[product.id]}
-                                  alt={product.name}
-                                  style={{
-                                    width: '100%',
-                                    height: '100%',
-                                    objectFit: 'cover',
-                                    position: 'absolute',
-                                    top: 0,
-                                    left: 0
-                                  }}
-                                />
-                              ) : (
-                                <div style={{
-                                  position: 'absolute',
-                                  top: 0,
-                                  left: 0,
+                              <img
+                                src={product.image_url || "https://via.placeholder.com/400x400.png?text=Sem+Imagem"}
+                                alt={product.name}
+                                style={{
                                   width: '100%',
                                   height: '100%',
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  justifyContent: 'center',
-                                  background: '#f5f5f5'
-                                }}>
-                                  <div style={{
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    alignItems: 'center',
-                                    gap: '10px'
-                                  }}>
-                                    <div style={{
-                                      width: '40px',
-                                      height: '40px',
-                                      border: '4px solid #d4af37',
-                                      borderTopColor: 'transparent',
-                                      borderRadius: '50%',
-                                      animation: 'spin 1s linear infinite'
-                                    }}></div>
-                                    <span style={{ color: '#999', fontSize: '13px' }}>Carregando...</span>
-                                  </div>
-                                </div>
-                              )}
+                                  objectFit: 'cover',
+                                  position: 'absolute',
+                                  top: 0,
+                                  left: 0
+                                }}
+                              />
                               <span className="label">Top</span>
                               <ul className="product__hover">
                                 <li>
@@ -653,49 +548,18 @@ const pageStyle = {
                         <SwiperSlide key={product.id}>
                           <div className="product__item">
                             <div className="product__item__pic" style={{ position: 'relative', paddingBottom: '100%', background: '#f5f5f5' }}>
-                              {imageCache[product.id] ? (
-                                <img
-                                  src={imageCache[product.id]}
-                                  alt={product.name}
-                                  style={{
-                                    width: '100%',
-                                    height: '100%',
-                                    objectFit: 'cover',
-                                    position: 'absolute',
-                                    top: 0,
-                                    left: 0
-                                  }}
-                                />
-                              ) : (
-                                <div style={{
-                                  position: 'absolute',
-                                  top: 0,
-                                  left: 0,
+                              <img
+                                src={product.image_url || "https://via.placeholder.com/400x400.png?text=Sem+Imagem"}
+                                alt={product.name}
+                                style={{
                                   width: '100%',
                                   height: '100%',
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  justifyContent: 'center',
-                                  background: '#f5f5f5'
-                                }}>
-                                  <div style={{
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    alignItems: 'center',
-                                    gap: '10px'
-                                  }}>
-                                    <div style={{
-                                      width: '40px',
-                                      height: '40px',
-                                      border: '4px solid #d4af37',
-                                      borderTopColor: 'transparent',
-                                      borderRadius: '50%',
-                                      animation: 'spin 1s linear infinite'
-                                    }}></div>
-                                    <span style={{ color: '#999', fontSize: '13px' }}>Carregando...</span>
-                                  </div>
-                                </div>
-                              )}
+                                  objectFit: 'cover',
+                                  position: 'absolute',
+                                  top: 0,
+                                  left: 0
+                                }}
+                              />
                               <span className="label">Novo</span>
                               <ul className="product__hover">
                                 <li>
