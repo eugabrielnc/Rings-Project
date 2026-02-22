@@ -12,16 +12,22 @@ export default function EditProductPage() {
   const inputFileRef = useRef(null);
 
   const [form, setForm] = useState({
-    name: "",
-    price: "",
-    type: "",
-    material: "",
-    checkout_link: "",
-    status: "",
-    stone: 0,
-  });
+  name: "",
+  price: "",
+  type: "",
+  material: "",
+  checkout_link: "",
+  status: "",
+  stone: 0,
+  solitary: 0,
+  pear: 0,
+});
   const [loading, setLoading] = useState(true);
-  const [images, setImages] = useState([]);
+  const [images, setImages] = useState({
+  image1: null,
+  image2: null,
+  image3: null,
+});
   const [submitting, setSubmitting] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
 
@@ -37,24 +43,22 @@ export default function EditProductPage() {
         const product = Array.isArray(data) ? data[0] : data;
 
         setForm({
-          name: product.name ?? "",
-          price: product.price != null ? String(product.price) : "",
-          type: product.type ?? "",
-          material: product.material ?? "",
-          checkout_link: product.checkout_link ?? "",
-          status: product.status ?? "",
-          stone: product.stone ?? 0,
-        });
+  name: product.name ?? "",
+  price: product.price != null ? String(product.price) : "",
+  type: product.type ?? "",
+  material: product.material ?? "",
+  checkout_link: product.checkout_link ?? "",
+  status: product.status ?? "",
+  stone: product.stone ?? 0,
+  solitary: product.solitary ?? 0,
+  pear: product.pear ?? 0,
+});
 
-        const imgs = [];
-
-        if (product.image) imgs.push({ file: null, url: product.image });
-        if (product.image2) imgs.push({ file: null, url: product.image2 });
-        if (product.image3) imgs.push({ file: null, url: product.image3 });
-        if (product.image4) imgs.push({ file: null, url: product.image4 });
-
-        setImages(imgs);
-
+        setImages({
+  image1: product.image ? { file: null, url: product.image } : null,
+  image2: product.image2 ? { file: null, url: product.image2 } : null,
+  image3: product.image3 ? { file: null, url: product.image3 } : null,
+});
       } catch (err) {
         console.error("Erro ao carregar produto:", err);
       } finally {
@@ -70,17 +74,19 @@ export default function EditProductPage() {
     setForm({ ...form, [e.target.name]: e.target.value });
   }
 
-  function handleFiles(files) {
-    const newFiles = Array.from(files).map((file) => ({
-      file,
-      url: URL.createObjectURL(file),
-    }));
+  function handleSingleFile(file, key) {
+  if (!file) return;
 
-    setImages((prev) => {
-      const merged = [...prev, ...newFiles];
-      return merged.slice(0, 4);
-    });
-  }
+  const newImage = {
+    file,
+    url: URL.createObjectURL(file),
+  };
+
+  setImages((prev) => ({
+    ...prev,
+    [key]: newImage,
+  }));
+}
 
 
   // 🔹 SUBMIT (UPDATE)
@@ -105,12 +111,18 @@ export default function EditProductPage() {
       formData.append("stone", form.stone);
       formData.append("checkout_link", form.checkout_link);
       formData.append("status", form.status);
+      formData.append("solitary", String(form.solitary));
+formData.append("pear", String(form.pear));
 
       // só envia imagem se trocar
-      if (images[0]?.file) formData.append("image", images[0].file);
-      if (images[1]?.file) formData.append("image2", images[1].file);
-      if (images[2]?.file) formData.append("image3", images[2].file);
-      if (images[3]?.file) formData.append("image4", images[3].file);
+      if (images.image1?.file)
+  formData.append("image", images.image1.file);
+
+if (images.image2?.file)
+  formData.append("image2", images.image2.file);
+
+if (images.image3?.file)
+  formData.append("image3", images.image3.file);
 
 
       const res = await fetch(`${url}/products/`, {
@@ -249,23 +261,74 @@ export default function EditProductPage() {
           Produto aceita pedras personalizadas
         </label>
 
-        {/* IMAGEM */}
-        <label className="label">Imagem</label>
-        <div
-          className="upload-zone"
-          onClick={() => inputFileRef.current?.click()}
-        >
-          Clique ou solte até 4 imagens
 
+        <label className="label" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+  <input
+    type="checkbox"
+    checked={form.solitary === 1}
+    onChange={(e) =>
+      setForm({ ...form, solitary: e.target.checked ? 1 : 0 })
+    }
+    style={{ width: 'auto', margin: 0 }}
+  />
+  Produto é modelo Solitário
+</label>
+
+<label className="label" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+  <input
+    type="checkbox"
+    checked={form.pear === 1}
+    onChange={(e) =>
+      setForm({ ...form, pear: e.target.checked ? 1 : 0 })
+    }
+    style={{ width: 'auto', margin: 0 }}
+  />
+  Produto é modelo Gota (Pear)
+</label>
+
+        {/* IMAGEM */}
+        <label className="label">
+  Imagens do Produto
+</label>
+
+<div className="image-slots">
+  {[
+  { key: "image1", label: "Imagem 1 (Principal)" },
+  { key: "image2", label: "Imagem 2" },
+  { key: "image3", label: "Imagem 3" },
+].map(({ key, label }) => (
+    <div key={key} className="image-slot">
+      <p className="image-slot-title">{label}</p>
+
+      {images[key] ? (
+        <div className="image-preview">
+          <img src={images[key].url} alt={label} />
+          <button
+            type="button"
+            className="image-remove"
+            onClick={() =>
+              setImages((prev) => ({ ...prev, [key]: null }))
+            }
+          >
+            ×
+          </button>
+        </div>
+      ) : (
+        <label className="upload-box">
+          Clique para enviar
           <input
             type="file"
             accept="image/*"
-            multiple
-            ref={inputFileRef}
             style={{ display: "none" }}
-            onChange={(e) => handleFiles(e.target.files)}
+            onChange={(e) =>
+              handleSingleFile(e.target.files[0], key)
+            }
           />
-        </div>
+        </label>
+      )}
+    </div>
+  ))}
+</div>
 
         {/* PREVIEW */}
         {images.length > 0 && (
