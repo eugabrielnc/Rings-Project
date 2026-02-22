@@ -9,16 +9,22 @@ export default function CreateProductPage() {
   const url = import.meta.env.VITE_API_URL;
   const inputFileRef = useRef(null);
 
-  const [form, setForm] = useState({
-    name: "",
-    price: "",
-    type: "",
-    material: "",
-    checkout_link: "",
-    stone: 0,
-  });
+ const [form, setForm] = useState({
+  name: "",
+  price: "",
+  type: "",
+  material: "",
+  checkout_link: "",
+  stone: 0,
+  solitary: 0,
+  pear: 0,
+});
 
-  const [images, setImages] = useState([]);
+  const [images, setImages] = useState({
+  image1: null,
+  image2: null,
+  image3: null,
+});
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
@@ -27,17 +33,7 @@ export default function CreateProductPage() {
     setForm({ ...form, [e.target.name]: e.target.value });
   }
 
-  function handleFiles(files) {
-    const newFiles = Array.from(files).map((file) => ({
-      file,
-      url: URL.createObjectURL(file),
-    }));
-
-    setImages((prev) => {
-      const merged = [...prev, ...newFiles];
-      return merged.slice(0, 4); // limita a 4 imagens
-    });
-  }
+  
 
 
 
@@ -49,10 +45,10 @@ export default function CreateProductPage() {
       return;
     }
 
-    if (images.length === 0) {
-      alert("Envie uma imagem");
-      return;
-    }
+    if (!images.image1) {
+  alert("A Imagem 1 (Principal) é obrigatória");
+  return;
+}
 
     setSubmitting(true);
 
@@ -67,21 +63,23 @@ export default function CreateProductPage() {
       formData.append("material", form.material);
       formData.append("checkout_link", form.checkout_link);
       formData.append("stone", String(form.stone));
+      formData.append("solitary", String(form.solitary));
+formData.append("pear", String(form.pear));
 
 
-      if (!images[0]) {
-        alert("A imagem principal é obrigatória");
-        setSubmitting(false);
-        return;
-      }
+      if (!images.image1) {
+  alert("A Imagem 1 (Principal) é obrigatória");
+  return;
+}
 
-      
-      formData.append("image", images[0].file);
 
-      // opcionais
-      if (images[1]) formData.append("image2", images[1].file);
-      if (images[2]) formData.append("image3", images[2].file);
-      if (images[3]) formData.append("image4", images[3].file);
+      formData.append("image", images.image1.file);
+
+if (images.image2)
+  formData.append("image2", images.image2.file);
+
+if (images.image3)
+  formData.append("image3", images.image3.file);
 
 
       const res = await fetch(`${url}/products/`, {
@@ -107,6 +105,22 @@ export default function CreateProductPage() {
       setSubmitting(false);
     }
   }
+
+
+
+  function handleSingleFile(file, key) {
+  if (!file) return;
+
+  const newImage = {
+    file,
+    url: URL.createObjectURL(file),
+  };
+
+  setImages((prev) => ({
+    ...prev,
+    [key]: newImage,
+  }));
+}
 
   return (
     <div className="container">
@@ -219,48 +233,88 @@ export default function CreateProductPage() {
           Produto aceita pedras personalizadas
         </label>
 
-        {/* IMAGEM */}
-        <label className="label">Imagem</label>
-        <div
-          className="upload-zone"
-          onClick={() => inputFileRef.current?.click()}
-          onDragOver={(e) => e.preventDefault()}
-          onDrop={(e) => {
-            e.preventDefault();
-            handleFiles(e.dataTransfer.files);
-          }}
-        >
-          Clique ou solte até 4 imagens
+
+
+
+        {/* SOLITARY */}
+<label className="label" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+  <input
+    type="checkbox"
+    checked={form.solitary === 1}
+    onChange={(e) =>
+      setForm({
+        ...form,
+        solitary: e.target.checked ? 1 : 0,
+      })
+    }
+    style={{ width: 'auto', margin: 0 }}
+  />
+  Produto é modelo Solitário
+</label>
+
+{/* PEAR */}
+<label className="label" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+  <input
+    type="checkbox"
+    checked={form.pear === 1}
+    onChange={(e) =>
+      setForm({
+        ...form,
+        pear: e.target.checked ? 1 : 0,
+      })
+    }
+    style={{ width: 'auto', margin: 0 }}
+  />
+  Produto é modelo Gota (Pear)
+</label>
+
+        
+
+        {/* PREVIEW */}
+        <label className="label">
+  Imagens do Produto
+</label>
+
+<div className="image-slots">
+
+  {[
+    { key: "image1", label: "Imagem 1 (Principal)" },
+    { key: "image2", label: "Imagem 2" },
+    { key: "image3", label: "Imagem 3" },
+  ].map(({ key, label }) => (
+    <div key={key} className="image-slot">
+      <p className="image-slot-title">{label}</p>
+
+      {images[key] ? (
+        <div className="image-preview">
+          <img src={images[key].url} alt={label} />
+          <button
+            type="button"
+            className="image-remove"
+            onClick={() =>
+              setImages((prev) => ({ ...prev, [key]: null }))
+            }
+          >
+            ×
+          </button>
+        </div>
+      ) : (
+        <label className="upload-box">
+          Clique para enviar
           <input
             type="file"
             accept="image/*"
-            multiple
-            ref={inputFileRef}
             style={{ display: "none" }}
-            onChange={(e) => handleFiles(e.target.files)}
+            onChange={(e) =>
+              handleSingleFile(e.target.files[0], key)
+            }
           />
+        </label>
+      )}
+    </div>
+  ))}
 
-        </div>
-
-        {/* PREVIEW */}
-        {images.length > 0 && (
-          <div className="image-grid">
-            {images.map((img, i) => (
-              <div key={i} className="image-preview">
-                <img src={img.url} alt="preview" />
-                <button
-                  type="button"
-                  className="image-remove"
-                  onClick={() =>
-                    setImages(images.filter((_, idx) => idx !== i))
-                  }
-                >
-                  ×
-                </button>
-              </div>
-            ))}
-          </div>
-        )}
+</div>
 
         {/* SUBMIT */}
         <button className="button-primary" disabled={submitting}>
