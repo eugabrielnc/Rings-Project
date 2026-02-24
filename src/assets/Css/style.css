@@ -4781,7 +4781,8 @@ ol {
 	}
 
 	.hero__items {
-		height: 200px !important;
+		height: 600px !important;
+		width: 100%;
 		padding: 0 !important;
 		margin: 0 !important;
 		background-size: 100% auto !important;
@@ -4790,9 +4791,7 @@ ol {
 		display: block !important;
 		line-height: 0 !important;
 	}
-
-
-	/* Imagens específicas para mobile */
+	/* banner mobile */
 	.hero__items[style*="aliprata.png"] {
 		background-image: url('/img/aliprata-mobile.png') !important;
 	}
