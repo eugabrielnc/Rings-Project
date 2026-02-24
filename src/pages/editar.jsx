@@ -262,18 +262,6 @@ if (images.image3?.file)
         </label>
 
 
-        <label className="label" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-  <input
-    type="checkbox"
-    checked={form.solitary === 1}
-    onChange={(e) =>
-      setForm({ ...form, solitary: e.target.checked ? 1 : 0 })
-    }
-    style={{ width: 'auto', margin: 0 }}
-  />
-  Produto é modelo Solitário
-</label>
-
 <label className="label" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
   <input
     type="checkbox"
@@ -283,9 +271,21 @@ if (images.image3?.file)
     }
     style={{ width: 'auto', margin: 0 }}
   />
-  Produto é modelo Gota (Pear)
+  Produto é um par 
 </label>
 
+
+        <label className="label" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+  <input
+    type="checkbox"
+    checked={form.solitary === 1}
+    onChange={(e) =>
+      setForm({ ...form, solitary: e.target.checked ? 1 : 0 })
+    }
+    style={{ width: 'auto', margin: 0 }}
+  />
+  O par vem com uma sólitaria acompanhando 
+</label>
         {/* IMAGEM */}
         <label className="label">
   Imagens do Produto

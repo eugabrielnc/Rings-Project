@@ -650,7 +650,7 @@ export default function ShopDetails() {
                       <div className="product__details__option">
 
                         <div className="products_details">
-                { isDualRing == true && (
+                { product.pear === 1 && (
 
                     <>
                           <div className="product__details__option__size">
@@ -746,7 +746,7 @@ export default function ShopDetails() {
                   </>
                   )}
             
-                  {isUniqueRing && (typeProduct == "Alianças" || typeProduct == "Anéis")  && ( 
+                  { (product.solitary === 1 || product.pear === 0)  && ( 
 
                         <div className="product__details__option__size">
                       
@@ -1010,7 +1010,6 @@ export default function ShopDetails() {
             </div>
           </section>
           {/* Related Section End */}
-
 
 
           {/* Search Begin */}

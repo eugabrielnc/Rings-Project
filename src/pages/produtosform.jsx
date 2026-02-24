@@ -236,21 +236,6 @@ if (images.image3)
 
 
 
-        {/* SOLITARY */}
-<label className="label" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-  <input
-    type="checkbox"
-    checked={form.solitary === 1}
-    onChange={(e) =>
-      setForm({
-        ...form,
-        solitary: e.target.checked ? 1 : 0,
-      })
-    }
-    style={{ width: 'auto', margin: 0 }}
-  />
-  Produto é modelo Solitário
-</label>
 
 {/* PEAR */}
 <label className="label" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
@@ -265,10 +250,25 @@ if (images.image3)
     }
     style={{ width: 'auto', margin: 0 }}
   />
-  Produto é modelo Gota (Pear)
+  Produto é um par 
 </label>
 
         
+        {/* SOLITARY */}
+<label className="label" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+  <input
+    type="checkbox"
+    checked={form.solitary === 1}
+    onChange={(e) =>
+      setForm({
+        ...form,
+        solitary: e.target.checked ? 1 : 0,
+      })
+    }
+    style={{ width: 'auto', margin: 0 }}
+  />
+  O par vem com uma sólitaria acompanhando 
+</label>
 
         {/* PREVIEW */}
         <label className="label">

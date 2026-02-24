@@ -225,6 +225,9 @@ export default function Produtos() {
           <table style={{ width: "100%", borderCollapse: "collapse" }}>
             <thead>
               <tr style={{ background: "#F9F5EE" }}>
+                <th style={th}>Imagem 1</th>
+                <th style={th}>Imagem 2</th>
+                <th style={th}>Imagem 3</th>
                 <th style={th}>ID</th>
                 <th style={th}>Produto</th>
                 <th style={th}>Preço</th>
@@ -234,7 +237,17 @@ export default function Produtos() {
             </thead>
             <tbody>
               {produtosOrdenados.map(p => (
-                <tr key={p.id}>
+                  <tr key={p.id}>
+                  <td style={td}>
+                    <img className="image-products" src={p.image_url}/> 
+                  </td>
+                  <td style={td}>
+                    <img className="image-products" src={p.image2_url}/> 
+                  </td>
+                   <td style={td}>
+                    <img className="image-products" src={p.image3_url}/> 
+                  </td>
+ 
                   <td style={td}>{p.id}</td>
                   <td style={td}>{p.name}</td>
                   <td style={td}>

@@ -37,6 +37,7 @@ import EditUserPage from "./pages/edituser";
 import Fretes from "./pages/Fretes"; 
 import FretesForm from "./pages/FretesForm"; 
 import ScrollToTop from "./utils/scrollToTop";
+import "./assets/Css/table-products.css"
 
 
 ReactDOM.createRoot(document.getElementById("root")).render(
