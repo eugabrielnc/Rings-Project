@@ -746,7 +746,7 @@ export default function ShopDetails() {
                   </>
                   )}
             
-                  { (product.solitary === 1 || product.pear === 0)  && ( 
+                { product.solitary === 1   && ( 
 
                         <div className="product__details__option__size">
                       

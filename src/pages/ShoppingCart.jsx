@@ -14,8 +14,11 @@ export default function ShoppingCart() {
   
   const [modalOpen, setModalOpen] = useState(false)
   const [valueFreight, setValueFreight] = useState(100)
-  const [selectedProduct, setSelectProduct] = useState({id:"", name:"", productIndex:-1 , selectedIndex:-1 , totalIndex:0 })
+  const [selectedProduct, setSelectProduct] = useState({image_url:"" ,id:"", name:"", productIndex:-1 , selectedIndex:-1 , totalIndex:0 })
   const [productToCheckout, setProductToCheckout] = useState({gravationFemale:"", gravationMascle:"", sizeMascle:0, sizeFemale:0, sizeUniqueRing:0})
+  const [thereIsSolitary, setThereIsSolitary] = useState(0)
+  const [IsPear, setIsPear] = useState(0)
+  const [typeProduct, setTypeProduct] = useState("")
 
   const [selectedStone,setSelectedStone] = useState("")
   const [isStone, setIsStone] = useState(0)
@@ -434,6 +437,13 @@ async function FinalizeCheckout(){
   const data = await res.json()
   const stone = data[0]?.stone
   const typeProduct = data[0]?.type
+  const ThereIsSolitary = data[0]?.solitary
+  const isPear = data[0]?.pear
+  setIsPear(isPear)
+  setThereIsSolitary(ThereIsSolitary)
+  setTypeProduct(typeProduct)
+
+
   console.log(typeProduct, "AQUI")
   setIsStone(stone)
 
@@ -464,7 +474,7 @@ async function FinalizeCheckout(){
       sizes:sizes_list, gravations:gravations_list }))   
 
   setSelectedStone("")
-  setSelectProduct({id:"", name:"", productIndex:-1 , selectedIndex:-1 , totalIndex:0 })
+  setSelectProduct({image_url:"", id:"", name:"", productIndex:-1 , selectedIndex:-1 , totalIndex:0 })
  setProductToCheckout({gravationFemale:"", gravationMascle:"", sizeMascle:0, sizeFemale:0, sizeUniqueRing:0})
   }
   if(index == totalIndexCarts){
@@ -474,7 +484,7 @@ async function FinalizeCheckout(){
   }
 
  
-  setSelectProduct(prev => ({...prev, totalIndex:totalIndexCarts, selectedIndex:index,
+  setSelectProduct(prev => ({...prev, image_url:cartProducts[index]["image_url"], totalIndex:totalIndexCarts, selectedIndex:index,
     id:cartProducts[index]["id"], name:cartProducts[index]["name"] }) )
   setModalOpen(true)
 
@@ -561,7 +571,7 @@ async function FinalizeCheckout(){
                                 }}
                               >
                                 <img
-                                  src={`${url}/products/${product.id}/image/1`}
+                                  src={product.image_url}
                                   alt={product.name}
                                   style={{
                                     width: "100%",
@@ -829,7 +839,7 @@ async function FinalizeCheckout(){
          </h5>
   
          <div className="container-modal-content">
-           <img src={`${url}/products/${selectedProduct["id"]}/image/1`} width="100" height="100"  />
+           <img src={selectedProduct["image_url"]} width="100" height="100"  />
             <p>{selectedProduct["name"]} </p>
          </div>
         {isStone == 1 && (
@@ -934,7 +944,7 @@ async function FinalizeCheckout(){
  
         </div>
         )}
-    {isDualRing  ? (
+    {IsPear  ? (
         <div className="modal-grid-form">
 
           <div className="column-form">
@@ -956,7 +966,7 @@ async function FinalizeCheckout(){
               <div className="client-field">   
                 <label>Gravação (aliança feminina) </label>
                 <input
-                placeholder="CEP"
+                placeholder="Escolha a gravação"
               value={productToCheckout.gravationFemale }                
               onChange={(e) =>
                   setProductToCheckout({ ...productToCheckout, gravationFemale: e.target.value })
@@ -997,7 +1007,7 @@ async function FinalizeCheckout(){
     
 
     ): null}
-    {isSoloRing  ? (
+    { thereIsSolitary  ? (
 
       <div  className="modal-grid-form" >
       <div className="client-field">   

@@ -277,7 +277,7 @@ if (images.image3?.file)
     }
     style={{ width: 'auto', margin: 0 }}
   />
-  Produto é um par 
+    Pedir tamanho do par
 </label>
 
 
@@ -290,7 +290,7 @@ if (images.image3?.file)
     }
     style={{ width: 'auto', margin: 0 }}
   />
-  O par vem com uma sólitaria acompanhando 
+    Pedir tamanho do anel único
 </label>
 
     {/* IMAGEM */}
