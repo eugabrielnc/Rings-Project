@@ -21,6 +21,9 @@ export default function EditProductPage() {
   stone: 0,
   solitary: 0,
   pear: 0,
+  image_url: "",
+  image2_url: "",
+  image3_url: "",
 });
   const [loading, setLoading] = useState(true);
   const [images, setImages] = useState({
@@ -52,6 +55,9 @@ export default function EditProductPage() {
   stone: product.stone ?? 0,
   solitary: product.solitary ?? 0,
   pear: product.pear ?? 0,
+  image_url: product.image_url ?? "",
+  image2_url: product.image2_url ?? "",
+  image3_url: product.image3_url ?? "",
 });
 
         setImages({
@@ -286,7 +292,20 @@ if (images.image3?.file)
   />
   O par vem com uma sólitaria acompanhando 
 </label>
-        {/* IMAGEM */}
+
+    {/* IMAGEM */}
+        <label className="label">
+  Imagens atuais do Produto
+</label>
+<div className="images-estatic-container">
+  <img  className="images-estatic" src={form.image_url} />
+  <img  className="images-estatic" src={form.image2_url} />
+  <img  className="images-estatic" src={form.image3_url} />
+</div>
+
+
+
+
         <label className="label">
   Imagens do Produto
 </label>
