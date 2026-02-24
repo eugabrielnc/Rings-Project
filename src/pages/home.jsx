@@ -67,6 +67,17 @@ export default function MaleFashion() {
   const [selectedColor, setSelectedColor] = useState("gold");
   const url = import.meta.env.VITE_API_URL;
   const [products, setProducts] = useState([]);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+// Adiciona o useEffect para detectar mobile
+useEffect(() => {
+  const handleResize = () => {
+    setIsMobile(window.innerWidth <= 768);
+  };
+
+  window.addEventListener('resize', handleResize);
+  return () => window.removeEventListener('resize', handleResize);
+}, []);
 
   // Cache de imagens
 
@@ -208,6 +219,7 @@ export default function MaleFashion() {
 
 
   };
+  
 
   return (
 
@@ -265,64 +277,75 @@ export default function MaleFashion() {
 
 
           {/* Hero Section Begin */}
-          <section className="hero">
-            <Swiper
-              modules={[Autoplay, Navigation, Pagination, EffectFade]}
-              effect="fade"
-              loop={true}
-              autoplay={{
-                delay: 3500,
-                disableOnInteraction: false,
-              }}
-              navigation={true}
-              pagination={{ clickable: true }}
-              className="hero__slider"
-            >
+       <section className="hero">
+           <Swiper
+             modules={[Autoplay, Navigation, Pagination, EffectFade]}
+             effect="fade"
+             loop={true}
+             autoplay={{
+               delay: 3500,
+               disableOnInteraction: false,
+             }}
+             navigation={true}
+             pagination={{ clickable: true }}
+             className="hero__slider"
+           >
 
-              {/* SLIDE 1 */}
 
-              <SwiperSlide>
-                <Link to={`/shop?title=Alianças&filter=Prata`}>
-                  <div
-                    className="hero__items"
-                    style={{
-                      backgroundImage: "url('/img/aliprata.png')",
-                    }}
-                  >
+             {/* SLIDE 1 */}
 
-                  </div>
-                </Link>
-              </SwiperSlide>
 
-              {/* SLIDE 2 */}
+             <SwiperSlide>
+               <Link to={`/shop?title=Alianças&filter=Prata`}>
+                 <div
+                   className="hero__items"
+                   style={{
+                     backgroundImage: isMobile ?
+                     "url('/img/pratamobile.png')" : "url('/img/aliprata.png')",
+                   }}
+                 >
 
-              <SwiperSlide>
-                <Link to={`/shop?title=Anéis`}>
-                  <div
-                    className="hero__items"
-                    style={{
-                      backgroundImage: "url('/img/aneis.png')",
-                    }}
-                  >
-                  </div>
-                </Link>
-              </SwiperSlide>
-              {/* SLIDE 3 */}
-              <SwiperSlide>
-                <Link to={`/shop?title=Anéis&filter=Formatura`}>
-                  <div
-                    className="hero__items"
-                    style={{
-                      backgroundImage: "url('/img/formatura.png')",
-                    }}
-                  >
 
-                  </div>
-                </Link>
-              </SwiperSlide>
+                 </div>
+               </Link>
+             </SwiperSlide>
 
-            </Swiper>
-          </section>
+
+             {/* SLIDE 2 */}
+
+
+             <SwiperSlide>
+               <Link to={`/shop?title=Anéis`}>
+                 <div
+                   className="hero__items"
+                   style={{
+                     backgroundImage: isMobile ?
+                      "url('/img/aneismobile.png')" : "url('/img/aneis.png')",
+                   }}
+                 >
+                 </div>
+               </Link>
+             </SwiperSlide>
+             {/* SLIDE 3 */}
+             <SwiperSlide>
+               <Link to={`/shop?title=Anéis&filter=Formatura`}>
+                 <div
+                   className="hero__items"
+                   style={{
+                     backgroundImage: isMobile ?
+                      "url('/img/formaturamobile.png')" : "url('/img/formatura.png')",
+                   }}
+                 >
+
+
+                 </div>
+               </Link>
+             </SwiperSlide>
+
+
+           </Swiper>
+         </section>
+
           {/* Hero Section End */}
 
           {/* Banner Section Begin */}
