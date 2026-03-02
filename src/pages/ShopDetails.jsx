@@ -13,6 +13,7 @@ export default function ShopDetails() {
   const [valueFreight, setValueFreight] = useState(0.01)
   const [isUniqueRing, setIsUniqueRing] = useState(true)
   const [isDualRing, setIsDualRing] = useState(false)
+  const [hasGravation, setHasGravation] = useState(false)
   const [sizeUniqueRing, setSizeUniqueRing] = useState(false)
 
   const pageStyle = {
@@ -671,7 +672,8 @@ export default function ShopDetails() {
                                 Não sabe seu tamanho? <a href="/medida" style={{ color: '#d4a574', fontWeight: '600' }}>Meça aqui!</a>
                               </p>
 
-                            {/* Campo de Gravação Masculino */}
+                  {/* Campo de Gravação Masculino */}
+                  {product.has_gravation === 1 &&
                             <div style={{ marginTop: '20px' }}>
                               <p style={{ display: 'block', marginBottom: '10px', fontWeight: '600', color: '#333' }}>
                                 Gravação (Masculino):
@@ -696,6 +698,7 @@ export default function ShopDetails() {
                                 Máximo 15 caracteres ({gravacaoMasculino.length}/15)
                               </p>
                             </div>
+                  }
                           </div>
 
                           <div className="product__details__option__size">
@@ -717,7 +720,8 @@ export default function ShopDetails() {
                             </p>
 
 
-                            {/* Campo de Gravação Feminino */}
+                  {/* Campo de Gravação Feminino */}
+                  {product.has_gravation === 1 &&
                             <div style={{ marginTop: '20px' }}>
                               <p style={{ display: 'block', marginBottom: '10px', fontWeight: '600', color: '#333' }}>
                                 Gravação (Feminino):
@@ -742,6 +746,7 @@ export default function ShopDetails() {
                                 Máximo 15 caracteres ({gravacaoFeminino.length}/15)
                               </p>
                             </div>
+                  }
                          </div>
                   </>
                   )}
