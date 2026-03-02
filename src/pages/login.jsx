@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import '../assets/Css/login.css';
 import { saveAuthData } from '../utils/dadosuser';
 import { useNavigate } from 'react-router-dom';
-
+import Loader from "../componentes/spinner-loader.jsx"
 
 function Login() {
+
+  const [isLoading, setIsLoading] = useState(false)
 
   const pageStyle = {
     minHeight: "100vh",
@@ -43,6 +45,7 @@ function Login() {
     });
   };
   const handleSubmit = (e) => {
+    setIsLoading(true)
     e.preventDefault();
     // Lógica de autenticação aqui
     fetch(`${url}/users/auth`, {
@@ -59,6 +62,7 @@ function Login() {
       .then((response) => response.json())
       .then((data) => {
         console.log("RESPOSTA LOGIN:", data);
+        setIsLoading(false)
 
         if (!data.access_token?.token) {
           console.error("BACKEND NÃO RETORNOU TOKEN");
@@ -90,6 +94,10 @@ function Login() {
   return (
 
     <div style={pageStyle}>
+
+  {isLoading &&
+    <Loader />
+  }
       {/* Overlay */}
       <div style={overlayStyle}></div>
       <div style={contentStyle}>

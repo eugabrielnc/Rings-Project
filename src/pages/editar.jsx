@@ -21,6 +21,7 @@ export default function EditProductPage() {
   stone: 0,
   solitary: 0,
   pear: 0,
+  has_gravation: 0,
   image_url: "",
   image2_url: "",
   image3_url: "",
@@ -55,6 +56,7 @@ export default function EditProductPage() {
   stone: product.stone ?? 0,
   solitary: product.solitary ?? 0,
   pear: product.pear ?? 0,
+  has_gravation: product.has_gravation ?? 0,
   image_url: product.image_url ?? "",
   image2_url: product.image2_url ?? "",
   image3_url: product.image3_url ?? "",
@@ -115,10 +117,10 @@ export default function EditProductPage() {
       formData.append("type", form.type);
       formData.append("material", form.material);
       formData.append("stone", form.stone);
-      formData.append("checkout_link", form.checkout_link);
       formData.append("status", form.status);
       formData.append("solitary", String(form.solitary));
-formData.append("pear", String(form.pear));
+      formData.append("pear", String(form.pear));
+      formData.append("has_gravation", String(form.has_gravation));
 
       // só envia imagem se trocar
       if (images.image1?.file)
@@ -243,14 +245,7 @@ if (images.image3?.file)
             ))}
         </select>
 
-        {/* CHECKOUT */}
-        <label className="label">Checkout Link</label>
-        <input
-          name="checkout_link"
-          className="input"
-          value={form.checkout_link}
-          onChange={handleChange}
-        />
+        
         {/* PEDRA */}
         <label className="label" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           <input
@@ -291,7 +286,24 @@ if (images.image3?.file)
     style={{ width: 'auto', margin: 0 }}
   />
     Pedir tamanho do anel único
+</label> 
+
+  {/*GRAVATION*/}
+<label className="label" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+  <input
+    type="checkbox"
+    checked={form.has_gravation === 1}
+    onChange={(e) =>
+      setForm({
+        ...form,
+        has_gravation: e.target.checked ? 1 : 0,
+      })
+    }
+    style={{ width: 'auto', margin: 0 }}
+  />
+  O par aceita gravação   
 </label>
+
 
     {/* IMAGEM */}
         <label className="label">

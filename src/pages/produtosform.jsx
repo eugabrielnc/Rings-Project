@@ -14,10 +14,10 @@ export default function CreateProductPage() {
   price: "",
   type: "",
   material: "",
-  checkout_link: "",
   stone: 0,
   solitary: 0,
   pear: 0,
+  has_gravation:0
 });
 
   const [images, setImages] = useState({
@@ -61,10 +61,10 @@ export default function CreateProductPage() {
       formData.append("price", String(form.price));
       formData.append("type", form.type);
       formData.append("material", form.material);
-      formData.append("checkout_link", form.checkout_link);
       formData.append("stone", String(form.stone));
       formData.append("solitary", String(form.solitary));
-formData.append("pear", String(form.pear));
+      formData.append("pear", String(form.pear));
+      formData.append("has_gravation", String(form.has_gravation));
 
 
       if (!images.image1) {
@@ -206,17 +206,7 @@ if (images.image3)
         {errors.material && <p className="error-text">{errors.material}</p>}
 
 
-        {/* CHECKOUT LINK */}
-        <label className="label">Checkout Link</label>
-        <input
-          name="checkout_link"
-          className="input"
-          value={form.checkout_link}
-          onChange={handleChange}
-        />
-        {errors.checkout_link && (
-          <p className="error-text">{errors.checkout_link}</p>
-        )}
+       
         {/* PEDRA */}
         <label className="label" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           <input
@@ -250,7 +240,7 @@ if (images.image3)
     }
     style={{ width: 'auto', margin: 0 }}
   />
-  Produto é um par 
+  Pedir tamanho do par
 </label>
 
         
@@ -267,8 +257,25 @@ if (images.image3)
     }
     style={{ width: 'auto', margin: 0 }}
   />
-  O par vem com uma sólitaria acompanhando 
+  Pedir tamanho do anel único
 </label>
+ 
+  {/*GRAVATION*/}
+<label className="label" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+  <input
+    type="checkbox"
+    checked={form.has_gravation === 1}
+    onChange={(e) =>
+      setForm({
+        ...form,
+        has_gravation: e.target.checked ? 1 : 0,
+      })
+    }
+    style={{ width: 'auto', margin: 0 }}
+  />
+  O par aceita gravação   
+</label>
+
 
         {/* PREVIEW */}
         <label className="label">
