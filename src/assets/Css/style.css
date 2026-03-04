@@ -110,7 +110,7 @@
 /* Template default CSS
 /*----------------------------------------*/
 :root {
-	--primary-color: linear-gradient(90deg, #ffffff 0%, #f7e9b3 10%, #d4af37 95%);
+	--primary-color: linear-gradient(90deg, #ffffff 0%, #f7e9b3 5%, #d4af37 95%);
 }
 
 html,
@@ -1068,6 +1068,7 @@ ol {
 	.header__logo img {
 		max-height: 200px;
 		transform-origin: left center;
+		margin-top: 20px;
 		/* Sombras múltiplas para destacar a logo e o texto branco no mobile */
 		filter:
 			drop-shadow(0 0 3px rgba(0, 0, 0, 0.5)) drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4)) drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));

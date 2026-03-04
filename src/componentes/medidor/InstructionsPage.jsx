@@ -103,7 +103,7 @@ const InstructionsPage = ({ onStart }) => {
                 margin: "0 auto 20px"
               }}>
                 <img 
-                  src="/img/aliancas.png" 
+                  src="/img/logonova2.png" 
                   alt="logo" 
                   style={{ 
                     width: "100%", 

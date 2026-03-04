@@ -722,7 +722,7 @@ useEffect(() => {
                                 <i className="fa fa-star"></i>
                                 <i className="fa fa-star"></i>
                               </div>
-                          <h5 className="old-price">R$ {(Math.floor(product.price * 2) + 0.90).toFixed(2)}</h5>
+                          <h5 className="old-price">R$ {(Math.floor(product.price * 1.3) + 0.90).toFixed(2)}</h5>
                           <div className="product__price">
                             R$ {product.price.toFixed(2)}
                           </div>
