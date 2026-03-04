@@ -123,7 +123,7 @@ export default function Header() {
             <div className="col-lg-3 col-md-3">
               <div className="header__logo">
                 <a href="/">
-                  <img src="/img/aliancas.png" alt="logo" />
+                  <img src="/img/logonova2.png" alt="logo" />
                 </a>
               </div>
             </div>

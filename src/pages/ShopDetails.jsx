@@ -992,7 +992,7 @@ export default function ShopDetails() {
                                 <i className="fa fa-star" />
                                 <i className="fa fa-star" />
                               </div>
-                              <h5 className="old-price">R$ {(Math.floor(produtos.price * 2) + 0.90).toFixed(2)}</h5>
+                              <h5 className="old-price">R$ {(Math.floor(produtos.price * 1.3) + 0.90).toFixed(2)}</h5>
                               <h5>R$ {produtos.price ? Number(produtos.price).toFixed(2) : '0.00'}</h5>
                               <a onClick={() => navigate(`/shopdetails/${produtos.id}`)} className="add-cart">
                                 Ver detalhes

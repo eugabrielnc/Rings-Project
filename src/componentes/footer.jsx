@@ -17,7 +17,7 @@ export default function Footer() {
                         <div className="footer__about">
                             <div className="footer__logo">
                                 <a href="#">
-                                    <img src="/img/1767797462566.png" alt="" />
+                                    <img src="/img/logonova2.png" alt="" />
                                 </a>
                             </div>
                             <p className="footer__text">
