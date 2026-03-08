@@ -528,378 +528,288 @@ export default function ShopDetails() {
       
         <>
           {/* Shop Details Section Begin */}
-          <section className="shop-details"
-            style={{ background: "transparent" }}>
-            <div className="product__details__pic"
-              style={{ background: "transparent" }}>
-              <div className="container">
-                <div className="row">
-                  <div className="col-lg-12">
-                    <div className="product__details__breadcrumb">
-                      <a href="./index.html">Home</a>
-                      <a href="./shop.html">Shop</a>
-                      <span>Product Details</span>
-                    </div>
-                  </div>
+<section className="shop-details" style={{ background: "transparent" }}>
+  <div className="product__details__pic" style={{ background: "transparent" }}>
+    <div className="container">
+
+      <div className="row">
+        <div className="col-lg-12">
+          <div className="product__details__breadcrumb">
+            <a href="./index.html">Home</a>
+            <a href="./shop.html">Shop</a>
+            <span>Product Details</span>
+          </div>
+        </div>
+      </div>
+
+      <div className="row">
+
+        {/* COLUNA DA IMAGEM */}
+        <div className="col-lg-6 col-md-6">
+
+          <div className="tab-content">
+            <div className="tab-pane active" id="tabs-1" role="tabpanel">
+              <div className="product__details__pic__item">
+                <img
+                  src={product.image_url}
+                  alt={product.name}
+                  style={{ width: "100%", borderRadius: 8 }}
+                  onError={(e) => {
+                    e.target.src = "/img/placeholder.png";
+                  }}
+                />
+              </div>
+            </div>
+
+            <div style={{ display: "flex", gap: "10px", marginTop: "15px" }}>
+
+              {product.image2_url &&
+                <div
+                  className="miniatura-imagem-container"
+                  onClick={() => {
+                    setSelectedImageIndex(index);
+                    retryThumb(index);
+                  }}
+                  style={{
+                    width: 70,
+                    height: 70,
+                    borderRadius: 14,
+                    overflow: "hidden",
+                    border: "1px solid #ccc",
+                    position: "relative",
+                    cursor: "pointer",
+                    background: "#f2f2f2"
+                  }}
+                >
+                  <img
+                    src={product.image2_url}
+                    alt="Miniatura 1"
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      transition: "opacity 0.3s ease"
+                    }}
+                  />
                 </div>
-                <div className="row">
-                  <div className="col-lg-3 col-md-3">
-                  </div>
-                  <div className="col-lg-6 col-md-9">
-                    <div className="tab-content">
-                      <div className="tab-pane active" id="tabs-1" role="tabpanel">
-                        <div className="product__details__pic__item">
-                          <img
-                            src={product.image_url}
-                            alt={product.name}
-                            style={{ width: "100%", borderRadius: 8 }}
-                            onError={(e) => {
-                              e.target.src = "/img/placeholder.png";
+              }
+
+              {product.image3_url &&
+                <div
+                  onClick={() => {
+                    setSelectedImageIndex(index);
+                    retryThumb(index);
+                  }}
+                  style={{
+                    width: 70,
+                    height: 70,
+                    borderRadius: 14,
+                    overflow: "hidden",
+                    border: "1px solid #ccc",
+                    position: "relative",
+                    cursor: "pointer",
+                    background: "#f2f2f2"
+                  }}
+                >
+                  <img
+                    className="miniatura-imagem"
+                    src={product.image3_url}
+                    alt="Miniatura 2"
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      transition: "opacity 0.3s ease"
+                    }}
+                  />
+                </div>
+              }
+
+            </div>
+          </div>
+
+        </div>
+
+        {/* COLUNA DOS DETALHES */}
+        <div className="col-lg-6 col-md-6">
+
+          <div className="product__details__text">
+
+            <h4>{product.name || ""}</h4>
+
+            <div className="rating">
+              <i className="fa fa-star" />
+              <i className="fa fa-star" />
+              <i className="fa fa-star" />
+              <i className="fa fa-star" />
+              <i className="fa fa-star-o" />
+              <span> - 5 Reviews</span>
+            </div>
+
+            <h3>
+              R$ {product.price ? Number(product.price).toFixed(2) : '0.00'}
+            </h3>
+
+            <div className="product__details__option">
+
+              <div className="products_details">
+
+                {product.pear === 1 && (
+                  <>
+                    {/* TAMANHO MASCULINO */}
+                    <div className="product__details__option__size">
+
+                      <span style={{ display: 'block', marginBottom: '10px', fontWeight: '600' }}>
+                        Selecione o Tamanho (Masculino):
+                      </span>
+
+                      <Select
+                        options={sizeOptions}
+                        value={selectedMascleSize}
+                        onChange={setSelectedMascleSize}
+                        styles={customStyles}
+                        placeholder="Escolha o tamanho..."
+                        isSearchable={false}
+                      />
+
+                      <p style={{ marginTop: '10px', fontSize: '13px', color: '#666' }}>
+                        <i className="fa fa-info-circle" style={{ marginRight: '5px' }}></i>
+                        Não sabe seu tamanho?
+                        <a href="/medida" style={{ color: '#d4a574', fontWeight: '600' }}> Meça aqui!</a>
+                      </p>
+
+                      {product.has_gravation === 1 &&
+                        <div style={{ marginTop: '20px' }}>
+                          <p style={{ marginBottom: '10px', fontWeight: '600' }}>
+                            Gravação (Masculino):
+                          </p>
+
+                          <input
+                            type="text"
+                            value={gravacaoMasculino}
+                            onChange={(e) => setGravacaoMasculino(e.target.value)}
+                            placeholder="Digite o texto..."
+                            maxLength={15}
+                            style={{
+                              width: '100%',
+                              padding: '12px 15px',
+                              border: '1px solid #e1e1e1',
+                              borderRadius: '4px'
                             }}
                           />
 
-
-
+                          <p style={{ fontSize: '12px', color: '#999' }}>
+                            Máximo 15 caracteres ({gravacaoMasculino.length}/15)
+                          </p>
                         </div>
-                      </div>
-                        <div style={{ display: "flex", gap: "10px", marginTop: "15px" }}>
-
-
-                        {product.image2_url && 
-                              <div
-                              className="miniatura-imagem-container"  
-                                onClick={() => {
-                                  setSelectedImageIndex(index);
-                                  retryThumb(index);
-                                }}
-                              style={{
-                              width: 70,
-                              height: 70,
-                                borderradius: 14,
-                              overflow: "hidden",
-                              border: "1px solid #ccc",
-                              position: "relative",
-                              cursor: "pointer",
-                              background: "#f2f2f2"}}
-                              >
-
-                                <img
-                                  src={product.image2_url}
-                                  alt={`Miniatura 1`}
-                                style={{
-                                  width: "100%",
-                                  height: "100%",
-                                  transition: "opacity 0.3s ease"
-
-                                }}
-                               />
-                              </div>
-                        }
-                        {product.image3_url && 
-                              <div
-                                onClick={() => {
-                                  setSelectedImageIndex(index);
-                                  retryThumb(index);
-                                }}
-                           style={{
-                              width: 70,
-                              height: 70,
-                                borderradius: 14,
-                              overflow: "hidden",
-                              border: "1px solid #ccc",
-                              position: "relative",
-                              cursor: "pointer",
-                              background: "#f2f2f2"}}
-    
-                             >
-
-                                <img
-                                  className="miniatura-imagem"
-                                  src={product.image3_url}
-                                  alt={`Miniatura 1`}
-                                 style={{
-                                  width: "100%",
-                                  height: "100%",
-                                  transition: "opacity 0.3s ease"
-
-                                }}
-  
-                               />
-
-
-                              </div>
-                        }
-                        </div>
-
+                      }
 
                     </div>
 
-                    {/* Conteúdo do produto logo abaixo da foto */}
-                    <div className="product__details__text" style={{ marginTop: '20px' }}>
-                      <h4>{product.name || ""}</h4>
-                      <div className="rating">
-                        <i className="fa fa-star" />
-                        <i className="fa fa-star" />
-                        <i className="fa fa-star" />
-                        <i className="fa fa-star" />
-                        <i className="fa fa-star-o" />
-                        <span> - 5 Reviews</span>
-                      </div>
-                      <h3>
-                        R$ {product.price ? Number(product.price).toFixed(2) : '0.00'}
-                      </h3>
-                      <div className="product__details__option">
+                    {/* TAMANHO FEMININO */}
+                    <div className="product__details__option__size">
 
-                        <div className="products_details">
-                { product.pear === 1 && (
+                      <span style={{ display: 'block', marginBottom: '10px', fontWeight: '600' }}>
+                        Selecione o Tamanho (Feminino):
+                      </span>
 
-                    <>
-                          <div className="product__details__option__size">
-                      
-                            <span style={{ display: 'block', marginBottom: '10px', fontWeight: '600' }}>
-                              Selecione o Tamanho  (Masculino):
-                            </span>
-                            <Select
-                              options={sizeOptions}
-                              value={selectedMascleSize}
-                              onChange={setSelectedMascleSize}
-                              styles={customStyles}
-                              placeholder="Escolha o tamanho..."
-                              isSearchable={false}
-                            />
-                              <p style={{ marginTop: '10px', fontSize: '13px', color: '#666' }}>
-                                <i className="fa fa-info-circle" style={{ marginRight: '5px' }}></i>
-                                Não sabe seu tamanho? <a href="/medida" style={{ color: '#d4a574', fontWeight: '600' }}>Meça aqui!</a>
-                              </p>
+                      <Select
+                        options={sizeOptions}
+                        value={selectedFemaleSize}
+                        onChange={setSelectedFemaleSize}
+                        styles={customStyles}
+                        placeholder="Escolha o tamanho..."
+                        isSearchable={false}
+                      />
 
-                  {/* Campo de Gravação Masculino */}
-                  {product.has_gravation === 1 &&
-                            <div style={{ marginTop: '20px' }}>
-                              <p style={{ display: 'block', marginBottom: '10px', fontWeight: '600', color: '#333' }}>
-                                Gravação (Masculino):
-                              </p>
-                              <input
-                                type="text"
-                                value={gravacaoMasculino}
-                                onChange={(e) => setGravacaoMasculino(e.target.value)}
-                                placeholder="Digite o texto para gravação..."
-                                maxLength={15}
-                                style={{
-                                  width: '100%',
-                                  padding: '12px 15px',
-                                  border: '1px solid #e1e1e1',
-                                  borderRadius: '4px',
-                                  fontSize: '14px',
-                                  outline: 'none',
-                                  boxShadow: 'none'
-                                }}
-                              />
-                              <p style={{ marginTop: '5px', fontSize: '12px', color: '#999' }}>
-                                Máximo 15 caracteres ({gravacaoMasculino.length}/15)
-                              </p>
-                            </div>
-                  }
-                          </div>
-
-                          <div className="product__details__option__size">
-                            <span style={{ display: 'block', marginBottom: '10px', fontWeight: '600' }}>
-                              Selecione o Tamanho  (Feminino):
-                            </span>
-                            <Select
-                              options={sizeOptions}
-                              value={selectedFemaleSize}
-                              onChange={setSelectedFemaleSize}
-                              styles={customStyles}
-                              placeholder="Escolha o tamanho..."
-                              isSearchable={false}
-                            />
-
-                            <p style={{ marginTop: '10px', fontSize: '13px', color: '#666' }}>
-                              <i className="fa fa-info-circle" style={{ marginRight: '5px' }}></i>
-                              Não sabe seu tamanho? <a href="/medida" style={{ color: '#d4a574', fontWeight: '600' }}>Meça aqui!</a>
-                            </p>
-
-
-                  {/* Campo de Gravação Feminino */}
-                  {product.has_gravation === 1 &&
-                            <div style={{ marginTop: '20px' }}>
-                              <p style={{ display: 'block', marginBottom: '10px', fontWeight: '600', color: '#333' }}>
-                                Gravação (Feminino):
-                              </p>
-                              <input
-                                type="text"
-                                value={gravacaoFeminino}
-                                onChange={(e) => setGravacaoFeminino(e.target.value)}
-                                placeholder="Digite o texto para gravação..."
-                                maxLength={15}
-                                style={{
-                                  width: '100%',
-                                  padding: '12px 15px',
-                                  border: '1px solid #e1e1e1',
-                                  borderRadius: '4px',
-                                  fontSize: '14px',
-                                  outline: 'none',
-                                  boxShadow: 'none'
-                                }}
-                              />
-                              <p style={{ marginTop: '5px', fontSize: '12px', color: '#999' }}>
-                                Máximo 15 caracteres ({gravacaoFeminino.length}/15)
-                              </p>
-                            </div>
-                  }
-                         </div>
+                    </div>
                   </>
-                  )}
-            
-                { product.solitary === 1   && ( 
+                )}
 
-                        <div className="product__details__option__size">
-                      
-                            <span style={{ display: 'block', marginBottom: '10px', fontWeight: '600' }}>
-                              Selecione o Tamanho  (Solitaria):
-                            </span>
-                            <Select
-                              options={sizeOptions}
-                              value={sizeUniqueRing}
-                              onChange={setSizeUniqueRing}
-                              styles={customStyles}
-                              placeholder="Escolha o tamanho..."
-                              isSearchable={false}
-                            />
-                              <p style={{ marginTop: '10px', fontSize: '13px', color: '#666' }}>
-                                <i className="fa fa-info-circle" style={{ marginRight: '5px' }}></i>
-                                Não sabe seu tamanho? <a href="/medida" style={{ color: '#d4a574', fontWeight: '600' }}>Meça aqui!</a>
-                              </p>
-                         </div>
+                {product.solitary === 1 && (
+                  <div className="product__details__option__size">
 
-                  )}
+                    <span style={{ marginBottom: '10px', fontWeight: '600' }}>
+                      Selecione o Tamanho (Solitária):
+                    </span>
 
-                        </div>
+                    <Select
+                      options={sizeOptions}
+                      value={sizeUniqueRing}
+                      onChange={setSizeUniqueRing}
+                      styles={customStyles}
+                      placeholder="Escolha o tamanho..."
+                      isSearchable={false}
+                    />
 
-                        {product.stone === 1 && (
+                  </div>
+                )}
 
-                          <div style={{ marginTop: '30px' }}>
-                            <h4 style={{
-                              fontSize: '16px',
-                              fontWeight: '600',
-                              color: '#333',
-                              marginBottom: '15px',
-                              alignItems: 'center'
-                            }}>
-                              Escolha a cor de pedras
-                            </h4>
-                            <div className="pedras">
-                              <div
-                                className={`pedra-item ${selectedStone === 'CRISTAL' ? 'selected' : ''}`}
-                                onClick={() => setSelectedStone('CRISTAL')}
-                              >
-                                <div
-                                  className="pedra-option"
-                                  style={{ backgroundImage: 'url("/img/pedras/cristal.png")' }}
-                                ></div>
+              </div>
 
-                                <span className="pedras-texto">Cristal</span>
-                              </div>
+              {/* PEDRAS */}
+              {product.stone === 1 && (
+                <div style={{ marginTop: "30px" }}>
+                  <h4 style={{ fontSize: "16px", fontWeight: "600", marginBottom: "15px" }}>
+                    Escolha a cor de pedras
+                  </h4>
 
-                              <div
-                                className={`pedra-item ${selectedStone === 'CITRINO' ? 'selected' : ''}`}
-                                onClick={() => setSelectedStone('CITRINO')}
-                              >
-                                <div
-                                  className="pedra-option"
-                                  style={{ backgroundImage: 'url("/img/pedras/citrino.png")' }}
-                                ></div>
-                                <span className="pedras-texto">Citrino</span>
-                              </div>
+                  <div className="pedras">
 
-                              <div
-                                className={`pedra-item ${selectedStone === 'AQUAMARINE' ? 'selected' : ''}`}
-                                onClick={() => setSelectedStone('AQUAMARINE')}
-                              >
-                                <div
-                                  className="pedra-option"
-                                  style={{ backgroundImage: 'url("/img/pedras/aquamarine.png")' }}
-                                ></div>
-                                <span className="pedras-texto">Aquamarine</span>
-                              </div>
-                              <div
-                                className={`pedra-item ${selectedStone === 'AMETISTA' ? 'selected' : ''}`}
-                                onClick={() => setSelectedStone('AMETISTA')}
-                              >
-                                <div
-                                  className="pedra-option"
-                                  style={{ backgroundImage: 'url("/img/pedras/ametista.png")' }}
-                                ></div>
-                                <span className="pedras-texto">Ametista</span>
-                              </div>
-                              <div
-                                className={`pedra-item ${selectedStone === 'PRETO' ? 'selected' : ''}`}
-                                onClick={() => setSelectedStone('PRETO')}
-                              >
-                                <div
-                                  className="pedra-option"
-                                  style={{ backgroundImage: 'url("/img/pedras/preto.png")' }}
-                                ></div>
-                                <span className="pedras-texto">Preto</span>
-                              </div>
-                              <div
-                                className={`pedra-item ${selectedStone === 'ROSA' ? 'selected' : ''}`}
-                                onClick={() => setSelectedStone('ROSA')}
-                              >
-                                <div
-                                  className="pedra-option"
-                                  style={{ backgroundImage: 'url("/img/pedras/rosa.png")' }}
-                                ></div>
-                                <span className="pedras-texto">Rosa</span>
-                              </div>
-                              <div
-                                className={`pedra-item ${selectedStone === 'VERDE' ? 'selected' : ''}`}
-                                onClick={() => setSelectedStone('VERDE')}
-                              >
-                                <div
-                                  className="pedra-option"
-                                  style={{ backgroundImage: 'url("/img/pedras/verde.png")' }}
-                                ></div>
-                                <span className="pedras-texto">Verde</span>
-                              </div>
-                              <div
-                                className={`pedra-item ${selectedStone === 'VERMELHO' ? 'selected' : ''}`}
-                                onClick={() => setSelectedStone('VERMELHO')}
-                              >
-                                <div
-                                  className="pedra-option"
-                                  style={{ backgroundImage: 'url("/img/pedras/vermelho.png")' }}
-                                ></div>
-                                <span className="pedras-texto">Vermelho</span>
-                              </div>
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                      <div className="product__details__cart__option">
-                        <div className="quantity">
-                          <div className="pro-qty">
-                            <input type="text" defaultValue={1} onChange={(e) => setSelectedAmount(e.target.value)} />
-                          </div>
-                        </div>
-                        <button
-                          type="button"
-                          className="primary-btn"
-                          style={{ borderRadius: '10px' }}
-                          onClick={() => setModalOpen(true)}
-                        >
-                          Comprar
-                        </button>
+                    <div
+                      className={`pedra-item ${selectedStone === 'CRISTAL' ? 'selected' : ''}`}
+                      onClick={() => setSelectedStone('CRISTAL')}
+                    >
+                      <div className="pedra-option" style={{ backgroundImage: 'url("/img/pedras/cristal.png")' }} />
+                      <span className="pedras-texto">Cristal</span>
+                    </div>
 
-                      </div>
+                    <div
+                      className={`pedra-item ${selectedStone === 'CITRINO' ? 'selected' : ''}`}
+                      onClick={() => setSelectedStone('CITRINO')}
+                    >
+                      <div className="pedra-option" style={{ backgroundImage: 'url("/img/pedras/citrino.png")' }} />
+                      <span className="pedras-texto">Citrino</span>
                     </div>
 
                   </div>
                 </div>
-              </div>
+              )}
+
             </div>
-          </section>
-          {/* Shop Details Section End */}
+
+            {/* BOTÃO */}
+            <div className="product__details__cart__option">
+
+              <div className="quantity">
+                <div className="pro-qty">
+                  <input
+                    type="text"
+                    defaultValue={1}
+                    onChange={(e) => setSelectedAmount(e.target.value)}
+                  />
+                </div>
+              </div>
+
+              <button
+                type="button"
+                className="primary-btn"
+                style={{ borderRadius: '10px' }}
+                onClick={() => setModalOpen(true)}
+              >
+                Comprar
+              </button>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</section>
+{/* Shop Details Section End */}
 
           {/* Related Section Begin */}
           <section className="related spad">
